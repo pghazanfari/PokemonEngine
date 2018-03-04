@@ -30,10 +30,11 @@ namespace PokemonEngine.Base
         private readonly int baseFriendship;
         public int BaseFriendship { get { return baseFriendship; } }
 
-        public Pokemon(string species, IList<PokemonType> types, MoveCapacity moveSet, BaseStats baseStats, IList<Ability> possibleAbilities, int baseFriendship)
+        public Pokemon(string species, IList<PokemonType> types, ExperienceGroup expGroup, MoveCapacity moveSet, BaseStats baseStats, IList<Ability> possibleAbilities, int baseFriendship)
         {
             this.species = species;
             this.types = new List<PokemonType>(types).AsReadOnly();
+            this.expGroup = expGroup;
             this.moveSet = moveSet;
             this.baseStats = baseStats;
             this.possibleAbilities = new List<Ability>(possibleAbilities).AsReadOnly();
