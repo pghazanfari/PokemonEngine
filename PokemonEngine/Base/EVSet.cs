@@ -15,15 +15,15 @@ namespace PokemonEngine.Base
         public const int MaxBattlePointsPerPokemon = 3;
         public const int MinBattlePointsPerPokemon = 1;
 
-        private readonly IDictionary<PStat, int> evs;
-        public int this[PStat stat] { get { return evs[stat]; } }
+        private readonly IDictionary<Stat, int> evs;
+        public int this[Stat stat] { get { return evs[stat]; } }
 
         public int Total { get; private set; }
 
-        public EVSet(IDictionary<PStat, int> evs)
+        public EVSet(IDictionary<Stat, int> evs)
         {
             int Total = 0;
-            foreach (PStat stat in Enum.GetValues(typeof(PStat)))
+            foreach (Stat stat in Enum.GetValues(typeof(Stat)))
             {
                 if (!evs.ContainsKey(stat))
                 {
@@ -39,10 +39,10 @@ namespace PokemonEngine.Base
             {
                 throw new Exception($"Sum of all EVs must be less than {MaxTotalEV}: {Total}");
             }
-            this.evs = new Dictionary<PStat, int>(evs);
+            this.evs = new Dictionary<Stat, int>(evs);
         }
 
-        public void Add(PStat stat, int battlePoints)
+        public void Add(Stat stat, int battlePoints)
         {
             if (battlePoints < MinBattlePointsPerPokemon || battlePoints > MaxBattlePointsPerPokemon)
             {

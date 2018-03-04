@@ -111,6 +111,9 @@ namespace PokemonEngine.Base
         private readonly Gender gender;
         public Gender Gender { get { return gender; } }
 
+        private readonly Nature nature;
+        public Nature Nature { get { return nature; } }
+
         private readonly MoveSet moves;
         public MoveSet Moves { get { return moves; } }
 
@@ -120,14 +123,15 @@ namespace PokemonEngine.Base
 
         public int Experience { get; private set; }
 
-        public int this[PStat stat] { get { return calculateStat(stat); } }
+        public int this[Stat stat] { get { return calculateStat(stat); } }
 
-        public UniquePokemon(Pokemon basePokemon, IVSet ivs, EVSet evs, Gender gender, MoveSet moves, int friendship, int level)
+        public UniquePokemon(Pokemon basePokemon, Gender gender, Nature nature, IVSet ivs, EVSet evs, MoveSet moves, int friendship, int level)
         {
             Base = basePokemon;
+            this.gender = gender;
+            this.nature = nature;
             this.ivs = ivs;
             this.evs = evs;
-            this.gender = gender;
             this.moves = moves;
             Friendship = friendship;
             Experience = ExpGroup.ExperienceNeededForLevel(level);
@@ -195,16 +199,16 @@ namespace PokemonEngine.Base
             return Friendship;
         }
 
-        private int calculateStat(PStat stat)
+        private int calculateStat(Stat stat)
         {
-            int baseVal = (int)Math.Floor((2.0 * BaseStats[stat] + IVs[stat] + Math.Floor(EVs[stat] / 4.0)) / 100.0);
+            int baseVal = (int)Math.Floor((2.0 * BaseStats[stat] + IVs[stat] + Math.Floor(EVs[stat] / 4.0)) * Level / 100.0);
 
-            if (stat == PStat.HP)
+            if (stat == Stat.HP)
             {
                 return baseVal + Level + 10;
             }
 
-            return (int)Math.Floor(baseVal * 1.0); // TODO: Account for Nature
+            return (int)Math.Floor(Math.Floor(baseVal + 5.0) * Nature.Multiplier(stat)); // TODO: Account for Nature
         }
     }
 }

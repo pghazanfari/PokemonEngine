@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Base
 {
-    public enum PStat { HP, Attack, Defense, SpecialAttack, SpecialDefense, Speed }
+    public enum Stat { HP, Attack, Defense, SpecialAttack, SpecialDefense, Speed }
     public interface IStatsProvider
     {
-        int this[PStat stat] { get;  }
+        int this[Stat stat] { get;  }
     }
 }

@@ -52,6 +52,7 @@
     <Compile Include="Base\MoveCapacity.cs" />
     <Compile Include="Base\Ability.cs" />
     <Compile Include="Base\Move.cs" />
+    <Compile Include="Base\Nature.cs" />
     <Compile Include="Base\UniquePokemon.cs" />
     <Compile Include="Base\IStatsProvider.cs" />
     <Compile Include="Base\PokemonType.cs" />

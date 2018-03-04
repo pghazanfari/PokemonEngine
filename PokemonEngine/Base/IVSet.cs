@@ -12,12 +12,12 @@ namespace PokemonEngine.Base
         public const int MaxIV = 31;
         public const int MinIV = 0;
 
-        private readonly IReadOnlyDictionary<PStat, int> ivs;
-        public int this[PStat stat] { get { return ivs[stat];  } }
+        private readonly IReadOnlyDictionary<Stat, int> ivs;
+        public int this[Stat stat] { get { return ivs[stat];  } }
 
-        public IVSet(IDictionary<PStat, int> ivs)
+        public IVSet(IDictionary<Stat, int> ivs)
         {
-            foreach (PStat stat in Enum.GetValues(typeof(PStat)))
+            foreach (Stat stat in Enum.GetValues(typeof(Stat)))
             {
                 if (!ivs.ContainsKey(stat))
                 {
@@ -28,7 +28,7 @@ namespace PokemonEngine.Base
                     throw new Exception($"{stat.ToString()} must be >= ${MinIV} and <= ${MaxIV}");
                 }
             }
-            this.ivs = new ReadOnlyDictionary<PStat, int>(ivs);
+            this.ivs = new ReadOnlyDictionary<Stat, int>(ivs);
         }
     }
 }

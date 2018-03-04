@@ -12,12 +12,12 @@ namespace PokemonEngine.Base
         public const int Max = 255;
         public const int Min = 0;
 
-        private readonly IReadOnlyDictionary<PStat, int> stats;
-        public int this[PStat stat] { get { return stats[stat]; } }
+        private readonly IReadOnlyDictionary<Stat, int> stats;
+        public int this[Stat stat] { get { return stats[stat]; } }
 
-        public BaseStats(IDictionary<PStat, int> stats)
+        public BaseStats(IDictionary<Stat, int> stats)
         {
-            foreach (PStat stat in Enum.GetValues(typeof(PStat)))
+            foreach (Stat stat in Enum.GetValues(typeof(Stat)))
             {
                 if (!stats.ContainsKey(stat))
                 {
@@ -29,7 +29,7 @@ namespace PokemonEngine.Base
                 }
             }
 
-            this.stats = new ReadOnlyDictionary<PStat, int>(stats);
+            this.stats = new ReadOnlyDictionary<Stat, int>(stats);
         }
     }
 }

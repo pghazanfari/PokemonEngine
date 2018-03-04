@@ -9,6 +9,7 @@ namespace PokemonEngine.Base
     public interface IUniquePokemon : IPokemon
     {
         Gender Gender { get; }
+        Nature Nature { get; }
         IVSet IVs { get; }
         EVSet EVs { get; }
         int Level { get; }
