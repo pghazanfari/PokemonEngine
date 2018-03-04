@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PokemonEngine.Model
+namespace PokemonEngine.Base
 {
     public class PType
     {
@@ -40,29 +40,29 @@ namespace PokemonEngine.Model
             Name = name;
         }
 
-        public bool isSuperEffectiveAgainst(PType other)
+        public bool IsSuperEffectiveAgainst(PType other)
         {
-            return effectivenessAgainst(other) > EFFECTIVE;
+            return EffectivenessAgainst(other) > EFFECTIVE;
         }
 
-        public bool isNotVeryEffectiveAgainst(PType other)
+        public bool IsNotVeryEffectiveAgainst(PType other)
         {
-            return effectivenessAgainst(other) < EFFECTIVE;
+            return EffectivenessAgainst(other) < EFFECTIVE;
         }
 
-        public bool hasNoEffectAgainst(PType other)
+        public bool HasNoEffectAgainst(PType other)
         {
-            return effectivenessAgainst(other) == NO_EFFECT;
+            return EffectivenessAgainst(other) == NO_EFFECT;
         }
 
-        public float effectivenessAgainst(PType other)
+        public float EffectivenessAgainst(PType other)
         {
             float effectiveness = EFFECTIVE;
             Effectiveness[this].TryGetValue(other, out effectiveness);
             return effectiveness;
         }
 
-        public float effectivenessFrom(PType other)
+        public float EffectivenessFrom(PType other)
         {
             float effectiveness = EFFECTIVE;
             Effectiveness[other].TryGetValue(this, out effectiveness);

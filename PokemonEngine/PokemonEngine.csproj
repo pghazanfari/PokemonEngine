@@ -41,8 +41,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\PType.cs" />
-    <Compile Include="Model\Pokemon.cs" />
+    <Compile Include="Base\IUniquePokemon.cs" />
+    <Compile Include="Base\PGender.cs" />
+    <Compile Include="Base\IPokemon.cs" />
+    <Compile Include="Base\PEVSet.cs" />
+    <Compile Include="Base\PIVSet.cs" />
+    <Compile Include="Base\PBaseStats.cs" />
+    <Compile Include="Base\PMoves.cs" />
+    <Compile Include="Base\PMoveSet.cs" />
+    <Compile Include="Base\PAbility.cs" />
+    <Compile Include="Base\PMove.cs" />
+    <Compile Include="Base\UniquePokemon.cs" />
+    <Compile Include="Base\IPStatsProvider.cs" />
+    <Compile Include="Base\PType.cs" />
+    <Compile Include="Base\Pokemon.cs" />
+    <Compile Include="Battle\BattleAction.cs" />
+    <Compile Include="Battle\BattleEffect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

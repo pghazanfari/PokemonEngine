@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PokemonEngine.Model
+namespace PokemonEngine.Battle
 {
-    public class Pokemon
+    interface BattleAction
     {
-        public IReadOnlyList<PType> Types { get; }
     }
 }
