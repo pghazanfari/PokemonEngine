@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Base
 {
-    public class UniquePokemon : IUniquePokemon, IPStatsProvider
+    public class UniquePokemon : IUniquePokemon, IStatsProvider
     {
         public const int MaxLevel = 100;
         public const int MinLevel = 1;
@@ -16,24 +16,77 @@ namespace PokemonEngine.Base
 
         #region Base Pokemon Wrapper Methods
         public string Species { get { return Base.Species; } }
-        public IReadOnlyList<PType> Types { get { return Base.Types; } }
-        public PBaseStats BaseStats { get { return Base.BaseStats; } }
-        public PMoveCapacity MoveSet { get { return Base.MoveSet; } }
-        public IReadOnlyList<PAbility> PossibleAbilities { get { return Base.PossibleAbilities; } }
-        public int BaseFriendship { get { return Base.BaseFriendship; } } 
+        public IReadOnlyList<PokemonType> Types { get { return Base.Types; } }
+        public BaseStats BaseStats { get { return Base.BaseStats; } }
+        public MoveCapacity MoveSet { get { return Base.MoveSet; } }
+        public IReadOnlyList<Ability> PossibleAbilities { get { return Base.PossibleAbilities; } }
+        public int BaseFriendship { get { return Base.BaseFriendship; } }
         #endregion
 
-        private readonly PIVSet ivs;
-        public PIVSet IVs { get { return ivs; } }
+        event EventHandler<LevelUpEventArgs> PreLevelUpEvent;
+        event EventHandler<LevelUpEventArgs> PostLevelUpEvent;
+        event EventHandler<FriendshipChangedEventArgs> PreFriendshipChangeEvent;
+        event EventHandler<FriendshipChangedEventArgs> PostFriendshipChangeEvent;
 
-        private readonly PEVSet evs;
-        public PEVSet EVs { get { return evs; } }
+        #region Interface Events
+        event EventHandler<LevelUpEventArgs> IUniquePokemon.OnLevelUp
+        {
+            add
+            {
+                PreLevelUpEvent += value;
+            }
+            remove
+            {
+                PreLevelUpEvent -= value;
+            }
+        }
+        event EventHandler<LevelUpEventArgs> IUniquePokemon.OnLevelledUp
+        {
+            add
+            {
+                PostLevelUpEvent += value;
+            }
+            remove
+            {
+                PostLevelUpEvent -= value;
+            }
+        }
 
-        private readonly PGender gender;
-        public PGender Gender { get { return gender; } }
+        event EventHandler<FriendshipChangedEventArgs> IUniquePokemon.OnFriendshipChange
+        {
+            add
+            {
+                PreFriendshipChangeEvent += value;
+            }
+            remove
+            {
+                PreFriendshipChangeEvent -= value;
+            }
+        }
+        event EventHandler<FriendshipChangedEventArgs> IUniquePokemon.OnFriendshipChanged
+        {
+            add
+            {
+                PostFriendshipChangeEvent += value;
+            }
+            remove
+            {
+                PostFriendshipChangeEvent -= value;
+            }
+        } 
+        #endregion
 
-        private readonly PMoveSet moves;
-        public PMoveSet Moves { get { return moves; } }
+        private readonly IVSet ivs;
+        public IVSet IVs { get { return ivs; } }
+
+        private readonly EVSet evs;
+        public EVSet EVs { get { return evs; } }
+
+        private readonly Gender gender;
+        public Gender Gender { get { return gender; } }
+
+        private readonly MoveSet moves;
+        public MoveSet Moves { get { return moves; } }
 
         public int Friendship { get; private set; }
 
@@ -41,7 +94,7 @@ namespace PokemonEngine.Base
 
         public int this[PStat stat] { get { return calculateStat(stat); } }
 
-        public UniquePokemon(Pokemon basePokemon, PIVSet ivs, PEVSet evs, PGender gender, PMoveSet moves, int friendship, int level)
+        public UniquePokemon(Pokemon basePokemon, IVSet ivs, EVSet evs, Gender gender, MoveSet moves, int friendship, int level)
         {
             Base = basePokemon;
             this.ivs = ivs;
@@ -62,11 +115,22 @@ namespace PokemonEngine.Base
             Level = level;
         }
 
-        public int LevelUp() { return ++Level; }
+        public int LevelUp()
+        {
+            LevelUpEventArgs args = new LevelUpEventArgs(this, Level, Level + 1);
+            PreLevelUpEvent?.Invoke(this, args);
+            Level += 1;
+            PostLevelUpEvent?.Invoke(this, args);
+            return Level;
+        }
 
         public int UpdateFriendship(int offset)
         {
+            FriendshipChangedEventArgs args = new FriendshipChangedEventArgs(this, Friendship, Friendship + offset, offset);
+
+            PreFriendshipChangeEvent?.Invoke(this, args);
             Friendship += offset;
+            PostFriendshipChangeEvent?.Invoke(this, args);
             return Friendship;
         }
 

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Base
 {
-    public class PAbility
+    public class Ability
     {
         public string Description { get; private set; }
 
-        public PAbility(string description)
+        public Ability(string description)
         {
             Description = description;
         }

@@ -9,10 +9,10 @@ namespace PokemonEngine.Base
     public interface IPokemon
     {
         string Species { get; }
-        IReadOnlyList<PType> Types { get; }
-        PMoveCapacity MoveSet { get; }
-        PBaseStats BaseStats { get; }
-        IReadOnlyList<PAbility> PossibleAbilities { get; }
+        IReadOnlyList<PokemonType> Types { get; }
+        MoveCapacity MoveSet { get; }
+        BaseStats BaseStats { get; }
+        IReadOnlyList<Ability> PossibleAbilities { get; }
         int BaseFriendship { get; }
     }
 }

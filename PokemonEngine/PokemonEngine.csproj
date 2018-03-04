@@ -42,18 +42,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\IUniquePokemon.cs" />
-    <Compile Include="Base\PGender.cs" />
+    <Compile Include="Base\Gender.cs" />
     <Compile Include="Base\IPokemon.cs" />
-    <Compile Include="Base\PEVSet.cs" />
-    <Compile Include="Base\PIVSet.cs" />
-    <Compile Include="Base\PBaseStats.cs" />
-    <Compile Include="Base\PMoveSet.cs" />
-    <Compile Include="Base\PMoveCapacity.cs" />
-    <Compile Include="Base\PAbility.cs" />
-    <Compile Include="Base\PMove.cs" />
+    <Compile Include="Base\EVSet.cs" />
+    <Compile Include="Base\IVSet.cs" />
+    <Compile Include="Base\BaseStats.cs" />
+    <Compile Include="Base\MoveSet.cs" />
+    <Compile Include="Base\MoveCapacity.cs" />
+    <Compile Include="Base\Ability.cs" />
+    <Compile Include="Base\Move.cs" />
     <Compile Include="Base\UniquePokemon.cs" />
-    <Compile Include="Base\IPStatsProvider.cs" />
-    <Compile Include="Base\PType.cs" />
+    <Compile Include="Base\IStatsProvider.cs" />
+    <Compile Include="Base\PokemonType.cs" />
     <Compile Include="Base\Pokemon.cs" />
     <Compile Include="Battle\BattleAction.cs" />
     <Compile Include="Battle\BattleEffect.cs" />

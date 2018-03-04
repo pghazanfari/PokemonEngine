@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Base
 {
-    public class PMoveSet
+    public class MoveSet
     {
         public const int MaxNumberOfMoves = 4;
 
-        private readonly IList<PMove> moves;
-        public PMove this[int i] { get { return moves[i]; } }
+        private readonly IList<Move> moves;
+        public Move this[int i] { get { return moves[i]; } }
 
-        public PMoveSet(IList<PMove> moves)
+        public MoveSet(IList<Move> moves)
         {
             if (moves.Count == 0)
             {
@@ -28,23 +28,23 @@ namespace PokemonEngine.Base
                 throw new Exception("Duplicate moves cannot exist");
             }
 
-            this.moves = new List<PMove>(4);
-            (this.moves as List<PMove>).AddRange(moves);
+            this.moves = new List<Move>(4);
+            (this.moves as List<Move>).AddRange(moves);
             for (int i = this.moves.Count; i < MaxNumberOfMoves; i++)
             {
                 this.moves.Add(null);
             }
         }
 
-        public PMoveSet(params PMove[] moves) : this(new List<PMove>(moves)) { }
+        public MoveSet(params Move[] moves) : this(new List<Move>(moves)) { }
 
-        public PMove ReplaceMove(int index, PMove newMove)
+        public Move ReplaceMove(int index, Move newMove)
         {
             if (moves.Contains(newMove))
             {
                 throw new Exception("Duplicate moves cannot exit");
             }
-            PMove oldMove = moves[index];
+            Move oldMove = moves[index];
             moves[index] = newMove;
             return oldMove;
         }

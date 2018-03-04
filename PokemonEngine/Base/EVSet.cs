@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Base
 {
-    public class PEVSet : IPStatsProvider
+    public class EVSet : IStatsProvider
     {
         public const int MaxEV = 255;
         public const int MinEV = 0;
@@ -20,7 +20,7 @@ namespace PokemonEngine.Base
 
         public int Total { get; private set; }
 
-        public PEVSet(IDictionary<PStat, int> evs)
+        public EVSet(IDictionary<PStat, int> evs)
         {
             int Total = 0;
             foreach (PStat stat in Enum.GetValues(typeof(PStat)))

@@ -8,13 +8,47 @@ namespace PokemonEngine.Base
 {
     public interface IUniquePokemon : IPokemon
     {
-        PGender Gender { get; }
-        PIVSet IVs { get; }
-        PEVSet EVs { get; }
+        Gender Gender { get; }
+        IVSet IVs { get; }
+        EVSet EVs { get; }
         int Level { get; }
         int Friendship { get; }
 
+        event EventHandler<LevelUpEventArgs> OnLevelUp;
+        event EventHandler<LevelUpEventArgs> OnLevelledUp;
         int LevelUp();
+
+        event EventHandler<FriendshipChangedEventArgs> OnFriendshipChange;
+        event EventHandler<FriendshipChangedEventArgs> OnFriendshipChanged;
         int UpdateFriendship(int offset);
+    }
+
+    public class LevelUpEventArgs : EventArgs
+    {
+        public readonly IUniquePokemon Pokemon;
+        public readonly int FromLevel;
+        public readonly int ToLevel;
+        public LevelUpEventArgs(IUniquePokemon pokemon, int fromLevel, int toLevel) : base()
+        {
+            this.Pokemon = pokemon;
+            FromLevel = fromLevel;
+            ToLevel = toLevel;
+        }
+    }
+
+    public class FriendshipChangedEventArgs : EventArgs
+    {
+        public readonly IUniquePokemon Pokemon;
+        public readonly int FromFriendship;
+        public readonly int ToFriendship;
+        public readonly int Offset;
+
+        public FriendshipChangedEventArgs(IUniquePokemon pokemon, int fromFriendship, int toFriendship, int offset) : base()
+        {
+            this.Pokemon = pokemon;
+            FromFriendship = fromFriendship;
+            ToFriendship = toFriendship;
+            Offset = offset;
+        }
     }
 }

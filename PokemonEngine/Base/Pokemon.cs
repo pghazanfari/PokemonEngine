@@ -12,28 +12,28 @@ namespace PokemonEngine.Base
         private readonly string species;
         public string Species { get { return species; } }
 
-        private readonly IReadOnlyList<PType> types;
-        public IReadOnlyList<PType> Types { get { return types; } }
+        private readonly IReadOnlyList<PokemonType> types;
+        public IReadOnlyList<PokemonType> Types { get { return types; } }
 
-        private readonly PMoveCapacity moveSet;
-        public PMoveCapacity MoveSet { get { return moveSet; } }
+        private readonly MoveCapacity moveSet;
+        public MoveCapacity MoveSet { get { return moveSet; } }
 
-        private readonly PBaseStats baseStats;
-        public PBaseStats BaseStats { get { return baseStats; } }
+        private readonly BaseStats baseStats;
+        public BaseStats BaseStats { get { return baseStats; } }
 
-        private readonly IReadOnlyList<PAbility> possibleAbilities;
-        public IReadOnlyList<PAbility> PossibleAbilities { get { return possibleAbilities; } }
+        private readonly IReadOnlyList<Ability> possibleAbilities;
+        public IReadOnlyList<Ability> PossibleAbilities { get { return possibleAbilities; } }
 
         private readonly int baseFriendship;
         public int BaseFriendship { get { return baseFriendship; } }
 
-        public Pokemon(string species, IList<PType> types, PMoveCapacity moveSet, PBaseStats baseStats, IList<PAbility> possibleAbilities, int baseFriendship)
+        public Pokemon(string species, IList<PokemonType> types, MoveCapacity moveSet, BaseStats baseStats, IList<Ability> possibleAbilities, int baseFriendship)
         {
             this.species = species;
-            this.types = new List<PType>(types).AsReadOnly();
+            this.types = new List<PokemonType>(types).AsReadOnly();
             this.moveSet = moveSet;
             this.baseStats = baseStats;
-            this.possibleAbilities = new List<PAbility>(possibleAbilities).AsReadOnly();
+            this.possibleAbilities = new List<Ability>(possibleAbilities).AsReadOnly();
             this.baseFriendship = baseFriendship;
         }
     }

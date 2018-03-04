@@ -6,70 +6,70 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Base
 {
-    public class PType
+    public class PokemonType
     {
         public const float EFFECTIVE = 1.0f;
         public const float NOT_VERY_EFFECTIVE = 0.5f;
         public const float SUPER_EFFECTIVE = 2.0f;
         public const float NO_EFFECT = 0.0f;
 
-        private static Dictionary<PType, Dictionary<PType, float>> Effectiveness = new Dictionary<PType, Dictionary<PType, float>>();
+        private static Dictionary<PokemonType, Dictionary<PokemonType, float>> Effectiveness = new Dictionary<PokemonType, Dictionary<PokemonType, float>>();
 
-        public static readonly PType Normal = new PType("Normal");
-        public static readonly PType Fighting = new PType("Fighting");
-        public static readonly PType Flying = new PType("Flying");
-        public static readonly PType Poison = new PType("Poison");
-        public static readonly PType Ground = new PType("Ground");
-        public static readonly PType Rock = new PType("Rock");
-        public static readonly PType Bug = new PType("Bug");
-        public static readonly PType Ghost = new PType("Ghost");
-        public static readonly PType Steel = new PType("Steel");
-        public static readonly PType Fire = new PType("Fire");
-        public static readonly PType Water = new PType("Water");
-        public static readonly PType Grass = new PType("Grass");
-        public static readonly PType Electric = new PType("Electric");
-        public static readonly PType Psychic = new PType("Psychic");
-        public static readonly PType Ice = new PType("Ice");
-        public static readonly PType Dragon = new PType("Dragon");
-        public static readonly PType Dark = new PType("Dark");
-        public static readonly PType Fairy = new PType("Fairy");
+        public static readonly PokemonType Normal = new PokemonType("Normal");
+        public static readonly PokemonType Fighting = new PokemonType("Fighting");
+        public static readonly PokemonType Flying = new PokemonType("Flying");
+        public static readonly PokemonType Poison = new PokemonType("Poison");
+        public static readonly PokemonType Ground = new PokemonType("Ground");
+        public static readonly PokemonType Rock = new PokemonType("Rock");
+        public static readonly PokemonType Bug = new PokemonType("Bug");
+        public static readonly PokemonType Ghost = new PokemonType("Ghost");
+        public static readonly PokemonType Steel = new PokemonType("Steel");
+        public static readonly PokemonType Fire = new PokemonType("Fire");
+        public static readonly PokemonType Water = new PokemonType("Water");
+        public static readonly PokemonType Grass = new PokemonType("Grass");
+        public static readonly PokemonType Electric = new PokemonType("Electric");
+        public static readonly PokemonType Psychic = new PokemonType("Psychic");
+        public static readonly PokemonType Ice = new PokemonType("Ice");
+        public static readonly PokemonType Dragon = new PokemonType("Dragon");
+        public static readonly PokemonType Dark = new PokemonType("Dark");
+        public static readonly PokemonType Fairy = new PokemonType("Fairy");
 
         public string Name { get; }
-        private PType(string name)
+        private PokemonType(string name)
         {
             Name = name;
         }
 
-        public bool IsSuperEffectiveAgainst(PType other)
+        public bool IsSuperEffectiveAgainst(PokemonType other)
         {
             return EffectivenessAgainst(other) > EFFECTIVE;
         }
 
-        public bool IsNotVeryEffectiveAgainst(PType other)
+        public bool IsNotVeryEffectiveAgainst(PokemonType other)
         {
             return EffectivenessAgainst(other) < EFFECTIVE;
         }
 
-        public bool HasNoEffectAgainst(PType other)
+        public bool HasNoEffectAgainst(PokemonType other)
         {
             return EffectivenessAgainst(other) == NO_EFFECT;
         }
 
-        public float EffectivenessAgainst(PType other)
+        public float EffectivenessAgainst(PokemonType other)
         {
             float effectiveness = EFFECTIVE;
             Effectiveness[this].TryGetValue(other, out effectiveness);
             return effectiveness;
         }
 
-        public float EffectivenessFrom(PType other)
+        public float EffectivenessFrom(PokemonType other)
         {
             float effectiveness = EFFECTIVE;
             Effectiveness[other].TryGetValue(this, out effectiveness);
             return effectiveness;
         }
 
-        static PType()
+        static PokemonType()
         {
             //Effectiveness[Attacker][Defender] = Effectiveness
 

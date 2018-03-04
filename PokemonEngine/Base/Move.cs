@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Base
 {
-    public class PMove
+    public class Move
     {
         public enum DamageType { Physical, Special }
 
@@ -16,14 +16,14 @@ namespace PokemonEngine.Base
 
         // TODO: Effects
 
-        public PMove(string name, int power, DamageType damage)
+        public Move(string name, int power, DamageType damage)
         {
             Name = name;
             Power = power;
             Damage = damage;
         }
 
-        public PMove(string name)
+        public Move(string name)
         {
             Name = name;
             Power = null;

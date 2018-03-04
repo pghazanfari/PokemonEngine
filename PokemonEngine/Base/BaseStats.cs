@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Base
 {
-    public class PBaseStats : IPStatsProvider
+    public class BaseStats : IStatsProvider
     {
         public const int Max = 255;
         public const int Min = 0;
@@ -15,7 +15,7 @@ namespace PokemonEngine.Base
         private readonly IReadOnlyDictionary<PStat, int> stats;
         public int this[PStat stat] { get { return stats[stat]; } }
 
-        public PBaseStats(IDictionary<PStat, int> stats)
+        public BaseStats(IDictionary<PStat, int> stats)
         {
             foreach (PStat stat in Enum.GetValues(typeof(PStat)))
             {

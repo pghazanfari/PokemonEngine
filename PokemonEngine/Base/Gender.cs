@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Base
 {
-    public enum PGender { Male, Female, Genderless }
+    public enum Gender { Male, Female, Genderless }
 }

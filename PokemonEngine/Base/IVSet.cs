@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Base
 {
-    public class PIVSet : IPStatsProvider
+    public class IVSet : IStatsProvider
     {
         public const int MaxIV = 31;
         public const int MinIV = 0;
@@ -15,7 +15,7 @@ namespace PokemonEngine.Base
         private readonly IReadOnlyDictionary<PStat, int> ivs;
         public int this[PStat stat] { get { return ivs[stat];  } }
 
-        public PIVSet(IDictionary<PStat, int> ivs)
+        public IVSet(IDictionary<PStat, int> ivs)
         {
             foreach (PStat stat in Enum.GetValues(typeof(PStat)))
             {
