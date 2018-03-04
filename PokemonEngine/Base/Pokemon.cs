@@ -15,6 +15,9 @@ namespace PokemonEngine.Base
         private readonly IReadOnlyList<PokemonType> types;
         public IReadOnlyList<PokemonType> Types { get { return types; } }
 
+        private readonly ExperienceGroup expGroup;
+        public ExperienceGroup ExpGroup { get { return expGroup; } }
+
         private readonly MoveCapacity moveSet;
         public MoveCapacity MoveSet { get { return moveSet; } }
 

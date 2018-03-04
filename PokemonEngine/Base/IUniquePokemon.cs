@@ -13,6 +13,11 @@ namespace PokemonEngine.Base
         EVSet EVs { get; }
         int Level { get; }
         int Friendship { get; }
+        int Experience { get; }
+
+        event EventHandler<ExperienceAddedEventArgs> OnAddExperience;
+        event EventHandler<ExperienceAddedEventArgs> OnExperienceAdded;
+        int AddExperience(int amount);
 
         event EventHandler<LevelUpEventArgs> OnLevelUp;
         event EventHandler<LevelUpEventArgs> OnLevelledUp;
@@ -49,6 +54,20 @@ namespace PokemonEngine.Base
             FromFriendship = fromFriendship;
             ToFriendship = toFriendship;
             Offset = offset;
+        }
+    }
+
+    public class ExperienceAddedEventArgs : EventArgs
+    {
+        public readonly IUniquePokemon Pokemon;
+        public readonly int Experience;
+        public readonly int AmountToAdd;
+
+        public ExperienceAddedEventArgs(IUniquePokemon pokemon, int experience, int amountToAdd)
+        {
+            Pokemon = pokemon;
+            Experience = experience;
+            AmountToAdd = amountToAdd;
         }
     }
 }

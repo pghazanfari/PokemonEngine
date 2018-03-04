@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\ExperienceGroup.cs" />
     <Compile Include="Base\IUniquePokemon.cs" />
     <Compile Include="Base\Gender.cs" />
     <Compile Include="Base\IPokemon.cs" />
@@ -55,9 +56,10 @@
     <Compile Include="Base\IStatsProvider.cs" />
     <Compile Include="Base\PokemonType.cs" />
     <Compile Include="Base\Pokemon.cs" />
-    <Compile Include="Battle\BattleAction.cs" />
-    <Compile Include="Battle\BattleEffect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Battle\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

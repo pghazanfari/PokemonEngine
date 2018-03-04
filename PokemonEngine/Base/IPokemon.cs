@@ -10,9 +10,11 @@ namespace PokemonEngine.Base
     {
         string Species { get; }
         IReadOnlyList<PokemonType> Types { get; }
+        ExperienceGroup ExpGroup { get; }
         MoveCapacity MoveSet { get; }
         BaseStats BaseStats { get; }
         IReadOnlyList<Ability> PossibleAbilities { get; }
         int BaseFriendship { get; }
+        //TODO: Natures
     }
 }
