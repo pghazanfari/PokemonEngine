@@ -10,7 +10,7 @@ namespace PokemonEngine.Base
     {
         string Species { get; }
         IReadOnlyList<PType> Types { get; }
-        PMoveSet MoveSet { get; }
+        PMoveCapacity MoveSet { get; }
         PBaseStats BaseStats { get; }
         IReadOnlyList<PAbility> PossibleAbilities { get; }
         int BaseFriendship { get; }

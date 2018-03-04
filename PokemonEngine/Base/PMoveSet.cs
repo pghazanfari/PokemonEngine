@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,19 +8,45 @@ namespace PokemonEngine.Base
 {
     public class PMoveSet
     {
-        private readonly IReadOnlyList<PMove> starterMoves;
-        public IReadOnlyList<PMove> StarterMoves { get { return starterMoves; } }
+        public const int MaxNumberOfMoves = 4;
 
-        private readonly IReadOnlyDictionary<int, PMove> moves;
-        public IReadOnlyDictionary<int, PMove> Moves { get { return moves; } }
+        private readonly IList<PMove> moves;
+        public PMove this[int i] { get { return moves[i]; } }
 
-        //TODO: TMs and HMs
-
-        public PMoveSet(IList<PMove> starterMoves, IDictionary<int, PMove> moves)
+        public PMoveSet(IList<PMove> moves)
         {
-            //TODO: Validation
-            this.starterMoves = new List<PMove>(starterMoves).AsReadOnly();
-            this.moves = new ReadOnlyDictionary<int, PMove>(moves);
+            if (moves.Count == 0)
+            {
+                throw new Exception("Move count must be greater than 0");
+            }
+            if (moves.Count > MaxNumberOfMoves)
+            {
+                throw new Exception($"Move count {moves.Count} is greater than the maximum number of moves {MaxNumberOfMoves}");
+            }
+            if (moves.Count != moves.Distinct().Count())
+            {
+                throw new Exception("Duplicate moves cannot exist");
+            }
+
+            this.moves = new List<PMove>(4);
+            (this.moves as List<PMove>).AddRange(moves);
+            for (int i = this.moves.Count; i < MaxNumberOfMoves; i++)
+            {
+                this.moves.Add(null);
+            }
+        }
+
+        public PMoveSet(params PMove[] moves) : this(new List<PMove>(moves)) { }
+
+        public PMove ReplaceMove(int index, PMove newMove)
+        {
+            if (moves.Contains(newMove))
+            {
+                throw new Exception("Duplicate moves cannot exit");
+            }
+            PMove oldMove = moves[index];
+            moves[index] = newMove;
+            return oldMove;
         }
     }
 }

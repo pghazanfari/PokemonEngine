@@ -18,7 +18,7 @@ namespace PokemonEngine.Base
         public string Species { get { return Base.Species; } }
         public IReadOnlyList<PType> Types { get { return Base.Types; } }
         public PBaseStats BaseStats { get { return Base.BaseStats; } }
-        public PMoveSet MoveSet { get { return Base.MoveSet; } }
+        public PMoveCapacity MoveSet { get { return Base.MoveSet; } }
         public IReadOnlyList<PAbility> PossibleAbilities { get { return Base.PossibleAbilities; } }
         public int BaseFriendship { get { return Base.BaseFriendship; } } 
         #endregion
@@ -32,8 +32,8 @@ namespace PokemonEngine.Base
         private readonly PGender gender;
         public PGender Gender { get { return gender; } }
 
-        private readonly PMoves moves;
-        public PMoves Moves { get { return moves; } }
+        private readonly PMoveSet moves;
+        public PMoveSet Moves { get { return moves; } }
 
         public int Friendship { get; private set; }
 
@@ -41,7 +41,7 @@ namespace PokemonEngine.Base
 
         public int this[PStat stat] { get { return calculateStat(stat); } }
 
-        public UniquePokemon(Pokemon basePokemon, PIVSet ivs, PEVSet evs, PGender gender, PMoves moves, int friendship, int level)
+        public UniquePokemon(Pokemon basePokemon, PIVSet ivs, PEVSet evs, PGender gender, PMoveSet moves, int friendship, int level)
         {
             Base = basePokemon;
             this.ivs = ivs;

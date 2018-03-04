@@ -47,8 +47,8 @@
     <Compile Include="Base\PEVSet.cs" />
     <Compile Include="Base\PIVSet.cs" />
     <Compile Include="Base\PBaseStats.cs" />
-    <Compile Include="Base\PMoves.cs" />
     <Compile Include="Base\PMoveSet.cs" />
+    <Compile Include="Base\PMoveCapacity.cs" />
     <Compile Include="Base\PAbility.cs" />
     <Compile Include="Base\PMove.cs" />
     <Compile Include="Base\UniquePokemon.cs" />
