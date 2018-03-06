@@ -27,6 +27,8 @@ namespace PokemonEngine.Base
         private readonly IReadOnlyList<Ability> possibleAbilities;
         public IReadOnlyList<Ability> PossibleAbilities { get { return possibleAbilities; } }
 
+        //TODO: Possible Natures
+
         private readonly int baseFriendship;
         public int BaseFriendship { get { return baseFriendship; } }
 

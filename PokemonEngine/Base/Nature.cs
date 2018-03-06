@@ -38,10 +38,10 @@ namespace PokemonEngine.Base
         public static readonly Nature Quirky = new Nature("Quirky", null, null);
 
         public readonly string Name;
-        public readonly Stat? IncreasedStat;
-        public readonly Stat? DecreasedStat;
+        public readonly Stat IncreasedStat;
+        public readonly Stat DecreasedStat;
 
-        private Nature(string name, Stat? increasedStat, Stat? decreasedStat)
+        private Nature(string name, Stat increasedStat, Stat decreasedStat)
         {
             Name = name;
             IncreasedStat = increasedStat;
