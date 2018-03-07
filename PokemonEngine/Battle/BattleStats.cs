@@ -5,19 +5,29 @@ using System.Text;
 using System.Threading.Tasks;
 
 using PokemonEngine.Base;
+using PokemonEngine.Base.Events;
 
 namespace PokemonEngine.Battle
 {
     public class BattleStats
     {
+        public class StageShiftEventArgs : ValueChangeEventArgs
+        {
+            public readonly BattleStat Stat;
+            public StageShiftEventArgs(BattleStat stat, int currentValue, int delta) : base(currentValue, delta)
+            {
+                Stat = stat;
+            }
+        }
+
         public const int MinStage = -6;
         public const int MaxStage = 6;
 
         private readonly IDictionary<BattleStat, int> stages;
         public int this[BattleStat stat] { get { return stages[stat]; } }
 
-        public event EventHandler<BattleStatStageModifiedEventArgs> OnStatStageModification;
-        public event EventHandler<BattleStatStageModifiedEventArgs> OnStatsStageModified;
+        public event EventHandler<BattleStats, StageShiftEventArgs> OnStageShift;
+        public event EventHandler<BattleStats, StageShiftEventArgs> OnStageShifted;
 
         public BattleStats()
         {
@@ -28,29 +38,14 @@ namespace PokemonEngine.Battle
             }
         }
 
-        public int ModifyStage(BattleStat stat, int delta)
+        public int ChangeStage(BattleStat stat, int delta)
         {
-            BattleStatStageModifiedEventArgs args = new BattleStatStageModifiedEventArgs(this, stat, this[stat], delta);
+            StageShiftEventArgs args = new StageShiftEventArgs(stat, this[stat], delta);
 
-            OnStatStageModification?.Invoke(this, args);
+            OnStageShift?.Invoke(this, args);
             stages[stat] = Math.Max(Math.Min(stages[stat] + delta, MaxStage), MinStage);
-            OnStatsStageModified?.Invoke(this, args);
+            OnStageShifted?.Invoke(this, args);
             return stages[stat];
-        }
-    }
-    public class BattleStatStageModifiedEventArgs : EventArgs
-    {
-        public readonly BattleStats Stats;
-        public readonly BattleStat Stat;
-        public readonly int Stage;
-        public readonly int Delta;
-
-        public BattleStatStageModifiedEventArgs(BattleStats stats, BattleStat stat, int stage, int delta) : base()
-        {
-            Stats = stats;
-            Stat = stat;
-            Stage = stage;
-            Delta = delta;
         }
     }
 }

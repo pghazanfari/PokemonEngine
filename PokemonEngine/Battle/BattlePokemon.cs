@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using PokemonEngine.Base;
+using PokemonEngine.Base.Events;
 
 namespace PokemonEngine.Battle
 {
@@ -28,31 +29,32 @@ namespace PokemonEngine.Battle
         public int Level { get { return Base.Level; } }
         public int Friendship { get { return Base.Friendship; } }
         public int Experience { get { return Base.Experience; } }
+        public int HP { get { return Base.HP; } }
 
-        event EventHandler<ExperienceAddedEventArgs> IUniquePokemon.OnAddExperience
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> IUniquePokemon.OnExperienceGain
         {
             add
             {
-                Base.OnAddExperience += value;
+                Base.OnExperienceGain += value;
             }
             remove
             {
-                Base.OnAddExperience -= value;
+                Base.OnExperienceGain -= value;
             }
         }
-        event EventHandler<ExperienceAddedEventArgs> IUniquePokemon.OnExperienceAdded
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> IUniquePokemon.OnExperienceGained
         {
             add
             {
-                Base.OnExperienceAdded += value;
+                Base.OnExperienceGained += value;
             }
             remove
             {
-                Base.OnExperienceAdded -= value;
+                Base.OnExperienceGained -= value;
             }
         }
 
-        event EventHandler<LevelUpEventArgs> IUniquePokemon.OnLevelUp
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> IUniquePokemon.OnLevelUp
         {
             add
             {
@@ -63,7 +65,7 @@ namespace PokemonEngine.Battle
                 Base.OnLevelUp -= value;
             }
         }
-        event EventHandler<LevelUpEventArgs> IUniquePokemon.OnLevelledUp
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> IUniquePokemon.OnLevelledUp
         {
             add
             {
@@ -75,7 +77,7 @@ namespace PokemonEngine.Battle
             }
         }
 
-        event EventHandler<FriendshipChangedEventArgs> IUniquePokemon.OnFriendshipChange
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> IUniquePokemon.OnFriendshipChange
         {
             add
             {
@@ -86,7 +88,7 @@ namespace PokemonEngine.Battle
                 Base.OnFriendshipChange -= value;
             }
         }
-        event EventHandler<FriendshipChangedEventArgs> IUniquePokemon.OnFriendshipChanged
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> IUniquePokemon.OnFriendshipChanged
         {
             add
             {
@@ -98,17 +100,44 @@ namespace PokemonEngine.Battle
             }
         }
 
-        public int AddExperience(int amount)
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> IUniquePokemon.OnHPChange
         {
-            return Base.AddExperience(amount);
+            add
+            {
+                Base.OnHPChange += value;
+            }
+            remove
+            {
+                Base.OnHPChange -= value;
+            }
+        }
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> IUniquePokemon.OnHPChanged
+        {
+            add
+            {
+                Base.OnHPChanged += value;
+            }
+            remove
+            {
+                Base.OnHPChanged -= value;
+            }
+        }
+
+        public int GainExperience(int amount)
+        {
+            return Base.GainExperience(amount);
         }
         public int LevelUp()
         {
             return Base.LevelUp();
         }
-        public int UpdateFriendship(int offset)
+        public int ChangeFriendship(int delta)
         {
-            return Base.UpdateFriendship(offset);
+            return Base.ChangeFriendship(delta);
+        }
+        public int ChangeHP(int delta)
+        {
+            return Base.ChangeHP(delta);
         }
         #endregion
 

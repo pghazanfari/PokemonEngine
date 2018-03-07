@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\Events\PokemonEventHandler.cs" />
     <Compile Include="Base\ExperienceGroup.cs" />
     <Compile Include="Base\IUniquePokemon.cs" />
     <Compile Include="Base\Gender.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="Base\IStatsProvider.cs" />
     <Compile Include="Base\PokemonType.cs" />
     <Compile Include="Base\Pokemon.cs" />
+    <Compile Include="Base\Events\ValueChangeEventArgs.cs" />
     <Compile Include="Battle\BattlePokemon.cs" />
     <Compile Include="Battle\IBattlePokemon.cs" />
     <Compile Include="Battle\BattleStats.cs" />

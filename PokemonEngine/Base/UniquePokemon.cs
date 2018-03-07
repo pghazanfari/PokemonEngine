@@ -4,13 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using PokemonEngine.Base.Events;
+
 namespace PokemonEngine.Base
 {
     public class UniquePokemon : IUniquePokemon, IStatsProvider
     {
         public const int MaxLevel = 100;
         public const int MinLevel = 1;
+
+        public const int MinFriendship = 0;
         public const int MaxFriendship = 255;
+
+        public const int MinHP = 0;
 
         public readonly Pokemon Base;
 
@@ -24,38 +30,40 @@ namespace PokemonEngine.Base
         public int BaseFriendship { get { return Base.BaseFriendship; } }
         #endregion
 
-        event EventHandler<ExperienceAddedEventArgs> PreAddExperienceEvent;
-        event EventHandler<ExperienceAddedEventArgs> PostAddExperienceEvent;
-        event EventHandler<LevelUpEventArgs> PreLevelUpEvent;
-        event EventHandler<LevelUpEventArgs> PostLevelUpEvent;
-        event EventHandler<FriendshipChangedEventArgs> PreFriendshipChangeEvent;
-        event EventHandler<FriendshipChangedEventArgs> PostFriendshipChangeEvent;
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> PreExperienceGainEvent;
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> PostExperienceGainEvent;
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> PreLevelUpEvent;
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> PostLevelUpEvent;
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> PreFriendshipChangeEvent;
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> PostFriendshipChangeEvent;
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> PreHPChangeEvent;
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> PostHPChangeEvent;
 
         #region Interface Events
-        event EventHandler<ExperienceAddedEventArgs> IUniquePokemon.OnAddExperience
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> IUniquePokemon.OnExperienceGain
         {
             add
             {
-                PreAddExperienceEvent += value;
+                PreExperienceGainEvent += value;
             }
             remove
             {
-                PreAddExperienceEvent -= value;
+                PreExperienceGainEvent -= value;
             }
         }
-        event EventHandler<ExperienceAddedEventArgs> IUniquePokemon.OnExperienceAdded
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> IUniquePokemon.OnExperienceGained
         {
             add
             {
-                PostAddExperienceEvent += value;
+                PostExperienceGainEvent += value;
             }
             remove
             {
-                PostAddExperienceEvent -= value;
+                PostExperienceGainEvent -= value;
             }
         }
 
-        event EventHandler<LevelUpEventArgs> IUniquePokemon.OnLevelUp
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> IUniquePokemon.OnLevelUp
         {
             add
             {
@@ -66,7 +74,7 @@ namespace PokemonEngine.Base
                 PreLevelUpEvent -= value;
             }
         }
-        event EventHandler<LevelUpEventArgs> IUniquePokemon.OnLevelledUp
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> IUniquePokemon.OnLevelledUp
         {
             add
             {
@@ -78,7 +86,7 @@ namespace PokemonEngine.Base
             }
         }
 
-        event EventHandler<FriendshipChangedEventArgs> IUniquePokemon.OnFriendshipChange
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> IUniquePokemon.OnFriendshipChange
         {
             add
             {
@@ -89,7 +97,7 @@ namespace PokemonEngine.Base
                 PreFriendshipChangeEvent -= value;
             }
         }
-        event EventHandler<FriendshipChangedEventArgs> IUniquePokemon.OnFriendshipChanged
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> IUniquePokemon.OnFriendshipChanged
         {
             add
             {
@@ -100,6 +108,29 @@ namespace PokemonEngine.Base
                 PostFriendshipChangeEvent -= value;
             }
         } 
+
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> IUniquePokemon.OnHPChange
+        {
+            add
+            {
+                PreHPChangeEvent += value;
+            }
+            remove
+            {
+                PreHPChangeEvent -= value;
+            }
+        }
+        event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> IUniquePokemon.OnHPChanged
+        {
+            add
+            {
+                PostHPChangeEvent += value;
+            }
+            remove
+            {
+                PostHPChangeEvent -= value;
+            }
+        }
         #endregion
 
         private readonly IVSet ivs;
@@ -116,6 +147,8 @@ namespace PokemonEngine.Base
 
         private readonly MoveSet moves;
         public MoveSet Moves { get { return moves; } }
+
+        public int HP { get; private set; }
 
         public int Friendship { get; private set; }
 
@@ -146,11 +179,12 @@ namespace PokemonEngine.Base
                 throw new Exception($"Level ({level}) must be between {MinLevel} and {MaxLevel} (inclusive)");
             }
             Level = level;
+            HP = this[Stat.HP];
         }
 
-        public int AddExperience(int amount)
+        public int GainExperience(int amount)
         {
-            ExperienceAddedEventArgs args = new ExperienceAddedEventArgs(this, Experience, amount);
+            ValueChangeEventArgs args = new ValueChangeEventArgs(Experience, amount);
 
             if (amount <= 0)
             {
@@ -160,28 +194,28 @@ namespace PokemonEngine.Base
             int expNeededForLevelup = ExpGroup.ExperienceNeededForLevel(Level + 1) - Experience;
             if (amount >= expNeededForLevelup)
             {
-                PreAddExperienceEvent?.Invoke(this, args);
+                PreExperienceGainEvent?.Invoke(this, args);
                 Experience += expNeededForLevelup;
-                PostAddExperienceEvent?.Invoke(this, args);
+                PostExperienceGainEvent?.Invoke(this, args);
                 LevelUp();
 
                 int newAmount = amount - expNeededForLevelup;
                 if (newAmount > 0)
                 {
-                    return AddExperience(amount - newAmount);
+                    return GainExperience(amount - newAmount);
                 }
                 return Experience;
             }
 
-            PreAddExperienceEvent?.Invoke(this, args);
+            PreExperienceGainEvent?.Invoke(this, args);
             Experience += amount;
-            PostAddExperienceEvent?.Invoke(this, args);
+            PostExperienceGainEvent?.Invoke(this, args);
             return Experience;
         }
 
         public int LevelUp()
         {
-            LevelUpEventArgs args = new LevelUpEventArgs(this, Level, Level + 1);
+            ValueChangeEventArgs args = new ValueChangeEventArgs(Level, 1);
             PreLevelUpEvent?.Invoke(this, args);
             Level += 1;
             Experience = ExpGroup.ExperienceNeededForLevel(Level);
@@ -189,14 +223,26 @@ namespace PokemonEngine.Base
             return Level;
         }
 
-        public int UpdateFriendship(int offset)
+        public int ChangeFriendship(int delta)
         {
-            FriendshipChangedEventArgs args = new FriendshipChangedEventArgs(this, Friendship, Friendship + offset, offset);
+            int newFriendship = Math.Max(0, Math.Min(MaxFriendship, Friendship + delta));
+            ValueChangeEventArgs args = new ValueChangeEventArgs(Friendship, Friendship - newFriendship);
 
             PreFriendshipChangeEvent?.Invoke(this, args);
-            Friendship += offset;
+            Friendship = newFriendship;
             PostFriendshipChangeEvent?.Invoke(this, args);
             return Friendship;
+        }
+
+        public int ChangeHP(int delta)
+        {
+            int newHP = Math.Max(MinHP, Math.Min(this[Stat.HP], HP + delta)); // TODO: Allow increasing max hp.
+            ValueChangeEventArgs args = new ValueChangeEventArgs(HP, newHP - HP);
+
+            PreHPChangeEvent?.Invoke(this, args);
+            HP = newHP;
+            PostFriendshipChangeEvent?.Invoke(this, args);
+            return HP;
         }
 
         private int calculateStat(Stat stat)
