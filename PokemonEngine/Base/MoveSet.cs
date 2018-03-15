@@ -38,6 +38,7 @@ namespace PokemonEngine.Base
 
         public MoveSet(params Move[] moves) : this(new List<Move>(moves)) { }
 
+        // TODO: Move Replaced Event
         public Move ReplaceMove(int index, Move newMove)
         {
             if (moves.Contains(newMove))

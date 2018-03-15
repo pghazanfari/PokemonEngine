@@ -18,8 +18,8 @@ namespace PokemonEngine.Base
         private readonly ExperienceGroup expGroup;
         public ExperienceGroup ExpGroup { get { return expGroup; } }
 
-        private readonly MoveCapacity moveSet;
-        public MoveCapacity MoveSet { get { return moveSet; } }
+        private readonly MoveCapacity possibleMoves;
+        public MoveCapacity PossibleMoves { get { return possibleMoves; } }
 
         private readonly BaseStats baseStats;
         public BaseStats BaseStats { get { return baseStats; } }
@@ -32,12 +32,12 @@ namespace PokemonEngine.Base
         private readonly int baseFriendship;
         public int BaseFriendship { get { return baseFriendship; } }
 
-        public Pokemon(string species, IList<PokemonType> types, ExperienceGroup expGroup, MoveCapacity moveSet, BaseStats baseStats, IList<Ability> possibleAbilities, int baseFriendship)
+        public Pokemon(string species, IList<PokemonType> types, ExperienceGroup expGroup, MoveCapacity possibleMoves, BaseStats baseStats, IList<Ability> possibleAbilities, int baseFriendship)
         {
             this.species = species;
             this.types = new List<PokemonType>(types).AsReadOnly();
             this.expGroup = expGroup;
-            this.moveSet = moveSet;
+            this.possibleMoves = possibleMoves;
             this.baseStats = baseStats;
             this.possibleAbilities = new List<Ability>(possibleAbilities).AsReadOnly();
             this.baseFriendship = baseFriendship;

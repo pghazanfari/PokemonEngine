@@ -25,7 +25,7 @@ namespace PokemonEngine.Base
         public IReadOnlyList<PokemonType> Types { get { return Base.Types; } }
         public ExperienceGroup ExpGroup { get { return Base.ExpGroup; } }
         public BaseStats BaseStats { get { return Base.BaseStats; } }
-        public MoveCapacity MoveSet { get { return Base.MoveSet; } }
+        public MoveCapacity PossibleMoves { get { return Base.PossibleMoves; } }
         public IReadOnlyList<Ability> PossibleAbilities { get { return Base.PossibleAbilities; } }
         public int BaseFriendship { get { return Base.BaseFriendship; } }
         #endregion
@@ -241,7 +241,7 @@ namespace PokemonEngine.Base
 
             PreHPChangeEvent?.Invoke(this, args);
             HP = newHP;
-            PostFriendshipChangeEvent?.Invoke(this, args);
+            PostHPChangeEvent?.Invoke(this, args);
             return HP;
         }
 
