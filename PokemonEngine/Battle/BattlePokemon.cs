@@ -18,7 +18,7 @@ namespace PokemonEngine.Battle
         public IReadOnlyList<PokemonType> Types { get { return Base.Types; } }
         public ExperienceGroup ExpGroup { get { return Base.ExpGroup; } }
         public BaseStats BaseStats { get { return Base.BaseStats; } }
-        public MoveCapacity PossibleMoves { get { return Base.PossibleMoves; } }
+        public Moves PossibleMoves { get { return Base.PossibleMoves; } }
         public IReadOnlyList<Ability> PossibleAbilities { get { return Base.PossibleAbilities; } }
         public int BaseFriendship { get { return Base.BaseFriendship; } }
         
