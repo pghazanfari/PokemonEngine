@@ -31,6 +31,5 @@ namespace PokemonEngine.Base
             this.damage = damage;
             this.target = target;
         }
-
     }
 }

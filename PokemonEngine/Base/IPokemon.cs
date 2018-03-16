@@ -11,7 +11,7 @@ namespace PokemonEngine.Base
         string Species { get; }
         IReadOnlyList<PokemonType> Types { get; }
         ExperienceGroup ExpGroup { get; }
-        MoveCapacity PossibleMoves { get; }
+        Moves PossibleMoves { get; }
         BaseStats BaseStats { get; }
         IReadOnlyList<Ability> PossibleAbilities { get; }
         int BaseFriendship { get; }

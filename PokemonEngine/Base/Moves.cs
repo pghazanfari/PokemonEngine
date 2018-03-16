@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Base
 {
-    public class MoveCapacity
+    public class Moves
     {
         private readonly IReadOnlyList<Move> starterMoves;
         public IReadOnlyList<Move> StarterMoves { get { return starterMoves; } }
@@ -17,7 +17,7 @@ namespace PokemonEngine.Base
 
         //TODO: TMs and HMs
 
-        public MoveCapacity(IList<Move> starterMoves, IDictionary<int, Move> moves)
+        public Moves(IList<Move> starterMoves, IDictionary<int, Move> moves)
         {
             //TODO: Validation
             this.starterMoves = new List<Move>(starterMoves).AsReadOnly();

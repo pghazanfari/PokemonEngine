@@ -50,11 +50,12 @@
     <Compile Include="Base\IVSet.cs" />
     <Compile Include="Base\BaseStats.cs" />
     <Compile Include="Base\MoveSet.cs" />
-    <Compile Include="Base\MoveCapacity.cs" />
+    <Compile Include="Base\Moves.cs" />
     <Compile Include="Base\Ability.cs" />
     <Compile Include="Base\Move.cs" />
     <Compile Include="Base\MoveTarget.cs" />
     <Compile Include="Base\Nature.cs" />
+    <Compile Include="Base\Party.cs" />
     <Compile Include="Base\Stat.cs" />
     <Compile Include="Base\UniquePokemon.cs" />
     <Compile Include="Base\IStatsProvider.cs" />
