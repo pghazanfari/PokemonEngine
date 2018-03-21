@@ -133,6 +133,9 @@ namespace PokemonEngine.Base
         }
         #endregion
 
+        private readonly string uid;
+        public string UID { get { return uid; } }
+
         private readonly IVSet ivs;
         public IVSet IVs { get { return ivs; } }
 
@@ -145,8 +148,8 @@ namespace PokemonEngine.Base
         private readonly Nature nature;
         public Nature Nature { get { return nature; } }
 
-        private readonly MoveSet moves;
-        public MoveSet Moves { get { return moves; } }
+        private readonly MoveSet<IUniqueMove> moves;
+        public MoveSet<IUniqueMove> Moves { get { return moves; } }
 
         public int HP { get; private set; }
 
@@ -158,11 +161,12 @@ namespace PokemonEngine.Base
 
         public int this[Stat stat] { get { return calculateStat(stat); } }
 
-        public UniquePokemon(Pokemon basePokemon, Gender gender, Nature nature, IVSet ivs, EVSet evs, MoveSet moves, int friendship, int level)
+        public UniquePokemon(Pokemon basePokemon, string uid, Gender gender, Nature nature, IVSet ivs, EVSet evs, MoveSet<IUniqueMove> moves, int friendship, int level)
         {
             Base = basePokemon;
             this.gender = gender;
             this.nature = nature;
+            this.uid = uid;
             this.ivs = ivs;
             this.evs = evs;
             this.moves = moves;
@@ -181,6 +185,9 @@ namespace PokemonEngine.Base
             Level = level;
             HP = this[Stat.HP];
         }
+
+        public UniquePokemon(Pokemon basePokemon, Gender gender, Nature nature, IVSet ivs, EVSet evs, MoveSet<IUniqueMove> moves, int friendship, int level) : 
+            this(basePokemon, Guid.NewGuid().ToString(), gender, nature, ivs, evs, moves, friendship, level) { }
 
         public int GainExperience(int amount)
         {
@@ -243,6 +250,20 @@ namespace PokemonEngine.Base
             HP = newHP;
             PostHPChangeEvent?.Invoke(this, args);
             return HP;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is IUniquePokemon)
+            {
+                return this.UID.Equals((obj as IUniquePokemon).UID);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return UID.GetHashCode();
         }
 
         private int calculateStat(Stat stat)

@@ -10,6 +10,8 @@ namespace PokemonEngine.Base
 {
     public interface IUniquePokemon : IPokemon
     {
+        string UID { get; }
+
         Gender Gender { get; }
         Nature Nature { get; }
         IVSet IVs { get; }
@@ -18,6 +20,7 @@ namespace PokemonEngine.Base
         int Friendship { get; }
         int Experience { get; }
         int HP { get; }
+        MoveSet<IUniqueMove> Moves { get; }
 
         event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> OnExperienceGain;
         event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> OnExperienceGained;
@@ -38,7 +41,7 @@ namespace PokemonEngine.Base
     
     public static class IUniquePokemonImpl
     {
-        public static bool Fainted(this IUniquePokemon pokemon)
+        public static bool HasFainted(this IUniquePokemon pokemon)
         {
             return pokemon.HP == 0;
         }

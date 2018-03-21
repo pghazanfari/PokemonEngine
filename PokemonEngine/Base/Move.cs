@@ -6,30 +6,36 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Base
 {
-    public class Move
+    public class Move : IMove
     {
-        public enum DamageType { Physical, Special } // Maybe none?
-
         private readonly string name;
         public string Name { get { return name; }  }
 
         private readonly int? power;
         public int? Power { get { return power; }  }
 
-        private readonly DamageType? damage;
-        public DamageType? Damage { get { return damage; } }
+        private readonly DamageType? damageType;
+        public DamageType? DamageType { get { return damageType; } }
 
         private MoveTarget target;
         public MoveTarget Target { get { return target; } }
 
+        private readonly int basePP;
+        public int BasePP { get { return basePP; } }
+
+        private readonly int maxPossiblePP;
+        public int MaxPossiblePP { get { return maxPossiblePP; } }
+
         // TODO: Effects
 
-        public Move(string name, int? power, DamageType? damage, MoveTarget target)
+        public Move(string name, int? power, DamageType? damageType, MoveTarget target, int basePP, int maxPossiblePP)
         {
             this.name = name;
             this.power = power;
-            this.damage = damage;
+            this.damageType = damageType;
             this.target = target;
+            this.basePP = basePP;
+            this.maxPossiblePP = maxPossiblePP;
         }
     }
 }

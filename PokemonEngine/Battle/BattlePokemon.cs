@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using PokemonEngine.Base;
 using PokemonEngine.Base.Events;
+using PokemonEngine.Util;
 
 namespace PokemonEngine.Battle
 {
@@ -24,12 +25,14 @@ namespace PokemonEngine.Battle
         
         public Gender Gender { get { return Base.Gender; } }
         public Nature Nature { get { return Base.Nature; } }
+        public string UID {  get { return Base.UID; } }
         public IVSet IVs { get { return Base.IVs; } }
         public EVSet EVs { get { return Base.EVs; } }
         public int Level { get { return Base.Level; } }
         public int Friendship { get { return Base.Friendship; } }
         public int Experience { get { return Base.Experience; } }
         public int HP { get { return Base.HP; } }
+        public MoveSet<IUniqueMove> Moves { get { return Base.Moves; } }
 
         event PokemonEventHandler<IUniquePokemon, ValueChangeEventArgs> IUniquePokemon.OnExperienceGain
         {
@@ -142,12 +145,37 @@ namespace PokemonEngine.Battle
         #endregion
 
         private readonly BattleStats battleStats;
-        public BattleStats BattleStats { get {return battleStats; } }
+        public BattleStats BattleStats { get { return battleStats; } }
+
+        private readonly MoveSet<IBattleMove> battleMoves;
+        public MoveSet<IBattleMove> BattleMoves { get { return battleMoves; } }
 
         public BattlePokemon(IUniquePokemon basePokemon)
         {
             Base = basePokemon;
             battleStats = new BattleStats();
+
+            UniqueList<IBattleMove> list = new UniqueList<IBattleMove>(Base.Moves.Moves.Count);
+            foreach (IUniqueMove move in Base.Moves.Moves) {
+                if (move == null) { list.Add(null); continue; }
+                list.Add(new BattleMove(move));
+            }
+            battleMoves = new MoveSet<IBattleMove>(list);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is IUniquePokemon)
+            {
+                this.UID.Equals((obj as IUniquePokemon).UID);
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return UID.GetHashCode();
         }
     }
 }

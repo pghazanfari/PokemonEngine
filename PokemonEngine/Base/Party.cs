@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using PokemonEngine.Base.Events;
+using PokemonEngine.Util;
 
 namespace PokemonEngine.Base
 {
@@ -73,7 +74,7 @@ namespace PokemonEngine.Base
         public event EventHandler<Party, PokemonReplacedEventArgs> OnPokemonReplace;
         public event EventHandler<Party, PokemonReplacedEventArgs> OnPokemonReplaced;
 
-        public Party(int partySize, IList<IUniquePokemon> pokemon)
+        public Party(int partySize, UniqueList<IUniquePokemon> pokemon)
         {
             if (partySize < pokemon.Count) { throw new Exception($"Party size ({partySize}) is smaller than the size of the supplied list of pokemon ({pokemon.Count})"); }
 
@@ -84,11 +85,16 @@ namespace PokemonEngine.Base
             PartySize = this.pokemon.Count;
         }
 
-        public Party(IList<IUniquePokemon> pokemon) : this(DefaultSize, pokemon) { }
+        public Party(UniqueList<IUniquePokemon> pokemon) : this(DefaultSize, pokemon) { }
 
-        public Party(int partySize, params IUniquePokemon[] pokemon): this(partySize, new List<IUniquePokemon>(pokemon)) { }
+        public Party(int partySize, params IUniquePokemon[] pokemon): this(partySize, new UniqueList<IUniquePokemon>(pokemon)) { }
 
         public Party(params IUniquePokemon[] pokemon) : this(DefaultSize, pokemon) { }
+
+        public bool Contains(IUniquePokemon pokemon)
+        {
+            return this.pokemon.Contains(pokemon);
+        }
 
         public void Swap(IUniquePokemon first, IUniquePokemon second)
         {

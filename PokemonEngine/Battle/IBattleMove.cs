@@ -8,9 +8,8 @@ using PokemonEngine.Base;
 
 namespace PokemonEngine.Battle
 {
-    public interface IBattlePokemon : IUniquePokemon
+    public interface IBattleMove : IUniqueMove
     {
-        BattleStats BattleStats { get; }
-        MoveSet<IBattleMove> BattleMoves { get; }
+        bool IsDisabled { get; }
     }
 }

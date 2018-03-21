@@ -43,6 +43,10 @@
   <ItemGroup>
     <Compile Include="Base\Events\PokemonEventHandler.cs" />
     <Compile Include="Base\ExperienceGroup.cs" />
+    <Compile Include="Base\IMove.cs" />
+    <Compile Include="Base\ITrainer.cs" />
+    <Compile Include="Util\UniqueList.cs" />
+    <Compile Include="Base\IUniqueMove.cs" />
     <Compile Include="Base\IUniquePokemon.cs" />
     <Compile Include="Base\Gender.cs" />
     <Compile Include="Base\IPokemon.cs" />
@@ -57,18 +61,26 @@
     <Compile Include="Base\Nature.cs" />
     <Compile Include="Base\Party.cs" />
     <Compile Include="Base\Stat.cs" />
+    <Compile Include="Base\Trainer.cs" />
+    <Compile Include="Base\UniqueMove.cs" />
     <Compile Include="Base\UniquePokemon.cs" />
     <Compile Include="Base\IStatsProvider.cs" />
     <Compile Include="Base\PokemonType.cs" />
     <Compile Include="Base\Pokemon.cs" />
     <Compile Include="Base\Events\ValueChangeEventArgs.cs" />
+    <Compile Include="Battle\Battle.cs" />
+    <Compile Include="Battle\BattleMove.cs" />
     <Compile Include="Battle\BattlePokemon.cs" />
+    <Compile Include="Battle\BattleTeam.cs" />
+    <Compile Include="Battle\BattleTrainer.cs" />
+    <Compile Include="Battle\IBattle.cs" />
+    <Compile Include="Battle\IBattleMove.cs" />
     <Compile Include="Battle\IBattlePokemon.cs" />
     <Compile Include="Battle\BattleStats.cs" />
     <Compile Include="Battle\BattleStat.cs" />
+    <Compile Include="Battle\IBattleTrainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

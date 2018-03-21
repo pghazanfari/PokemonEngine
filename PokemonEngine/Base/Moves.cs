@@ -9,19 +9,25 @@ namespace PokemonEngine.Base
 {
     public class Moves
     {
-        private readonly IReadOnlyList<Move> starterMoves;
-        public IReadOnlyList<Move> StarterMoves { get { return starterMoves; } }
+        private readonly IReadOnlyList<IMove> starterMoves;
+        public IReadOnlyList<IMove> StarterMoves { get { return starterMoves; } }
 
-        private readonly IReadOnlyDictionary<int, Move> moves;
-        public IReadOnlyDictionary<int, Move> Moves { get { return moves; } }
+        private readonly IReadOnlyDictionary<int, IMove> moves;
+        public IMove this[int i]
+        {
+            get
+            {
+                return moves[i];
+            }
+        }
 
         //TODO: TMs and HMs
 
-        public Moves(IList<Move> starterMoves, IDictionary<int, Move> moves)
+        public Moves(IList<IMove> starterMoves, IDictionary<int, IMove> moves)
         {
             //TODO: Validation
-            this.starterMoves = new List<Move>(starterMoves).AsReadOnly();
-            this.moves = new ReadOnlyDictionary<int, Move>(moves);
+            this.starterMoves = new List<IMove>(starterMoves).AsReadOnly();
+            this.moves = new ReadOnlyDictionary<int, IMove>(moves);
         }
     }
 }
