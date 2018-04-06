@@ -1,0 +1,2 @@
+﻿* Decouple read and write attributes of pokemon.
+	* Battle Pokemon should only be able to modify attributes that can be modified during a battle.

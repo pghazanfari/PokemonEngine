@@ -14,6 +14,7 @@ namespace PokemonEngine.Model.Battle
         public IReadOnlyList<BattleTeam> Teams { get { return Base.Teams; } } 
         #endregion
 
+        // Probably want a better name for this.
         private readonly IBattleParticipant owner;
         public IBattleParticipant Owner { get { return owner; } }
 
@@ -23,7 +24,7 @@ namespace PokemonEngine.Model.Battle
         private readonly int slot;
         public int Slot { get { return slot; } }
 
-        private IBattlePokemon Pokemon { get { return team.PokemonAt(slot); } }
+        public IBattlePokemon Pokemon { get { return team.PokemonAt(slot); } }
 
         public BattleView(IBattle battle, IBattleParticipant owner, int slot)
         {
