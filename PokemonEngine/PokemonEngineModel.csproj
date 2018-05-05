@@ -40,9 +40,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Battle\Actions\Run.cs" />
+    <Compile Include="Model\Battle\Actions\IBattleAction.cs" />
+    <Compile Include="Model\Battle\BattleSlot.cs" />
+    <Compile Include="Model\Battle\Messaging\BattleMessageQueue.cs" />
+    <Compile Include="Model\Battle\Messaging\IBattleMessage.cs" />
+    <Compile Include="Model\Battle\Messaging\IBattleMessageReceiver.cs" />
     <Compile Include="Model\Battle\Events\BattleEventsArgs.cs" />
     <Compile Include="Model\Battle\IBattleParticipant.cs" />
     <Compile Include="Model\Battle\BattleView.cs" />
+    <Compile Include="Model\Battle\Messaging\IMessage.cs" />
+    <Compile Include="Model\Battle\Messaging\MessageQueue.cs" />
+    <Compile Include="Model\Battle\Messaging\IMessageReceiver.cs" />
     <Compile Include="Model\Events\PokemonEventHandler.cs" />
     <Compile Include="Model\ExperienceGroup.cs" />
     <Compile Include="Model\IMove.cs" />

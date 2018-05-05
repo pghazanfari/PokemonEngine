@@ -24,8 +24,8 @@ namespace PokemonEngine.Model.Battle
 
         public BattleTeam(IList<IBattleParticipant> slotMappings)
         {
-            if (slotMappings == null) { throw new Exception("Slot mappings must be a non-null list of ITrainer(s)");  }
-            if (slotMappings.Any(x => x == null)){ throw new Exception("A slot cannot be mapped to a 'null' ITrainer"); }
+            if (slotMappings == null) { throw new Exception("Slot mappings must be a non-null list of IBattleParticipant(s)");  }
+            if (slotMappings.Any(x => x == null)){ throw new Exception("A slot cannot be mapped to a 'null' IBattleParticipant"); }
 
             Dictionary<IBattleParticipant, int> trainerPokemonCounts = new Dictionary<IBattleParticipant, int>();
             List<int> slotIndexMap = new List<int>(slotMappings.Count);

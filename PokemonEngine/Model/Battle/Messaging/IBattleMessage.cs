@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PokemonEngine.Model.Battle
+namespace PokemonEngine.Model.Battle.Messaging
 {
-    public interface IBattleMove : IUniqueMove
+    public interface IBattleMessage : IMessage<IBattleMessage>
     {
-        bool IsDisabled { get; }
     }
 }
