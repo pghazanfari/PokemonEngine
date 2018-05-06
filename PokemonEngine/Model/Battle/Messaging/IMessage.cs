@@ -8,6 +8,7 @@ namespace PokemonEngine.Model.Battle.Messaging
 {
     public interface IMessage<T> where T : IMessage<T>
     {
+        T Message { get; }
         void Dispatch(IMessageReceiver<T> receiver);
     }
 }

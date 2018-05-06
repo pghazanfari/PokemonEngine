@@ -11,7 +11,6 @@ namespace PokemonEngine.Model.Battle.Messaging
     {
         private Dictionary<T, LinkedListNode<T>> map;
         private LinkedList<T> queue;
-
         private HashSet<IMessageReceiver<T>> receivers;
 
         public MessageQueue()
@@ -40,17 +39,7 @@ namespace PokemonEngine.Model.Battle.Messaging
             return map.ContainsKey(obj);
         }
 
-        public virtual bool Enqueue(T obj)
-        {
-            if (!map.ContainsKey(obj))
-            {
-                map[obj] = queue.AddLast(obj);
-                return true;
-            }
-            return false;
-        }
-
-        public virtual T Broadcast()
+        public T Broadcast()
         {
             if (queue.Count > 0)
             {
@@ -63,43 +52,29 @@ namespace PokemonEngine.Model.Battle.Messaging
                 return node.Value;
             }
             throw new Exception("MessageQueue has no more messages remaining");
-        } 
-
-        public virtual bool InjectAfter(T message, T newMessage)
-        {
-            if (map.ContainsKey(message))
-            {
-                queue.AddAfter(map[message], newMessage);
-            }
-            return false;
         }
 
-        public virtual bool InjectBefore(T message, T newMessage)
+        public bool Add(T message)
         {
-            if (map.ContainsKey(message))
+            if (!map.ContainsKey(message))
             {
-                queue.AddBefore(map[message], newMessage);
-            }
-            return false;
-        }
-
-        public virtual bool Replace(T message, T newMessage)
-        {
-            if (map.ContainsKey(message))
-            {
-                queue.AddAfter(map[message], newMessage);
-                queue.Remove(map[message]);
-                map.Remove(message);
+                queue.AddLast(message);
                 return true;
             }
             return false;
         }
 
-        public virtual bool Remove(T message)
+        public bool Swap(T firstMessage, T secondMessage)
         {
-            if (map.ContainsKey(message))
+            if (map.ContainsKey(firstMessage) && map.ContainsKey(secondMessage))
             {
-                queue.Remove(map[message]);
+                map[firstMessage].Value = secondMessage;
+                map[secondMessage].Value = firstMessage;
+
+                LinkedListNode<T> tmp = map[firstMessage];
+                map[firstMessage] = map[secondMessage];
+                map[secondMessage] = tmp;
+
                 return true;
             }
             return false;

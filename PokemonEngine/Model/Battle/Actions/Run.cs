@@ -13,6 +13,23 @@ namespace PokemonEngine.Model.Battle.Actions
         private readonly BattleSlot user;
         public BattleSlot User { get { return user; } }
 
+        public IBattleMessage Message
+        {
+            get
+            {
+                // Should never run
+                throw new NotImplementedException();
+            }
+        }
+
+        Run IMessage<Run>.Message
+        {
+            get
+            {
+                return this;
+            }
+        }
+
         public Run(BattleSlot user)
         {
             this.user = user;

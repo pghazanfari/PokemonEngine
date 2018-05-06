@@ -8,7 +8,7 @@ using PokemonEngine.Model.Battle.Actions;
 
 namespace PokemonEngine.Model.Battle.Messaging
 {
-    public interface IBattleMessageReceiver : IMessageReceiver<Run>
+    public interface IBattleMessageReceiver : IMessageReceiver<IBattleMessage>, IMessageReceiver<Run>
     {
     }
 }

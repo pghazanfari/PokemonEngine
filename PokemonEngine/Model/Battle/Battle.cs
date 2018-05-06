@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 
 using PokemonEngine.Model.Util;
-using System.Collections.ObjectModel;
+using PokemonEngine.Model.Battle.Messaging;
+using PokemonEngine.Model.Battle.Actions;
 
 namespace PokemonEngine.Model.Battle
 {
@@ -14,6 +15,8 @@ namespace PokemonEngine.Model.Battle
     {
         private readonly IReadOnlyList<BattleTeam> teams;
         public IReadOnlyList<BattleTeam> Teams { get { return teams; } }
+
+        private readonly MessageQueue<IBattleMessage> messageQueue;
 
         public Battle(IList<BattleTeam> teams)
         {
@@ -26,7 +29,20 @@ namespace PokemonEngine.Model.Battle
             //Going to attempt to not enforce this
             //if (teams.Any(x => x.SlotCount != teams[0].SlotCount)) throw new ArgumentException("All teams must have the same number of slots for the battle");
 
-            this.teams = new List<BattleTeam>(teams).AsReadOnly(); 
+            this.teams = new List<BattleTeam>(teams).AsReadOnly();
+            messageQueue = new MessageQueue<IBattleMessage>();
+            messageQueue.AddReceiver(this);
+        }
+
+        public void Receive(IMessage<Run> message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Receive(IMessage<IBattleMessage> message)
+        {
+            // Should never run
+            throw new NotImplementedException();
         }
     }
 }
