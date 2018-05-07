@@ -7,45 +7,45 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Model.Battle.Messaging
 {
-    public class MessageQueue<T> : IEnumerable<T> where T : IMessage<T>
+    public class BattleMessageQueue : IEnumerable<IBattleMessage>
     {
-        private Dictionary<T, LinkedListNode<T>> map;
-        private LinkedList<T> queue;
-        private HashSet<IMessageReceiver<T>> receivers;
+        private Dictionary<IBattleMessage, LinkedListNode<IBattleMessage>> map;
+        private LinkedList<IBattleMessage> queue;
+        private HashSet<IBattleMessageSubscriber> receivers;
 
-        public MessageQueue()
+        public BattleMessageQueue()
         {
-            queue = new LinkedList<T>();
-            map = new Dictionary<T, LinkedListNode<T>>();
-            receivers = new HashSet<IMessageReceiver<T>>();
+            queue = new LinkedList<IBattleMessage>();
+            map = new Dictionary<IBattleMessage, LinkedListNode<IBattleMessage>>();
+            receivers = new HashSet<IBattleMessageSubscriber>();
         }
 
         public int Count { get { return queue.Count; } }
 
         public bool HasNext { get { return queue.Count > 0; } }
 
-        public bool AddReceiver(IMessageReceiver<T> receiver)
+        public bool AddSubscriber(IBattleMessageSubscriber receiver)
         {
             return receivers.Add(receiver);
         }
 
-        public bool RemoveReceiver(IMessageReceiver<T> receiver)
+        public bool RemoveSubscriber(IBattleMessageSubscriber receiver)
         {
             return receivers.Remove(receiver);
         }
 
-        public bool Contains(T obj)
+        public bool Contains(IBattleMessage obj)
         {
             return map.ContainsKey(obj);
         }
 
-        public T Broadcast()
+        public IBattleMessage Broadcast()
         {
             if (queue.Count > 0)
             {
-                LinkedListNode<T> node = queue.First;
+                LinkedListNode<IBattleMessage> node = queue.First;
                 queue.RemoveFirst();
-                foreach (IMessageReceiver<T> receiver in receivers)
+                foreach (IBattleMessageSubscriber receiver in receivers)
                 {
                     node.Value.Dispatch(receiver);
                 }
@@ -54,7 +54,7 @@ namespace PokemonEngine.Model.Battle.Messaging
             throw new Exception("MessageQueue has no more messages remaining");
         }
 
-        public bool Add(T message)
+        public bool Add(IBattleMessage message)
         {
             if (!map.ContainsKey(message))
             {
@@ -64,14 +64,14 @@ namespace PokemonEngine.Model.Battle.Messaging
             return false;
         }
 
-        public bool Swap(T firstMessage, T secondMessage)
+        public bool Swap(IBattleMessage firstMessage, IBattleMessage secondMessage)
         {
             if (map.ContainsKey(firstMessage) && map.ContainsKey(secondMessage))
             {
                 map[firstMessage].Value = secondMessage;
                 map[secondMessage].Value = firstMessage;
 
-                LinkedListNode<T> tmp = map[firstMessage];
+                LinkedListNode<IBattleMessage> tmp = map[firstMessage];
                 map[firstMessage] = map[secondMessage];
                 map[secondMessage] = tmp;
 
@@ -80,7 +80,7 @@ namespace PokemonEngine.Model.Battle.Messaging
             return false;
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public IEnumerator<IBattleMessage> GetEnumerator()
         {
             return queue.GetEnumerator();
         }

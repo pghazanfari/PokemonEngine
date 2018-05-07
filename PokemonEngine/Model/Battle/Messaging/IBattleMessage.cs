@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Model.Battle.Messaging
 {
-    public interface IBattleMessage : IMessage<IBattleMessage>
+    public interface IBattleMessage
     {
+        void Dispatch(IBattleMessageSubscriber receiver);
     }
 }

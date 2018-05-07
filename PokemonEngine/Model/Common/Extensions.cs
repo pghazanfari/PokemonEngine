@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PokemonEngine.Model.Util
+namespace PokemonEngine.Model.Common
 {
     public static class Extensions
     {

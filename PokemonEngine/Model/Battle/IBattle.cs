@@ -8,8 +8,10 @@ using PokemonEngine.Model.Battle.Messaging;
 
 namespace PokemonEngine.Model.Battle
 {
-    public interface IBattle : IBattleMessageReceiver
+    public interface IBattle : IBattleMessageSubscriber
     {
         IReadOnlyList<BattleTeam> Teams { get; }
+        bool IsTurnComplete { get; }
+        void ResetTurn();
     }
 }

@@ -4,20 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using PokemonEngine.Model.Common;
 using PokemonEngine.Model.Battle.Messaging;
+using PokemonEngine.Model.Battle.Actions;
 
-namespace PokemonEngine.Model.Battle.Actions
+namespace PokemonEngine.Model.Battle.Requests
 {
-    public class Run : IBattleAction
+    public class BattleActionRequest : IBattleMessage
     {
-        private readonly BattleSlot user;
-        public BattleSlot User { get { return user; } }
-
-        public Run(BattleSlot user)
-        {
-            this.user = user;
-        }
-        
         public void Dispatch(IBattleMessageSubscriber receiver)
         {
             receiver.Receive(this);

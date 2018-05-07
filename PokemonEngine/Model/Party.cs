@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using PokemonEngine.Model.Events;
-using PokemonEngine.Model.Util;
+using PokemonEngine.Model.Common;
 
 namespace PokemonEngine.Model
 {
