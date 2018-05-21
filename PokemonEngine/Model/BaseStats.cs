@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Model
 {
-    public class BaseStats : IStatsProvider
+    public class BaseStats
     {
         public const int Max = 255;
         public const int Min = 0;

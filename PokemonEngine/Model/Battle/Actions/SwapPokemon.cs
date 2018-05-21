@@ -8,17 +8,17 @@ using PokemonEngine.Model.Battle.Messaging;
 
 namespace PokemonEngine.Model.Battle.Actions
 {
-    public class SwapPokemon : IBattleAction
+    public class SwapPokemon : IAction
     {
-        private readonly BattleSlot user;
-        public BattleSlot User { get { return user; } }
+        private readonly Slot user;
+        public Slot User { get { return user; } }
 
-        public SwapPokemon(BattleSlot user)
+        public SwapPokemon(Slot user)
         {
             this.user = user;
         }
 
-        public void Dispatch(IBattleMessageSubscriber receiver)
+        public void Dispatch(ISubscriber receiver)
         {
             receiver.Receive(this);
         }

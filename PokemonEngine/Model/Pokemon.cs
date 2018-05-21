@@ -32,6 +32,8 @@ namespace PokemonEngine.Model
         private readonly int baseFriendship;
         public int BaseFriendship { get { return baseFriendship; } }
 
+        public int this[Stat stat] { get { return baseStats[stat]; } }
+
         public Pokemon(string species, IList<PokemonType> types, ExperienceGroup expGroup, Moves possibleMoves, BaseStats baseStats, IList<Ability> possibleAbilities, int baseFriendship)
         {
             this.species = species;

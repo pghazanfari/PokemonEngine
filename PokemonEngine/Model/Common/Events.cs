@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Model.Common
 {
-    public interface IProvider<I, O>
-    {
-        O Provide(I request);
-    }
+    public delegate void EventHandler<TSender, TArgs>(TSender sender, TArgs e);
+    public delegate void SenderOnlyEventHandler<TSender>(TSender sender);
 }

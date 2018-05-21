@@ -13,6 +13,7 @@ namespace PokemonEngine.Model
         ExperienceGroup ExpGroup { get; }
         Moves PossibleMoves { get; }
         BaseStats BaseStats { get; }
+        int this[Stat stat] { get; }
         IReadOnlyList<Ability> PossibleAbilities { get; }
         int BaseFriendship { get; }
         //TODO: Natures

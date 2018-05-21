@@ -8,17 +8,17 @@ using PokemonEngine.Model.Battle.Messaging;
 
 namespace PokemonEngine.Model.Battle.Actions
 {
-    public class Run : IBattleAction
+    public class Run : IAction
     {
-        private readonly BattleSlot user;
-        public BattleSlot User { get { return user; } }
+        private readonly Slot user;
+        public Slot User { get { return user; } }
 
-        public Run(BattleSlot user)
+        public Run(Slot user)
         {
             this.user = user;
         }
         
-        public void Dispatch(IBattleMessageSubscriber receiver)
+        public void Dispatch(ISubscriber receiver)
         {
             receiver.Receive(this);
         }

@@ -8,21 +8,21 @@ using PokemonEngine.Model.Battle.Messaging;
 
 namespace PokemonEngine.Model.Battle.Actions
 {
-    public class UseMove : IBattleAction
+    public class UseMove : IAction
     {
-        private readonly BattleSlot user;
-        public BattleSlot User { get { return user; } }
+        private readonly Slot user;
+        public Slot User { get { return user; } }
 
-        private readonly IBattleMove move;
-        public IBattleMove Move { get { return move; } }
+        private readonly IMove move;
+        public IMove Move { get { return move; } }
 
-        public UseMove(BattleSlot user, IBattleMove move)
+        public UseMove(Slot user, IMove move)
         {
             this.user = user;
             this.move = move;
         }
 
-        public void Dispatch(IBattleMessageSubscriber receiver)
+        public void Dispatch(ISubscriber receiver)
         {
             receiver.Receive(this);
         }

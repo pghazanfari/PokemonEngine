@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PokemonEngine.Model.Common
+namespace PokemonEngine.Model.Battle
 {
-    public interface IProvider<I, O>
+    public interface ITrainer : Unique.ITrainer, IParticipant
     {
-        O Provide(I request);
+
     }
 }

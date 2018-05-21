@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PokemonEngine</RootNamespace>
     <AssemblyName>PokemonEngine</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,53 +45,58 @@
     <Compile Include="Model\Battle\Actions\UseItem.cs" />
     <Compile Include="Model\Battle\Actions\UseMove.cs" />
     <Compile Include="Model\Battle\Actions\Run.cs" />
-    <Compile Include="Model\Battle\Actions\IBattleAction.cs" />
-    <Compile Include="Model\Battle\BattleSlot.cs" />
-    <Compile Include="Model\Battle\IBattleParticipant.cs" />
-    <Compile Include="Model\Battle\BattleView.cs" />
-    <Compile Include="Model\Battle\Messaging\BattleMessageQueue.cs" />
-    <Compile Include="Model\Battle\Messaging\IBattleMessage.cs" />
-    <Compile Include="Model\Battle\Messaging\IBattleMessageSubscriber.cs" />
-    <Compile Include="Model\Battle\Requests\BattleActionRequest.cs" />
+    <Compile Include="Model\Battle\Effects\MoveDamageEffect.cs" />
+    <Compile Include="Model\Battle\IAction.cs" />
+    <Compile Include="Model\Battle\Slot.cs" />
+    <Compile Include="Model\Battle\IParticipant.cs" />
+    <Compile Include="Model\Battle\View.cs" />
+    <Compile Include="Model\Battle\Effect.cs" />
+    <Compile Include="Model\Battle\Messaging\Queue.cs" />
+    <Compile Include="Model\Battle\Messaging\IMessage.cs" />
+    <Compile Include="Model\Battle\Messaging\ISubscriber.cs" />
+    <Compile Include="Model\Battle\Orchestrator.cs" />
+    <Compile Include="Model\Battle\Actions\Request.cs" />
+    <Compile Include="Model\Common\Events.cs" />
     <Compile Include="Model\Common\IProvider.cs" />
-    <Compile Include="Model\Events\PokemonEventHandler.cs" />
+    <Compile Include="Model\Common\Sequence\IMutableSequence.cs" />
+    <Compile Include="Model\Common\Sequence\ISequence.cs" />
+    <Compile Include="Model\Common\Sequence\MutableSequence.cs" />
+    <Compile Include="Model\Common\Sequence\Sequence.cs" />
     <Compile Include="Model\ExperienceGroup.cs" />
     <Compile Include="Model\IMove.cs" />
-    <Compile Include="Model\ITrainer.cs" />
+    <Compile Include="Model\Unique\ITrainer.cs" />
     <Compile Include="Model\Common\Extensions.cs" />
-    <Compile Include="Model\IUniqueMove.cs" />
-    <Compile Include="Model\IUniquePokemon.cs" />
+    <Compile Include="Model\Unique\IMove.cs" />
+    <Compile Include="Model\Unique\IPokemon.cs" />
     <Compile Include="Model\Gender.cs" />
     <Compile Include="Model\IPokemon.cs" />
-    <Compile Include="Model\EVSet.cs" />
-    <Compile Include="Model\IVSet.cs" />
+    <Compile Include="Model\Unique\EVSet.cs" />
+    <Compile Include="Model\Unique\IVSet.cs" />
     <Compile Include="Model\BaseStats.cs" />
-    <Compile Include="Model\MoveSet.cs" />
+    <Compile Include="Model\Unique\MoveSet.cs" />
     <Compile Include="Model\Moves.cs" />
     <Compile Include="Model\Ability.cs" />
     <Compile Include="Model\Move.cs" />
     <Compile Include="Model\MoveTarget.cs" />
     <Compile Include="Model\Nature.cs" />
-    <Compile Include="Model\Party.cs" />
+    <Compile Include="Model\Unique\Party.cs" />
     <Compile Include="Model\Stat.cs" />
-    <Compile Include="Model\Trainer.cs" />
-    <Compile Include="Model\UniqueMove.cs" />
-    <Compile Include="Model\UniquePokemon.cs" />
-    <Compile Include="Model\IStatsProvider.cs" />
+    <Compile Include="Model\Unique\Move.cs" />
+    <Compile Include="Model\Unique\Pokemon.cs" />
     <Compile Include="Model\PokemonType.cs" />
     <Compile Include="Model\Pokemon.cs" />
     <Compile Include="Model\Events\ValueChangeEventArgs.cs" />
     <Compile Include="Model\Battle\Battle.cs" />
-    <Compile Include="Model\Battle\BattleMove.cs" />
-    <Compile Include="Model\Battle\BattlePokemon.cs" />
-    <Compile Include="Model\Battle\BattleTeam.cs" />
-    <Compile Include="Model\Battle\BattleTrainer.cs" />
+    <Compile Include="Model\Battle\Move.cs" />
+    <Compile Include="Model\Battle\Pokemon.cs" />
+    <Compile Include="Model\Battle\Team.cs" />
+    <Compile Include="Model\Unique\Trainer.cs" />
     <Compile Include="Model\Battle\IBattle.cs" />
-    <Compile Include="Model\Battle\IBattleMove.cs" />
-    <Compile Include="Model\Battle\IBattlePokemon.cs" />
-    <Compile Include="Model\Battle\BattleStats.cs" />
-    <Compile Include="Model\Battle\BattleStat.cs" />
-    <Compile Include="Model\Battle\IBattleTrainer.cs" />
+    <Compile Include="Model\Battle\IMove.cs" />
+    <Compile Include="Model\Battle\IPokemon.cs" />
+    <Compile Include="Model\Battle\Stats.cs" />
+    <Compile Include="Model\Battle\Stat.cs" />
+    <Compile Include="Model\Battle\ITrainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

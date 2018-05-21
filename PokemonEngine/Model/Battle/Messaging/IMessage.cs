@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PokemonEngine.Model.Common
+namespace PokemonEngine.Model.Battle.Messaging
 {
-    public interface IProvider<I, O>
+    public interface IMessage
     {
-        O Provide(I request);
+        void Dispatch(ISubscriber receiver);
     }
 }
