@@ -44,9 +44,10 @@
     <Compile Include="Model\Battle\Actions\SwapPokemon.cs" />
     <Compile Include="Model\Battle\Actions\UseItem.cs" />
     <Compile Include="Model\Battle\Actions\UseMove.cs" />
-    <Compile Include="Model\Battle\Actions\Run.cs" />
-    <Compile Include="Model\Battle\Effects\MoveDamageEffect.cs" />
-    <Compile Include="Model\Battle\IAction.cs" />
+    <Compile Include="Model\Battle\Actions\UseRun.cs" />
+    <Compile Include="Model\Battle\EventArgs.cs" />
+    <Compile Include="Model\Battle\Messages\InflictMoveDamage.cs" />
+    <Compile Include="Model\Battle\Actions\IAction.cs" />
     <Compile Include="Model\Battle\Slot.cs" />
     <Compile Include="Model\Battle\IParticipant.cs" />
     <Compile Include="Model\Battle\View.cs" />
@@ -54,7 +55,6 @@
     <Compile Include="Model\Battle\Messaging\Queue.cs" />
     <Compile Include="Model\Battle\Messaging\IMessage.cs" />
     <Compile Include="Model\Battle\Messaging\ISubscriber.cs" />
-    <Compile Include="Model\Battle\Orchestrator.cs" />
     <Compile Include="Model\Battle\Actions\Request.cs" />
     <Compile Include="Model\Common\Events.cs" />
     <Compile Include="Model\Common\IProvider.cs" />
@@ -64,6 +64,7 @@
     <Compile Include="Model\Common\Sequence\Sequence.cs" />
     <Compile Include="Model\ExperienceGroup.cs" />
     <Compile Include="Model\IMove.cs" />
+    <Compile Include="Model\Unique\EventArgs.cs" />
     <Compile Include="Model\Unique\ITrainer.cs" />
     <Compile Include="Model\Common\Extensions.cs" />
     <Compile Include="Model\Unique\IMove.cs" />
@@ -99,7 +100,9 @@
     <Compile Include="Model\Battle\ITrainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Model\Battle\Effects\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

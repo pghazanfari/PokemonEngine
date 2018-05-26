@@ -8,17 +8,11 @@ using PokemonEngine.Model.Battle.Messaging;
 
 namespace PokemonEngine.Model.Battle.Actions
 {
-    public class Run : IAction
+    public class UseRun : IAction
     {
-        private readonly Slot user;
-        public Slot User { get { return user; } }
+        public UseRun(Team team, Slot slot) : base(team, slot) { }
 
-        public Run(Slot user)
-        {
-            this.user = user;
-        }
-        
-        public void Dispatch(ISubscriber receiver)
+        public override void Dispatch(ISubscriber receiver)
         {
             receiver.Receive(this);
         }

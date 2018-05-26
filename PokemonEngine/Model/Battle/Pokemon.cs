@@ -35,18 +35,18 @@ namespace PokemonEngine.Model.Battle
         public int HP { get { return Base.HP; } }
         public MoveSet<Unique.IMove> Moves { get { return Base.Moves; } }
 
-        event EventHandler<Unique.IPokemon, ValueChangeEventArgs> Unique.IPokemon.OnExperienceGain
+        event EventHandler<GainExperienceEventArgs> Unique.IPokemon.OnGainExperience
         {
             add
             {
-                Base.OnExperienceGain += value;
+                Base.OnGainExperience += value;
             }
             remove
             {
-                Base.OnExperienceGain -= value;
+                Base.OnGainExperience -= value;
             }
         }
-        event EventHandler<Unique.IPokemon, ValueChangeEventArgs> Unique.IPokemon.OnExperienceGained
+        event EventHandler<ExperienceGainedEventArgs> Unique.IPokemon.OnExperienceGained
         {
             add
             {
@@ -58,7 +58,7 @@ namespace PokemonEngine.Model.Battle
             }
         }
 
-        event EventHandler<Unique.IPokemon, ValueChangeEventArgs> Unique.IPokemon.OnLevelUp
+        event EventHandler<LevelUpEventArgs> Unique.IPokemon.OnLevelUp
         {
             add
             {
@@ -69,7 +69,7 @@ namespace PokemonEngine.Model.Battle
                 Base.OnLevelUp -= value;
             }
         }
-        event EventHandler<Unique.IPokemon, ValueChangeEventArgs> Unique.IPokemon.OnLevelledUp
+        event EventHandler<LevelledUpEventArgs> Unique.IPokemon.OnLevelledUp
         {
             add
             {
@@ -81,49 +81,49 @@ namespace PokemonEngine.Model.Battle
             }
         }
 
-        event EventHandler<Unique.IPokemon, ValueChangeEventArgs> Unique.IPokemon.OnFriendshipChange
+        event EventHandler<UpdateFriendshipEventArgs> Unique.IPokemon.OnUpdateFriendship
         {
             add
             {
-                Base.OnFriendshipChange += value;
+                Base.OnUpdateFriendship += value;
             }
             remove
             {
-                Base.OnFriendshipChange -= value;
+                Base.OnUpdateFriendship -= value;
             }
         }
-        event EventHandler<Unique.IPokemon, ValueChangeEventArgs> Unique.IPokemon.OnFriendshipChanged
+        event EventHandler<FriendshipUpdatedEventArgs> Unique.IPokemon.OnFriendshipUpdated
         {
             add
             {
-                Base.OnFriendshipChanged += value;
+                Base.OnFriendshipUpdated += value;
             }
             remove
             {
-                Base.OnFriendshipChanged -= value;
+                Base.OnFriendshipUpdated -= value;
             }
         }
 
-        event EventHandler<Unique.IPokemon, ValueChangeEventArgs> Unique.IPokemon.OnHPChange
+        event EventHandler<UpdateHPEventArgs> Unique.IPokemon.OnUpdateHP
         {
             add
             {
-                Base.OnHPChange += value;
+                Base.OnUpdateHP += value;
             }
             remove
             {
-                Base.OnHPChange -= value;
+                Base.OnUpdateHP -= value;
             }
         }
-        event EventHandler<Unique.IPokemon, ValueChangeEventArgs> Unique.IPokemon.OnHPChanged
+        event EventHandler<HPUpdatedEventArgs> Unique.IPokemon.OnHPUpdated
         {
             add
             {
-                Base.OnHPChanged += value;
+                Base.OnHPUpdated += value;
             }
             remove
             {
-                Base.OnHPChanged -= value;
+                Base.OnHPUpdated -= value;
             }
         }
 
@@ -135,13 +135,13 @@ namespace PokemonEngine.Model.Battle
         {
             return Base.LevelUp();
         }
-        public int ChangeFriendship(int delta)
+        public int UpdateFriendship(int delta)
         {
-            return Base.ChangeFriendship(delta);
+            return Base.UpdateFriendship(delta);
         }
-        public int ChangeHP(int delta)
+        public int UpdateHP(int delta)
         {
-            return Base.ChangeHP(delta);
+            return Base.UpdateHP(delta);
         }
         #endregion
 

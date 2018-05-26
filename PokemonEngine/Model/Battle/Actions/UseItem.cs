@@ -10,17 +10,13 @@ namespace PokemonEngine.Model.Battle.Actions
 {
     public class UseItem : IAction
     {
-        private readonly Slot user;
-        public Slot User { get { return user; } }
-
         //TODO: Implement Items
 
-        public UseItem(Slot user)
+        public UseItem(Team team, Slot slot) : base(team, slot)
         {
-            this.user = user;
         }
 
-        public void Dispatch(ISubscriber receiver)
+        public override void Dispatch(ISubscriber receiver)
         {
             receiver.Receive(this);
         }

@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using PokemonEngine.Model.Common;
 using PokemonEngine.Model.Battle.Messaging;
-using PokemonEngine.Model.Battle.Actions;
 
 namespace PokemonEngine.Model.Battle.Actions
 {
-    public class Request : IMessage
+    public abstract class IAction : IMessage// TODO: , IComparable<IBattleAction>
     {
         private readonly Team team;
         public Team Team { get { return team; } }
@@ -18,16 +16,13 @@ namespace PokemonEngine.Model.Battle.Actions
         private readonly Slot slot;
         public Slot Slot { get { return slot; } }
 
-        public Request(Team team, Slot slot)
+        public IAction(Team team, Slot slot)
         {
             if (!team.Contains(slot)) { throw new ArgumentException("This slot provided is not part of the given team", "slot"); }
             this.team = team;
-            this.slot = slot;  
+            this.slot = slot;
         }
 
-        public void Dispatch(ISubscriber receiver)
-        {
-            receiver.Receive(this);
-        }
+        public abstract void Dispatch(ISubscriber receiver);
     }
 }

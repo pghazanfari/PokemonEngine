@@ -23,26 +23,26 @@ namespace PokemonEngine.Model.Unique
         int HP { get; }
         MoveSet<IMove> Moves { get; }
 
-        event EventHandler<IPokemon, ValueChangeEventArgs> OnExperienceGain;
-        event EventHandler<IPokemon, ValueChangeEventArgs> OnExperienceGained;
+        event EventHandler<GainExperienceEventArgs> OnGainExperience;
+        event EventHandler<ExperienceGainedEventArgs> OnExperienceGained;
         int GainExperience(int amount);
 
-        event EventHandler<IPokemon, ValueChangeEventArgs> OnLevelUp;
-        event EventHandler<IPokemon, ValueChangeEventArgs> OnLevelledUp;
+        event EventHandler<LevelUpEventArgs> OnLevelUp;
+        event EventHandler<LevelledUpEventArgs> OnLevelledUp;
         int LevelUp();
 
-        event EventHandler<IPokemon, ValueChangeEventArgs> OnFriendshipChange;
-        event EventHandler<IPokemon, ValueChangeEventArgs> OnFriendshipChanged;
-        int ChangeFriendship(int delta);
+        event EventHandler<UpdateFriendshipEventArgs> OnUpdateFriendship;
+        event EventHandler<FriendshipUpdatedEventArgs> OnFriendshipUpdated;
+        int UpdateFriendship(int delta);
 
-        event EventHandler<IPokemon, ValueChangeEventArgs> OnHPChange;
-        event EventHandler<IPokemon, ValueChangeEventArgs> OnHPChanged;
-        int ChangeHP(int delta);
+        event EventHandler<UpdateHPEventArgs> OnUpdateHP;
+        event EventHandler<HPUpdatedEventArgs> OnHPUpdated;
+        int UpdateHP(int delta);
     }
     
     public static class IUniquePokemonImpl
     {
-        public static bool HasFainted(this IPokemon pokemon)
+        public static bool HasFainted(this Unique.IPokemon pokemon)
         {
             return pokemon.HP == 0;
         }

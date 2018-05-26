@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 using PokemonEngine.Model.Common;
 using PokemonEngine.Model.Battle.Messaging;
 using PokemonEngine.Model.Battle.Actions;
+using PokemonEngine.Model.Battle.Messages;
+using System.Collections.ObjectModel;
+
 
 namespace PokemonEngine.Model.Battle
 {
@@ -19,7 +22,43 @@ namespace PokemonEngine.Model.Battle
         private readonly Queue messageQueue;
         public Queue MessageQueue { get { return messageQueue; } }
 
-        public Battle(IList<Team> teams, IProvider<IAction, Request> provider)
+        private readonly IList<Effect> effects;
+        private readonly IReadOnlyList<Effect> roEffects;
+        public IReadOnlyList<Effect> Effects
+        {
+            get
+            {
+                return roEffects;
+            }
+        }
+
+        public event EventHandler<EventArgs> OnTurnStart;
+        public event EventHandler<EventArgs> OnTurnEnd;
+        public event EventHandler<EventArgs> OnMessageBroadcast;
+
+        public event EventHandler<RequestInputEventArgs> OnRequestInput;
+        public event EventHandler<InputReceivedEventArgs> OnInputReceived;
+
+        public event EventHandler<SwapPokemonEventArgs> OnSwapPokemon;
+        public event EventHandler<PokemonSwappedEventArgs> OnPokemonSwapped;
+
+        public event EventHandler<UseItemEventArgs> OnUseItem;
+        public event EventHandler<ItemUsedEventArgs> OnItemUsed;
+
+        public event EventHandler<UseMoveEventArgs> OnUseMove;
+        public event EventHandler<MoveUsedEventArgs> OnMoveUsed;
+
+        public event EventHandler<UseRunEventArgs> OnUseRun;
+        public event EventHandler<RunUsedEventArgs> OnRunUsed;
+
+        public event EventHandler<InflictMoveDamageEventArgs> OnInflictMoveDamage;
+        public event EventHandler<MoveDamageInflictedEventArgs> OnMoveDamageInflicted;
+
+        public IProvider<IList<Request>, IList<IAction>> ActionProvider { get; set; }
+
+        private readonly IList<Request> actionRequests;
+
+        public Battle(IList<Team> teams, IProvider<IList<Request>, IList<IAction>> ActionProvider)
         {
             if (teams == null) { throw new ArgumentNullException("teams"); }
             if (teams.ContainsNull()) { throw new ArgumentException("A BattleTeam in a Battle cannot be null");  }
@@ -31,183 +70,157 @@ namespace PokemonEngine.Model.Battle
             //if (teams.Any(x => x.SlotCount != teams[0].SlotCount)) throw new ArgumentException("All teams must have the same number of slots for the battle");
 
             this.teams = new List<Team>(teams).AsReadOnly();
+            this.ActionProvider = ActionProvider;
+
+            effects = new List<Effect>();
+            roEffects = (effects as List<Effect>).AsReadOnly();
+            
+            actionRequests = new List<Request>();
 
             messageQueue = new Queue();
         }
-    }
-}
 
-/*
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
-using PokemonEngine.Model.Common;
-using PokemonEngine.Model.Battle.Messaging;
-using PokemonEngine.Model.Battle.Actions;
-using PokemonEngine.Model.Battle.Requests;
-
-namespace PokemonEngine.Model.Battle
-{
-    public class Battle : IBattle
-    {
-        //TODO: Change these to better names
-        private enum BattlePhase { TURN_START, REQUEST_ACTIONS, PERFORM_ACTIONS, TURN_END}
-
-        private readonly IReadOnlyList<BattleTeam> teams;
-        public IReadOnlyList<BattleTeam> Teams { get { return teams; } }
-
-        private BattlePhase phase;
-        private readonly BattleMessageQueue queue;
-        private readonly IList<BattleActionRequest> actionRequests;
-        private readonly IProvider<BattleActionRequest, IBattleAction> provider;
-
-        public bool IsTurnComplete { get { return phase == BattlePhase.TURN_END; } }
-
-        public Battle(IList<BattleTeam> teams, IProvider<IBattleAction, BattleActionRequest> provider)
+        private void flush()
         {
-            if (provider == null) { throw new ArgumentNullException("provider");  }
-            this.provider = provider;
-
-            if (teams == null) { throw new ArgumentNullException("teams"); }
-            if (teams.ContainsNull()) { throw new ArgumentException("A BattleTeam in a Battle cannot be null");  }
-            if (teams.ContainsDuplicates()) { throw new ArgumentException("A battle cannot contain duplicate teams"); }
-            if (teams.AnyOverlaps()) { throw new ArgumentException("2 or more teams contain overlapping trainers"); }
-            if (teams.Count < 2) { throw new ArgumentException("There must be at least 2 teams in a battle"); }
-
-            //Going to attempt to not enforce this
-            //if (teams.Any(x => x.SlotCount != teams[0].SlotCount)) throw new ArgumentException("All teams must have the same number of slots for the battle");
-
-            this.teams = new List<BattleTeam>(teams).AsReadOnly();
-
-            queue = new BattleMessageQueue();
-            queue.AddSubscriber(this);
-
-            actionRequests = new List<BattleActionRequest>();
-            phase = BattlePhase.TURN_START;
-        }
-
-        public void ResetTurn()
-        {
-            phase = BattlePhase.TURN_START;
-            actionRequests.Clear();
-        }
-
-        private void turnStart()
-        {
-            foreach (BattleTeam team in teams)
+            while (messageQueue.HasNext)
             {
-                foreach (BattleSlot slot in team)
+                OnMessageBroadcast?.Invoke(this, new EventArgs(this));
+                messageQueue.Broadcast();
+            }
+        }
+
+        public bool RegisterEffect(Effect effect)
+        {
+            if (effects.Contains(effect)) { return false; }
+            effects.Add(effect);
+
+            OnTurnStart += effect.OnTurnStart;
+            OnTurnEnd += effect.OnTurnEnd;
+            OnMessageBroadcast += effect.OnMessageBroadcast;
+            OnRequestInput += effect.OnRequestInput;
+            OnInputReceived += effect.OnInputReceived;
+            OnSwapPokemon += effect.OnSwapPokemon;
+            OnPokemonSwapped += effect.OnPokemonSwapped;
+            OnUseItem += effect.OnUseItem;
+            OnItemUsed += effect.OnItemUsed;
+            OnUseMove += effect.OnUseMove;
+            OnMoveUsed += effect.OnMoveUsed;
+            OnUseRun += effect.OnUseRun;
+            OnRunUsed += effect.OnRunUsed;
+            OnInflictMoveDamage += effect.OnInflictMoveDamage;
+            OnMoveDamageInflicted += effect.OnMoveDamageInflicted;
+
+            return true;
+        }
+
+        public bool DeregisterEffect(Effect effect)
+        {
+            OnTurnStart -= effect.OnTurnStart;
+            OnTurnEnd -= effect.OnTurnEnd;
+            OnMessageBroadcast -= effect.OnMessageBroadcast;
+            OnRequestInput -= effect.OnRequestInput;
+            OnInputReceived -= effect.OnInputReceived;
+            OnSwapPokemon -= effect.OnSwapPokemon;
+            OnPokemonSwapped -= effect.OnPokemonSwapped;
+            OnUseItem -= effect.OnUseItem;
+            OnItemUsed -= effect.OnItemUsed;
+            OnUseMove -= effect.OnUseMove;
+            OnMoveUsed -= effect.OnMoveUsed;
+            OnUseRun -= effect.OnUseRun;
+            OnRunUsed -= effect.OnRunUsed;
+            OnInflictMoveDamage -= effect.OnInflictMoveDamage;
+            OnMoveDamageInflicted -= effect.OnMoveDamageInflicted;
+
+            return effects.Remove(effect);
+        }
+
+        public void ExecuteTurn()
+        {
+            OnTurnStart?.Invoke(this, new EventArgs(this));
+
+            /* First we enqueue BattleActionRequests for all battle slots that are still in play. The 
+             * purpose of this is to allow move effects to trigger based on the enqueue'ing of the 
+             * BattleActionRequests. This allows effects from moves like Taunt modify which battlers
+             * we make BattleActionRequests for.
+            */
+            foreach (Team team in Teams)
+            {
+                foreach (Slot slot in team.Slots)
                 {
                     if (slot.IsInPlay)
                     {
-                        BattleActionRequest request = new BattleActionRequest(team, slot.SlotNumber);
-                        queue.Enqueue(request);
+                        messageQueue.Enqueue(new Request(team, slot));
                     }
                 }
             }
+            actionRequests.Clear();
+            flush();
 
-            phase = BattlePhase.REQUEST_ACTIONS;
+            OnRequestInput?.Invoke(this, new RequestInputEventArgs(this, actionRequests));
+
+            List<IAction> actions = new List<IAction>(ActionProvider.Provide(actionRequests));
+
+            OnInputReceived?.Invoke(this, new InputReceivedEventArgs(this, actionRequests, actions));
+
+            actions.Sort(); // Maybe make it so that the comparator is changeable? That would allow for Trick Room to function easier.
+
+            foreach (IAction action in actions)
+            {
+                messageQueue.Enqueue(action);
+            }
+            flush();
+
+            OnTurnEnd?.Invoke(this, new EventArgs(this));
         }
 
-        private void requestActions()
+        public void Receive(Request request)
         {
-            queue.Flush();
-
-            List<IBattleAction> list = new List<IBattleAction>(actionRequests.Count);
-            foreach (BattleActionRequest request in actionRequests)
-            {
-                list.Add(provider.Provide(request));
-            }
-            list.Sort();
-            foreach (IBattleAction action in list)
-            {
-                queue.Enqueue(action);
-            }
-
-            phase = BattlePhase.PERFORM_ACTIONS;
-        }
-
-        private void performActions()
-        {
-            queue.Flush();
-            phase = BattlePhase.TURN_END;
-        }
-
-        public bool ProgressTurn()
-        {
-            if (IsTurnComplete) { return true; }
-
-            switch(phase)
-            {
-                case BattlePhase.TURN_START:
-                    turnStart();
-                    break;
-                case BattlePhase.REQUEST_ACTIONS:
-                    requestActions();
-                    break;
-                case BattlePhase.PERFORM_ACTIONS:
-                    performActions();
-                    break;
-                case BattlePhase.TURN_END:
-                    break;
-            }
-
-            return false;
-        }
-
-        public void Receive(Run run)
-        {
-            if (phase == BattlePhase.PERFORM_ACTIONS)
-            {
-
-            }
-
-            throw new NotImplementedException();
-        }
-
-        public void Receive(UseMove useMove)
-        {
-            if (phase == BattlePhase.PERFORM_ACTIONS)
-            {
-
-            }
-            throw new NotImplementedException();
-        }
-
-        public void Receive(UseItem useItemAction)
-        {
-            if (phase == BattlePhase.PERFORM_ACTIONS)
-            {
-
-            }
-            throw new NotImplementedException();
+            actionRequests.Add(request);
         }
 
         public void Receive(SwapPokemon swapPokemonAction)
         {
-            switch (phase)
-            {
-                case BattlePhase.TURN_START:
-                    break;
-                case BattlePhase.PERFORM_ACTIONS:
-                    break;
-            }
-            throw new NotImplementedException();
+
+            OnSwapPokemon?.Invoke(this, new SwapPokemonEventArgs(this, swapPokemonAction));
+
+            // TODO
+            OnPokemonSwapped?.Invoke(this, new PokemonSwappedEventArgs(this, swapPokemonAction));
         }
 
-        public void Receive(BattleActionRequest request)
+        public void Receive(UseItem useItemAction)
         {
-            if (phase == BattlePhase.REQUEST_ACTIONS)
-            {
-                actionRequests.Add(request);
-            }
-            throw new NotImplementedException();
+            OnUseItem?.Invoke(this, new UseItemEventArgs(this, useItemAction));
+
+            // TODO
+
+            OnItemUsed?.Invoke(this, new ItemUsedEventArgs(this, useItemAction));
+        }
+
+        public void Receive(UseMove useMoveAction)
+        {
+            OnUseMove?.Invoke(this, new UseMoveEventArgs(this, useMoveAction));
+
+            // TODO
+
+            OnMoveUsed?.Invoke(this, new MoveUsedEventArgs(this, useMoveAction));
+        }
+
+        public void Receive(UseRun runAction)
+        {
+            OnUseRun?.Invoke(this, new UseRunEventArgs(this, runAction));
+
+            // TODO
+
+            OnRunUsed?.Invoke(this, new RunUsedEventArgs(this, runAction));
+        }
+
+        public void Receive(InflictMoveDamage inflictMoveDamage)
+        {
+            OnInflictMoveDamage?.Invoke(this, new InflictMoveDamageEventArgs(this, inflictMoveDamage));
+
+            inflictMoveDamage.Apply();
+
+            OnMoveDamageInflicted?.Invoke(this, new MoveDamageInflictedEventArgs(this, inflictMoveDamage));
         }
     }
 }
- 
-*/

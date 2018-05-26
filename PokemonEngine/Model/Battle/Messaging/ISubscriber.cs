@@ -5,16 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 
 using PokemonEngine.Model.Battle.Actions;
+using PokemonEngine.Model.Battle.Messages;
 
 namespace PokemonEngine.Model.Battle.Messaging
 {
     public interface ISubscriber
     {
-        void Receive(Run runAction);
+        void Receive(UseRun runAction);
         void Receive(UseMove useMoveAction);
         void Receive(UseItem useItemAction);
         void Receive(SwapPokemon swapPokemonAction);
         void Receive(Request request);
-        void Receive(Effect effect);
+
+        void Receive(InflictMoveDamage moveDamage);
     }
 }

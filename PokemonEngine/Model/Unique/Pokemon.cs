@@ -11,8 +11,8 @@ namespace PokemonEngine.Model.Unique
 {
     public class Pokemon : IPokemon
     {
-        public const int MaxLevel = 100;
         public const int MinLevel = 1;
+        public const int MaxLevel = 100;
 
         public const int MinFriendship = 0;
         public const int MaxFriendship = 255;
@@ -31,108 +31,14 @@ namespace PokemonEngine.Model.Unique
         public int BaseFriendship { get { return Base.BaseFriendship; } }
         #endregion
 
-        event EventHandler<IPokemon, ValueChangeEventArgs> PreExperienceGainEvent;
-        event EventHandler<IPokemon, ValueChangeEventArgs> PostExperienceGainEvent;
-        event EventHandler<IPokemon, ValueChangeEventArgs> PreLevelUpEvent;
-        event EventHandler<IPokemon, ValueChangeEventArgs> PostLevelUpEvent;
-        event EventHandler<IPokemon, ValueChangeEventArgs> PreFriendshipChangeEvent;
-        event EventHandler<IPokemon, ValueChangeEventArgs> PostFriendshipChangeEvent;
-        event EventHandler<IPokemon, ValueChangeEventArgs> PreHPChangeEvent;
-        event EventHandler<IPokemon, ValueChangeEventArgs> PostHPChangeEvent;
-
-        #region Interface Events
-        event EventHandler<IPokemon, ValueChangeEventArgs> IPokemon.OnExperienceGain
-        {
-            add
-            {
-                PreExperienceGainEvent += value;
-            }
-            remove
-            {
-                PreExperienceGainEvent -= value;
-            }
-        }
-        event EventHandler<IPokemon, ValueChangeEventArgs> IPokemon.OnExperienceGained
-        {
-            add
-            {
-                PostExperienceGainEvent += value;
-            }
-            remove
-            {
-                PostExperienceGainEvent -= value;
-            }
-        }
-
-        event EventHandler<IPokemon, ValueChangeEventArgs> IPokemon.OnLevelUp
-        {
-            add
-            {
-                PreLevelUpEvent += value;
-            }
-            remove
-            {
-                PreLevelUpEvent -= value;
-            }
-        }
-        event EventHandler<IPokemon, ValueChangeEventArgs> IPokemon.OnLevelledUp
-        {
-            add
-            {
-                PostLevelUpEvent += value;
-            }
-            remove
-            {
-                PostLevelUpEvent -= value;
-            }
-        }
-
-        event EventHandler<IPokemon, ValueChangeEventArgs> IPokemon.OnFriendshipChange
-        {
-            add
-            {
-                PreFriendshipChangeEvent += value;
-            }
-            remove
-            {
-                PreFriendshipChangeEvent -= value;
-            }
-        }
-        event EventHandler<IPokemon, ValueChangeEventArgs> IPokemon.OnFriendshipChanged
-        {
-            add
-            {
-                PostFriendshipChangeEvent += value;
-            }
-            remove
-            {
-                PostFriendshipChangeEvent -= value;
-            }
-        } 
-
-        event EventHandler<IPokemon, ValueChangeEventArgs> IPokemon.OnHPChange
-        {
-            add
-            {
-                PreHPChangeEvent += value;
-            }
-            remove
-            {
-                PreHPChangeEvent -= value;
-            }
-        }
-        event EventHandler<IPokemon, ValueChangeEventArgs> IPokemon.OnHPChanged
-        {
-            add
-            {
-                PostHPChangeEvent += value;
-            }
-            remove
-            {
-                PostHPChangeEvent -= value;
-            }
-        }
-        #endregion
+        public event EventHandler<GainExperienceEventArgs> OnGainExperience;
+        public event EventHandler<ExperienceGainedEventArgs> OnExperienceGained;
+        public event EventHandler<LevelUpEventArgs> OnLevelUp;
+        public event EventHandler<LevelledUpEventArgs> OnLevelledUp;
+        public event EventHandler<UpdateFriendshipEventArgs> OnUpdateFriendship;
+        public event EventHandler<FriendshipUpdatedEventArgs> OnFriendshipUpdated;
+        public event EventHandler<UpdateHPEventArgs> OnUpdateHP;
+        public event EventHandler<HPUpdatedEventArgs> OnHPUpdated;
 
         private readonly string uid;
         public string UID { get { return uid; } }
@@ -192,19 +98,14 @@ namespace PokemonEngine.Model.Unique
 
         public int GainExperience(int amount)
         {
-            ValueChangeEventArgs args = new ValueChangeEventArgs(Experience, amount);
-
-            if (amount <= 0)
-            {
-                throw new Exception("Experience may only be increased by a positive number");
-            }
-
             int expNeededForLevelup = ExpGroup.ExperienceNeededForLevel(Level + 1) - Experience;
             if (amount >= expNeededForLevelup)
             {
-                PreExperienceGainEvent?.Invoke(this, args);
+                int prevExp1 = this.Experience;
+
+                OnGainExperience?.Invoke(this, new GainExperienceEventArgs(this, expNeededForLevelup));
                 Experience += expNeededForLevelup;
-                PostExperienceGainEvent?.Invoke(this, args);
+                OnExperienceGained?.Invoke(this, new ExperienceGainedEventArgs(this, prevExp1));
                 LevelUp();
 
                 int newAmount = amount - expNeededForLevelup;
@@ -215,41 +116,43 @@ namespace PokemonEngine.Model.Unique
                 return Experience;
             }
 
-            PreExperienceGainEvent?.Invoke(this, args);
+            int prevExp2 = Experience;
+            OnGainExperience?.Invoke(this, new GainExperienceEventArgs(this, amount));
             Experience += amount;
-            PostExperienceGainEvent?.Invoke(this, args);
+            OnExperienceGained?.Invoke(this, new ExperienceGainedEventArgs(this, prevExp2));
             return Experience;
         }
 
         public int LevelUp()
         {
-            ValueChangeEventArgs args = new ValueChangeEventArgs(Level, 1);
-            PreLevelUpEvent?.Invoke(this, args);
+            OnLevelUp?.Invoke(this, new LevelUpEventArgs(this));
             Level += 1;
             Experience = ExpGroup.ExperienceNeededForLevel(Level);
-            PostLevelUpEvent?.Invoke(this, args);
+            OnLevelledUp?.Invoke(this, new LevelledUpEventArgs(this));
             return Level;
         }
 
-        public int ChangeFriendship(int delta)
+        public int UpdateFriendship(int delta)
         {
-            int newFriendship = Math.Max(0, Math.Min(MaxFriendship, Friendship + delta));
-            ValueChangeEventArgs args = new ValueChangeEventArgs(Friendship, Friendship - newFriendship);
+            int prevFriendship = Friendship;
+            int newFriendship = (int)Math.Max(0, Math.Min(MaxFriendship, Friendship + delta));
+            int actualDelta = newFriendship - Friendship;
 
-            PreFriendshipChangeEvent?.Invoke(this, args);
-            Friendship = newFriendship;
-            PostFriendshipChangeEvent?.Invoke(this, args);
+            OnUpdateFriendship?.Invoke(this, new UpdateFriendshipEventArgs(this, actualDelta));
+            Friendship += actualDelta;
+            OnFriendshipUpdated?.Invoke(this, new FriendshipUpdatedEventArgs(this, prevFriendship));
             return Friendship;
         }
 
-        public int ChangeHP(int delta)
+        public int UpdateHP(int delta)
         {
+            int prevHP = HP;
             int newHP = Math.Max(MinHP, Math.Min(this[Stat.HP], HP + delta)); // TODO: Allow increasing max hp.
-            ValueChangeEventArgs args = new ValueChangeEventArgs(HP, newHP - HP);
+            int actualDelta = newHP - HP;
 
-            PreHPChangeEvent?.Invoke(this, args);
+            OnUpdateHP?.Invoke(this, new UpdateHPEventArgs(this, actualDelta));
             HP = newHP;
-            PostHPChangeEvent?.Invoke(this, args);
+            OnHPUpdated?.Invoke(this, new HPUpdatedEventArgs(this, prevHP));
             return HP;
         }
 
@@ -273,7 +176,7 @@ namespace PokemonEngine.Model.Unique
 
             if (stat == Stat.HP)
             {
-                return baseVal + Level + 10;
+                return (int)(baseVal + Level + 10);
             }
 
             return (int)Math.Floor(Math.Floor(baseVal + 5.0) * Nature.Multiplier(stat)); // TODO: Account for Nature

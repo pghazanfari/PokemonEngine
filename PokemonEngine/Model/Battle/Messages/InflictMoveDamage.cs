@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PokemonEngine.Model.Battle.Messaging;
 
-namespace PokemonEngine.Model.Battle.Effects
+namespace PokemonEngine.Model.Battle.Messages
 {
-    public class MoveDamageEffect : Effect
+    public class InflictMoveDamage : IMessage
     {
         public readonly IMove Move;
         public readonly Slot User;
@@ -15,7 +16,7 @@ namespace PokemonEngine.Model.Battle.Effects
         private readonly float criticalModifier;
         private readonly float randomModifier;
 
-        public MoveDamageEffect(Random random, IMove move, Slot user, IReadOnlyCollection<Slot> targets)
+        public InflictMoveDamage(Random random, IMove move, Slot user, IReadOnlyCollection<Slot> targets)
         {
             Move = move;
             User = user;
@@ -25,7 +26,7 @@ namespace PokemonEngine.Model.Battle.Effects
             randomModifier = 1.0f - (random.Next(16) / 100.0f);
         }
 
-        public MoveDamageEffect(IMove move, Slot user, IReadOnlyCollection<Slot> targets) : this(new Random(), move, user, targets) { }
+        public InflictMoveDamage(IMove move, Slot user, IReadOnlyCollection<Slot> targets) : this(new Random(), move, user, targets) { }
 
         public float CriticalModifier
         {
@@ -111,13 +112,18 @@ namespace PokemonEngine.Model.Battle.Effects
             return ((LevelInfluence * Move.Power.Value * AttackDefenseRatio(target) / 50.0f) + 2) * Modifier(target);
         }
 
-        public override void Execute()
+        public void Apply()
         {
             foreach (Slot target in Targets)
             {
                 float dmg = Damage(target);
-                target.Pokemon.ChangeHP(-(int)dmg);
+                target.Pokemon.UpdateHP(-(int)dmg);
             }
+        }
+
+        public void Dispatch(ISubscriber receiver)
+        {
+            receiver.Receive(this);
         }
     }
 }

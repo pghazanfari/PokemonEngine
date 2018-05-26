@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using PokemonEngine.Model.Battle.Effects;
+using PokemonEngine.Model.Battle.Messages;
 
 namespace PokemonEngine.Model.Battle
 {
@@ -37,7 +37,7 @@ namespace PokemonEngine.Model.Battle
 
         public void Use(IBattle battle, Slot user, IReadOnlyCollection<Slot> targets)
         {
-            battle.MessageQueue.AddFirst(new MoveDamageEffect(this, user, targets));
+            battle.MessageQueue.AddFirst(new InflictMoveDamage(this, user, targets));
         }
     }
 }

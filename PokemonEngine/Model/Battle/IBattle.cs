@@ -4,14 +4,48 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using PokemonEngine.Model.Common;
 using PokemonEngine.Model.Battle.Messaging;
+using PokemonEngine.Model.Battle.Actions;
+using PokemonEngine.Model.Battle.Messages;
 
 namespace PokemonEngine.Model.Battle
 {
-    public interface IBattle
+    public interface IBattle : ISubscriber
     {
         IReadOnlyList<Team> Teams { get; }
         Queue MessageQueue { get; }
+        IReadOnlyList<Effect> Effects { get; }
+
+        // TODO: Change the second parameter for the post-message events.
+        //       The same type is used as a placeholder for now.
+
+        event EventHandler<EventArgs> OnTurnStart;
+        event EventHandler<EventArgs> OnTurnEnd;
+        event EventHandler<EventArgs> OnMessageBroadcast;
+
+        event EventHandler<RequestInputEventArgs> OnRequestInput;
+        event EventHandler<InputReceivedEventArgs> OnInputReceived;
+
+        event EventHandler<SwapPokemonEventArgs> OnSwapPokemon;
+        event EventHandler<PokemonSwappedEventArgs> OnPokemonSwapped;
+
+        event EventHandler<UseItemEventArgs> OnUseItem;
+        event EventHandler<ItemUsedEventArgs> OnItemUsed;
+
+        event EventHandler<UseMoveEventArgs> OnUseMove;
+        event EventHandler<MoveUsedEventArgs> OnMoveUsed;
+
+        event EventHandler<UseRunEventArgs> OnUseRun;
+        event EventHandler<RunUsedEventArgs> OnRunUsed;
+
+        event EventHandler<InflictMoveDamageEventArgs> OnInflictMoveDamage;
+        event EventHandler<MoveDamageInflictedEventArgs> OnMoveDamageInflicted;
+
+        bool RegisterEffect(Effect effect);
+        bool DeregisterEffect(Effect effect);
+
+        void ExecuteTurn();
     }
     public static class IBattleImpl
     {

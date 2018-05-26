@@ -10,19 +10,14 @@ namespace PokemonEngine.Model.Battle.Actions
 {
     public class UseMove : IAction
     {
-        private readonly Slot user;
-        public Slot User { get { return user; } }
+        public readonly IMove Move;
 
-        private readonly IMove move;
-        public IMove Move { get { return move; } }
-
-        public UseMove(Slot user, IMove move)
+        public UseMove(Team team, Slot slot, IMove move) : base(team, slot)
         {
-            this.user = user;
-            this.move = move;
+            Move = move;
         }
 
-        public void Dispatch(ISubscriber receiver)
+        public override void Dispatch(ISubscriber receiver)
         {
             receiver.Receive(this);
         }

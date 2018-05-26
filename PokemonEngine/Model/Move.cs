@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PokemonEngine.Model.Battle;
-using PokemonEngine.Model.Battle.Effects;
 
 namespace PokemonEngine.Model
 {

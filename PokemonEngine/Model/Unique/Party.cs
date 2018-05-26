@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 using PokemonEngine.Model.Events;
 using PokemonEngine.Model.Common;
+using System.Collections;
 
 namespace PokemonEngine.Model.Unique
 {
-    public class Party
+    public class Party : IEnumerable<Unique.IPokemon>
     {
         public class PokemonSwappedEventArgs : EventArgs
         {
@@ -138,6 +139,16 @@ namespace PokemonEngine.Model.Unique
             pokemon[slot] = replacementPokemon;
             OnPokemonReplaced(this, args);
             return old;
+        }
+
+        public IEnumerator<IPokemon> GetEnumerator()
+        {
+            return pokemon.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return pokemon.GetEnumerator();
         }
     }
 }
