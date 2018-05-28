@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8EA90F35-9574-47EB-B8B6-0D879187346D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PokemonEngine</RootNamespace>
+    <AssemblyName>PokemonEngine.Model</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\Battle\Actions\SwapPokemon.cs" />
+    <Compile Include="Model\Battle\Actions\UseItem.cs" />
+    <Compile Include="Model\Battle\Actions\UseMove.cs" />
+    <Compile Include="Model\Battle\Actions\UseRun.cs" />
+    <Compile Include="Model\Battle\EventArgs.cs" />
+    <Compile Include="Model\Battle\IBattleInputProvider.cs" />
+    <Compile Include="Model\Battle\ITargetSelector.cs" />
+    <Compile Include="Model\Battle\ITrainer.cs" />
+    <Compile Include="Model\Battle\Messages\InflictMoveDamage.cs" />
+    <Compile Include="Model\Battle\Actions\IAction.cs" />
+    <Compile Include="Model\Battle\Slot.cs" />
+    <Compile Include="Model\Battle\IParticipant.cs" />
+    <Compile Include="Model\Battle\StatisticSet.cs" />
+    <Compile Include="Model\Battle\Trainer.cs" />
+    <Compile Include="Model\Battle\View.cs" />
+    <Compile Include="Model\Battle\Effect.cs" />
+    <Compile Include="Model\Battle\Messaging\Queue.cs" />
+    <Compile Include="Model\Battle\Messaging\IMessage.cs" />
+    <Compile Include="Model\Battle\Messaging\ISubscriber.cs" />
+    <Compile Include="Model\Battle\Actions\Request.cs" />
+    <Compile Include="Model\Common\Events.cs" />
+    <Compile Include="Model\Common\IProvider.cs" />
+    <Compile Include="Model\Common\Sequence\IMutableSequence.cs" />
+    <Compile Include="Model\Common\Sequence\ISequence.cs" />
+    <Compile Include="Model\Common\Sequence\MutableSequence.cs" />
+    <Compile Include="Model\Common\Sequence\Sequence.cs" />
+    <Compile Include="Model\ExperienceGroup.cs" />
+    <Compile Include="Model\IMove.cs" />
+    <Compile Include="Model\IStatisticSet.cs" />
+    <Compile Include="Model\StatisticSet.cs" />
+    <Compile Include="Model\Unique\EventArgs.cs" />
+    <Compile Include="Model\Unique\ITrainer.cs" />
+    <Compile Include="Model\Common\Extensions.cs" />
+    <Compile Include="Model\Unique\IMove.cs" />
+    <Compile Include="Model\Unique\IPokemon.cs" />
+    <Compile Include="Model\Gender.cs" />
+    <Compile Include="Model\IPokemon.cs" />
+    <Compile Include="Model\Unique\EVSet.cs" />
+    <Compile Include="Model\Unique\IVSet.cs" />
+    <Compile Include="Model\Unique\MoveSet.cs" />
+    <Compile Include="Model\MovePool.cs" />
+    <Compile Include="Model\Ability.cs" />
+    <Compile Include="Model\Move.cs" />
+    <Compile Include="Model\MoveTarget.cs" />
+    <Compile Include="Model\Nature.cs" />
+    <Compile Include="Model\Unique\Party.cs" />
+    <Compile Include="Model\Statistic.cs" />
+    <Compile Include="Model\Unique\Move.cs" />
+    <Compile Include="Model\Unique\Pokemon.cs" />
+    <Compile Include="Model\PokemonType.cs" />
+    <Compile Include="Model\Pokemon.cs" />
+    <Compile Include="Model\Battle\Battle.cs" />
+    <Compile Include="Model\Battle\Move.cs" />
+    <Compile Include="Model\Battle\Pokemon.cs" />
+    <Compile Include="Model\Battle\Team.cs" />
+    <Compile Include="Model\Unique\StatisticsSet.cs" />
+    <Compile Include="Model\Unique\Trainer.cs" />
+    <Compile Include="Model\Battle\IBattle.cs" />
+    <Compile Include="Model\Battle\IMove.cs" />
+    <Compile Include="Model\Battle\IPokemon.cs" />
+    <Compile Include="Model\Battle\Stats.cs" />
+    <Compile Include="Model\Battle\Statistic.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
