@@ -4,15 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using PokemonEngine.Model.Unique;
+
 namespace PokemonEngine.Model.Battle
 {
     public interface IPokemon : Unique.IPokemon
     {
-        new StatisticSet Stats { get; }
+        new Statistics Stats { get; }
         new MoveSet<IMove> Moves { get; }
 
         //event EventHandler<UpdateStatStageEventArgs> OnUpdateStatStage;
         //event EventHandler<StatStageUpdatedEventArgs> OnStatStageUpdated;
+
+        new IPokemon Clone();
     }
 
     public static class IPokemonImpl

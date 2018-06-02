@@ -15,8 +15,8 @@ namespace PokemonEngine.Model
         private readonly IReadOnlyList<PokemonType> types;
         public IReadOnlyList<PokemonType> Types { get { return types; } }
 
-        private readonly IStatisticSet baseStats;
-        public IStatisticSet BaseStats { get { return baseStats; } }
+        private readonly IStatistics stats;
+        public IStatistics Stats { get { return stats; } }
 
         private readonly ExperienceGroup expGroup;
         public ExperienceGroup ExpGroup { get { return expGroup; } }
@@ -32,11 +32,11 @@ namespace PokemonEngine.Model
         private readonly int friendship;
         public int Friendship { get { return friendship; } }
 
-        public Pokemon(string species, IList<PokemonType> types, IStatisticSet stats, ExperienceGroup expGroup, MovePool movePool, IList<Ability> abilityPool, int friendship)
+        public Pokemon(string species, IList<PokemonType> types, IStatistics stats, ExperienceGroup expGroup, MovePool movePool, IList<Ability> abilityPool, int friendship)
         {
             this.species = species;
             this.types = new List<PokemonType>(types).AsReadOnly();
-            this.baseStats = stats;
+            this.stats = stats;
             this.expGroup = expGroup;
             this.movePool = movePool;
             this.possibleAbilities = new List<Ability>(abilityPool).AsReadOnly();

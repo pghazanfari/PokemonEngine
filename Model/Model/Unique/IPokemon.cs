@@ -8,11 +8,11 @@ using PokemonEngine.Model.Common;
 
 namespace PokemonEngine.Model.Unique
 {
-    public interface IPokemon : Model.IPokemon
+    public interface IPokemon : Model.IPokemon, ICloneable
     {
         string UID { get; }
 
-        IStatisticSet Stats { get; }
+        new IStatistics Stats { get; }
         Gender Gender { get; }
         Nature Nature { get; }
         IVSet IVs { get; }
@@ -37,6 +37,8 @@ namespace PokemonEngine.Model.Unique
         event EventHandler<UpdateHPEventArgs> OnUpdateHP;
         event EventHandler<HPUpdatedEventArgs> OnHPUpdated;
         int UpdateHP(int delta);
+
+        new IPokemon Clone();
     }
     
     public static class IPokemonImpl

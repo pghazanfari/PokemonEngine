@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using ModelUnitTests.Pokemons;
+using ModelUnitTests.PokemonImpl;
 
 namespace ModelUnitTests
 {

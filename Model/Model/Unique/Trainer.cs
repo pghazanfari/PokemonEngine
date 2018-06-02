@@ -22,5 +22,19 @@ namespace PokemonEngine.Model.Unique
 
         public Trainer(Party party) : this(Guid.NewGuid().ToString(), party) { }
 
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        ITrainer ITrainer.Clone()
+        {
+            return Clone();
+        }
+
+        public Trainer Clone()
+        {
+            return new Trainer(this.uid, party.Clone());
+        }
     }
 }

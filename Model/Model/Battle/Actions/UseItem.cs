@@ -16,6 +16,14 @@ namespace PokemonEngine.Model.Battle.Actions
         {
         }
 
+        public override int Priority
+        {
+            get
+            {
+                return 6;
+            }
+        }
+
         public override void Dispatch(ISubscriber receiver)
         {
             receiver.Receive(this);

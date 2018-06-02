@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Model
 {
-    public class StatisticSet : IStatisticSet
+    public class Statistics : IStatistics
     {
         private readonly IReadOnlyDictionary<Statistic, int> statistics;
         public virtual int this[Statistic stat]
@@ -18,7 +18,7 @@ namespace PokemonEngine.Model
             }
         }
 
-        public StatisticSet(IDictionary<Statistic, int> statistics)
+        public Statistics(IDictionary<Statistic, int> statistics)
         {
             Dictionary<Statistic, int> dict = new Dictionary<Statistic, int>(Statistic.All.Count);
             foreach (Statistic stat in Statistic.All)
@@ -31,7 +31,7 @@ namespace PokemonEngine.Model
             this.statistics = new ReadOnlyDictionary<Statistic, int>(dict);
         }
 
-        public StatisticSet(int hp, int attack, int defense, int specialAttack, int specialDefense, int speed) : this(paramsToDict(hp, attack, defense, specialAttack, specialDefense, speed)) { }
+        public Statistics(int hp, int attack, int defense, int specialAttack, int specialDefense, int speed) : this(paramsToDict(hp, attack, defense, specialAttack, specialDefense, speed)) { }
 
         private static IDictionary<Statistic, int> paramsToDict(int hp, int attack, int defense, int specialAttack, int specialDefense, int speed)
         {

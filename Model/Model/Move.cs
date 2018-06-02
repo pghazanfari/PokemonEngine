@@ -12,6 +12,8 @@ namespace PokemonEngine.Model
 {
     public class Move : IMove
     {
+        public const int DefaultPriority = 0;
+
         private readonly string name;
         public string Name { get { return name; }  }
 
@@ -33,9 +35,18 @@ namespace PokemonEngine.Model
         private readonly int maxPossiblePP;
         public int MaxPPLimit { get { return maxPossiblePP; } }
 
+        private readonly int priority;
+        public int Priority
+        {
+            get
+            {
+                return priority;
+            }
+        }
+
         // TODO: Effects
 
-        public Move(string name, PokemonType type, int? power, DamageType? damageType, MoveTarget target, int basePP, int maxPossiblePP)
+        public Move(string name, PokemonType type, int? power, DamageType? damageType, MoveTarget target, int basePP, int maxPossiblePP, int priority)
         {
             this.name = name;
             this.type = type;
@@ -44,9 +55,13 @@ namespace PokemonEngine.Model
             this.target = target;
             this.basePP = basePP;
             this.maxPossiblePP = maxPossiblePP;
+            this.priority = priority;
         }
 
-        public void Use(IBattle battle, UseMove useMoveAction)
+        public Move(string name, PokemonType type, int? power, DamageType? damageType, MoveTarget target, int basePP, int maxPossiblePP) : this(name, type, power, damageType, target, basePP, maxPossiblePP, DefaultPriority)
+        { }
+
+        public virtual void Use(IBattle battle, UseMove useMoveAction)
         {
             if (!damageType.HasValue) { return; }
 

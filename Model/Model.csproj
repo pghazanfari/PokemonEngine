@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Battle\Actions\Comparer.cs" />
     <Compile Include="Model\Battle\Actions\SwapPokemon.cs" />
     <Compile Include="Model\Battle\Actions\UseItem.cs" />
     <Compile Include="Model\Battle\Actions\UseMove.cs" />
@@ -49,11 +50,14 @@
     <Compile Include="Model\Battle\IBattleInputProvider.cs" />
     <Compile Include="Model\Battle\ITargetSelector.cs" />
     <Compile Include="Model\Battle\ITrainer.cs" />
+    <Compile Include="Model\Battle\Messages\EffectOperation.cs" />
     <Compile Include="Model\Battle\Messages\InflictMoveDamage.cs" />
     <Compile Include="Model\Battle\Actions\IAction.cs" />
+    <Compile Include="Model\Battle\Messages\MoveOperation.cs" />
+    <Compile Include="Model\Battle\Messages\ShiftStatStage.cs" />
     <Compile Include="Model\Battle\Slot.cs" />
     <Compile Include="Model\Battle\IParticipant.cs" />
-    <Compile Include="Model\Battle\StatisticSet.cs" />
+    <Compile Include="Model\Battle\Statistics.cs" />
     <Compile Include="Model\Battle\Trainer.cs" />
     <Compile Include="Model\Battle\View.cs" />
     <Compile Include="Model\Battle\Effect.cs" />
@@ -69,8 +73,8 @@
     <Compile Include="Model\Common\Sequence\Sequence.cs" />
     <Compile Include="Model\ExperienceGroup.cs" />
     <Compile Include="Model\IMove.cs" />
-    <Compile Include="Model\IStatisticSet.cs" />
-    <Compile Include="Model\StatisticSet.cs" />
+    <Compile Include="Model\IStatistics.cs" />
+    <Compile Include="Model\Statistics.cs" />
     <Compile Include="Model\Unique\EventArgs.cs" />
     <Compile Include="Model\Unique\ITrainer.cs" />
     <Compile Include="Model\Common\Extensions.cs" />
@@ -96,12 +100,11 @@
     <Compile Include="Model\Battle\Move.cs" />
     <Compile Include="Model\Battle\Pokemon.cs" />
     <Compile Include="Model\Battle\Team.cs" />
-    <Compile Include="Model\Unique\StatisticsSet.cs" />
+    <Compile Include="Model\Unique\Statistics.cs" />
     <Compile Include="Model\Unique\Trainer.cs" />
     <Compile Include="Model\Battle\IBattle.cs" />
     <Compile Include="Model\Battle\IMove.cs" />
     <Compile Include="Model\Battle\IPokemon.cs" />
-    <Compile Include="Model\Battle\Stats.cs" />
     <Compile Include="Model\Battle\Statistic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

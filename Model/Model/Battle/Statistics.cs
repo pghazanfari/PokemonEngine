@@ -6,28 +6,24 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Model.Battle
 {
-    public class StatisticSet : IStatisticSet
+    public class Statistics : Model.IStatistics
     {
         public const int MinStage = -6;
         public const int InitialStage = 0;
         public const int MaxStage = 6;
 
-        private readonly Unique.IPokemon Pokemon;
-        public int this[Model.Statistic stat] { get { return (int)(Pokemon.Stats[stat] * Multiplier(stat)); } }
+        private readonly IStatistics stats;
+        public int this[Model.Statistic stat] { get { return (int)(stats[stat] * Multiplier(stat)); } }
 
         private readonly IDictionary<Statistic, int> stages;
 
-        public StatisticSet(IPokemon pokemon)
+        public Statistics(IStatistics stats)
         {
-            Pokemon = pokemon;
-            stages = new Dictionary<Statistic, int>(Statistic.All.Count);
-            foreach (Statistic stat in Statistic.All)
-            {
-                stages[stat] = InitialStage;
-            }
+            this.stats = stats;
+            stages = Statistic.All.ToDictionary(kvp => kvp, kvp => InitialStage);
         }
 
-        public void UpdateStage(Statistic stat, int delta)
+        public void ShiftStage(Statistic stat, int delta)
         {
             stages[stat] = Math.Max(Math.Min(stages[stat] + delta, MaxStage), MinStage);
         }

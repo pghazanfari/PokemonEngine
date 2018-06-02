@@ -8,10 +8,12 @@ using PokemonEngine.Model.Battle.Messaging;
 
 namespace PokemonEngine.Model.Battle.Actions
 {
-    public abstract class IAction : IMessage// TODO: , IComparable<IBattleAction>
+    public abstract class IAction : IMessage// TODO: , IComparable<Action>
     {
         private readonly Slot slot;
         public Slot Slot { get { return slot; } }
+
+        public abstract int Priority { get; }
 
         public IAction( Slot slot)
         {

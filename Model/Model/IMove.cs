@@ -19,6 +19,7 @@ namespace PokemonEngine.Model
         MoveTarget Target { get;  }
         int BasePP { get; }
         int MaxPPLimit { get; }
+        int Priority { get; }
 
         void Use(IBattle battle, UseMove useMoveAction);
     }

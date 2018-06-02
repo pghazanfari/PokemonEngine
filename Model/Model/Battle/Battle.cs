@@ -35,6 +35,9 @@ namespace PokemonEngine.Model.Battle
             }
         }
 
+        public event EventHandler<EventArgs> OnBattleStart;
+        public event EventHandler<EventArgs> OnBattleEnd;
+
         public event EventHandler<EventArgs> OnTurnStart;
         public event EventHandler<EventArgs> OnTurnEnd;
         public event EventHandler<EventArgs> OnMessageBroadcast;
@@ -56,10 +59,25 @@ namespace PokemonEngine.Model.Battle
 
         public event EventHandler<InflictMoveDamageEventArgs> OnInflictMoveDamage;
         public event EventHandler<MoveDamageInflictedEventArgs> OnMoveDamageInflicted;
+        
+        public event EventHandler<ShiftStatStageEventArgs> OnShiftStatStage;
+        public event EventHandler<StatStageShiftedEventArgs> OnStatStageShifted;
+
+        public event EventHandler<PerformMoveOperationEventArgs> OnPerformMoveOperation;
+        public event EventHandler<MoveOperationPerformedEventArgs> OnMoveOperationPerformed;
+
+        public event EventHandler<PerformEffectOperationEventArgs> OnPerformEffectOperation;
+        public event EventHandler<EffectOperationPerformedEventArgs> OnEffectOperationPerformed;
 
         public IBattleInputProvider InputProvider { get; set; }
+        public IComparer<IAction> ActionComparer { get; set; }
 
         private readonly IList<Request> actionRequests;
+
+        private enum State { START, IN_PROGRESS, END };
+        private State currentState;
+
+        public int TurnCounter { get; private set; }
 
         public Battle(Random rng, IBattleInputProvider inputProvider, IEnumerable<Team> teams)
         {
@@ -84,6 +102,10 @@ namespace PokemonEngine.Model.Battle
 
             messageQueue = new Messaging.Queue();
             messageQueue.AddSubscriber(this);
+
+            ActionComparer = new Actions.Comparer(RNG);
+            currentState = State.START;
+            TurnCounter = 1;
         }
 
         public Battle(IBattleInputProvider inputProvider, IEnumerable<Team> teams) : this(new Random(), inputProvider, teams) { }
@@ -128,6 +150,12 @@ namespace PokemonEngine.Model.Battle
             OnRunUsed += effect.OnRunUsed;
             OnInflictMoveDamage += effect.OnInflictMoveDamage;
             OnMoveDamageInflicted += effect.OnMoveDamageInflicted;
+            OnShiftStatStage += effect.OnShiftStatStage;
+            OnStatStageShifted += effect.OnStatStageShifted;
+            OnPerformMoveOperation += effect.OnPerformMoveOperation;
+            OnMoveOperationPerformed += effect.OnMoveOperationPerformed;
+            OnPerformEffectOperation += effect.OnPerformEffectOperation;
+            OnEffectOperationPerformed += effect.OnEffectOperationPerformed;
 
             return true;
         }
@@ -149,12 +177,26 @@ namespace PokemonEngine.Model.Battle
             OnRunUsed -= effect.OnRunUsed;
             OnInflictMoveDamage -= effect.OnInflictMoveDamage;
             OnMoveDamageInflicted -= effect.OnMoveDamageInflicted;
+            OnShiftStatStage -= effect.OnShiftStatStage;
+            OnStatStageShifted -= effect.OnStatStageShifted;
+            OnPerformMoveOperation -= effect.OnPerformMoveOperation;
+            OnMoveOperationPerformed -= effect.OnMoveOperationPerformed;
+            OnPerformEffectOperation -= effect.OnPerformEffectOperation;
+            OnEffectOperationPerformed -= effect.OnEffectOperationPerformed;
 
             return effects.Remove(effect);
         }
 
         public void ExecuteTurn()
         {
+            if (currentState == State.END) { return; } // Don't do anything if battle is over
+
+            if (currentState == State.START)
+            {
+                OnBattleStart?.Invoke(this, new EventArgs(this));
+                currentState = State.IN_PROGRESS;
+            }
+
             OnTurnStart?.Invoke(this, new EventArgs(this));
 
             /* First we enqueue BattleActionRequests for all battle slots that are still in play. The 
@@ -181,7 +223,7 @@ namespace PokemonEngine.Model.Battle
 
             OnInputReceived?.Invoke(this, new InputReceivedEventArgs(this, actionRequests, actions));
 
-            //actions.Sort(); // Maybe make it so that the comparator is changeable? That would allow for Trick Room to function easier.
+            actions.Sort(ActionComparer);
 
             foreach (IAction action in actions)
             {
@@ -210,6 +252,14 @@ namespace PokemonEngine.Model.Battle
 
 
             OnTurnEnd?.Invoke(this, new EventArgs(this));
+
+            if (this.IsComplete())
+            {
+                OnBattleEnd?.Invoke(this, new BattleEndEventArgs(this, this.Winner()));
+                currentState = State.END;
+            }
+
+            TurnCounter += 1;
         }
 
         public void Receive(Request request)
@@ -223,6 +273,7 @@ namespace PokemonEngine.Model.Battle
             OnSwapPokemon?.Invoke(this, new SwapPokemonEventArgs(this, swapPokemonAction));
 
             // TODO
+            
             OnPokemonSwapped?.Invoke(this, new PokemonSwappedEventArgs(this, swapPokemonAction));
         }
 
@@ -263,6 +314,33 @@ namespace PokemonEngine.Model.Battle
             inflictMoveDamage.Apply();
 
             OnMoveDamageInflicted?.Invoke(this, new MoveDamageInflictedEventArgs(this, inflictMoveDamage));
+        }
+
+        public void Receive(ShiftStatStage shiftStatStage)
+        {
+            OnShiftStatStage?.Invoke(this, new ShiftStatStageEventArgs(this, shiftStatStage));
+
+            shiftStatStage.Apply();
+
+            OnStatStageShifted?.Invoke(this, new StatStageShiftedEventArgs(this, shiftStatStage));
+        }
+
+        public void Receive(MoveOperation moveOperation)
+        {
+            OnPerformMoveOperation?.Invoke(this, new PerformMoveOperationEventArgs(this, moveOperation));
+
+            moveOperation.PerformOperation(this);
+
+            OnMoveOperationPerformed?.Invoke(this, new MoveOperationPerformedEventArgs(this, moveOperation));
+        }
+
+        public void Receive(EffectOperation effectOperation)
+        {
+            OnPerformEffectOperation?.Invoke(this, new PerformEffectOperationEventArgs(this, effectOperation));
+
+            effectOperation.PerformOperation(this);
+
+            OnEffectOperationPerformed?.Invoke(this, new EffectOperationPerformedEventArgs(this, effectOperation));
         }
     }
 }

@@ -4,15 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using PokemonEngine.Model.Battle;
+
 namespace PokemonEngine.Model
 {
-    public class Ability
+    public abstract class Ability
     {
-        public string Description { get; private set; }
+        public readonly string Name;
+        public readonly string Description;
 
-        public Ability(string description)
+        public Ability(string name, string description)
         {
+            Name = name;
             Description = description;
         }
+
+        public abstract void OnBattleStart(IBattle battle);
+        public abstract void OnEnterBattle(IBattle battle, Battle.IPokemon pokemon);
+        public abstract void OnExitBattle(IBattle battle, Battle.IPokemon pokemon);
     }
 }

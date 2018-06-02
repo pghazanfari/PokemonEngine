@@ -19,6 +19,14 @@ namespace PokemonEngine.Model.Battle.Actions
             Targets = new List<Slot>(targets).AsReadOnly();
         }
 
+        public override int Priority
+        {
+            get
+            {
+                return Move.Priority;
+            }
+        }
+
         public override void Dispatch(ISubscriber receiver)
         {
             receiver.Receive(this);

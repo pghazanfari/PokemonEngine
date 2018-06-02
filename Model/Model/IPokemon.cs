@@ -10,7 +10,7 @@ namespace PokemonEngine.Model
     {
         string Species { get; }
         IReadOnlyList<PokemonType> Types { get; }
-        IStatisticSet BaseStats { get; }
+        IStatistics Stats { get; }
         ExperienceGroup ExpGroup { get; }
         MovePool MovePool { get; }
         IReadOnlyList<Ability> AbilityPool { get; }

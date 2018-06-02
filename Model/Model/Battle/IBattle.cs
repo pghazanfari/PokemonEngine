@@ -17,10 +17,14 @@ namespace PokemonEngine.Model.Battle
         IReadOnlyList<Team> Teams { get; }
         Queue MessageQueue { get; }
         IReadOnlyList<Effect> Effects { get; }
+        int TurnCounter { get; }
+        IComparer<IAction> ActionComparer { get; set; }
 
         // TODO: Change the second parameter for the post-message events.
         //       The same type is used as a placeholder for now.
 
+        event EventHandler<EventArgs> OnBattleStart;
+        event EventHandler<EventArgs> OnBattleEnd;
         event EventHandler<EventArgs> OnTurnStart;
         event EventHandler<EventArgs> OnTurnEnd;
         event EventHandler<EventArgs> OnMessageBroadcast;
@@ -42,6 +46,15 @@ namespace PokemonEngine.Model.Battle
 
         event EventHandler<InflictMoveDamageEventArgs> OnInflictMoveDamage;
         event EventHandler<MoveDamageInflictedEventArgs> OnMoveDamageInflicted;
+
+        event EventHandler<ShiftStatStageEventArgs> OnShiftStatStage;
+        event EventHandler<StatStageShiftedEventArgs> OnStatStageShifted;
+
+        event EventHandler<PerformMoveOperationEventArgs> OnPerformMoveOperation;
+        event EventHandler<MoveOperationPerformedEventArgs> OnMoveOperationPerformed;
+
+        event EventHandler<PerformEffectOperationEventArgs> OnPerformEffectOperation;
+        event EventHandler<EffectOperationPerformedEventArgs> OnEffectOperationPerformed;
 
         bool RegisterEffect(Effect effect);
         bool DeregisterEffect(Effect effect);

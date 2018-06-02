@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Model
 {
-    public interface IStatisticSet
+    public interface IStatistics
     {
         int this[Statistic stat] { get; }
     }

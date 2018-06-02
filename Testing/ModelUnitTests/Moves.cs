@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using ModelUnitTests.Moves;
+using ModelUnitTests.MoveImpl;
 
 namespace ModelUnitTests
 {
     public partial class Move
     {
-        public static readonly MTackle Tackle = MTackle.Instance;
+        public static readonly Tackle Tackle = Tackle.Instance;
+        public static readonly Growl Growl = Growl.Instance;
 
         private Move() { }
     }

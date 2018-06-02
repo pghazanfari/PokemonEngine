@@ -20,6 +20,15 @@ namespace PokemonEngine.Model.Battle
     }
 
     #region Battle
+    public class BattleEndEventArgs : EventArgs
+    {
+        public readonly Team Winner;
+        public BattleEndEventArgs(IBattle battle, Team winner) : base(battle)
+        {
+            Winner = winner;
+        }
+    }
+
     public class RequestInputEventArgs : EventArgs
     {
         public readonly IList<Request> Requests;
@@ -132,6 +141,62 @@ namespace PokemonEngine.Model.Battle
         public MoveDamageInflictedEventArgs(IBattle battle, InflictMoveDamage action) : base(battle)
         {
             Action = action;
+        }
+    }
+
+    public class ShiftStatStageEventArgs : EventArgs
+    {
+        public readonly ShiftStatStage Action;
+        public ShiftStatStageEventArgs(IBattle battle, ShiftStatStage action) : base(battle)
+        {
+            Action = action;
+        }
+    }
+
+    public class StatStageShiftedEventArgs : EventArgs
+    {
+        public readonly ShiftStatStage Action;
+        public StatStageShiftedEventArgs(IBattle battle, ShiftStatStage action) : base(battle)
+        {
+            Action = action;
+        }
+    }
+
+    public class PerformMoveOperationEventArgs : EventArgs
+    {
+        public readonly MoveOperation Operation;
+        public PerformMoveOperationEventArgs(IBattle battle, MoveOperation operation) : base(battle)
+        {
+            Operation = operation;
+        }
+    }
+
+    public class MoveOperationPerformedEventArgs : EventArgs
+    {
+        public readonly MoveOperation Operation;
+        public MoveOperationPerformedEventArgs(IBattle battle, MoveOperation operation) : base(battle)
+        {
+            Operation = operation;
+        }
+    }
+    
+    public class PerformEffectOperationEventArgs : EventArgs
+    {
+        public readonly EffectOperation Operation;
+
+        public PerformEffectOperationEventArgs(IBattle battle, EffectOperation operation) : base(battle)
+        {
+            Operation = operation;
+        }
+    }
+
+    public class EffectOperationPerformedEventArgs : EventArgs
+    {
+        public readonly EffectOperation Operation;
+
+        public EffectOperationPerformedEventArgs(IBattle battle, EffectOperation operation) : base(battle)
+        {
+            Operation = operation;
         }
     }
     #endregion

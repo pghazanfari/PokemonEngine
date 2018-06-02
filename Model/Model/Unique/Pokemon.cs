@@ -23,7 +23,7 @@ namespace PokemonEngine.Model.Unique
         #region Base Pokemon Wrapper Methods
         public string Species { get { return Base.Species; } }
         public IReadOnlyList<PokemonType> Types { get { return Base.Types; } }
-        public IStatisticSet BaseStats { get { return Base.BaseStats; } }
+        IStatistics Model.IPokemon.Stats { get { return Base.Stats; } }
         public ExperienceGroup ExpGroup { get { return Base.ExpGroup; } }
         public MovePool MovePool { get { return Base.MovePool; } }
         public IReadOnlyList<Ability> AbilityPool { get { return Base.AbilityPool; } }
@@ -41,8 +41,8 @@ namespace PokemonEngine.Model.Unique
         private readonly string uid;
         public string UID { get { return uid; } }
 
-        private readonly IStatisticSet stats;
-        public IStatisticSet Stats { get { return stats; } }
+        private readonly IStatistics stats;
+        public IStatistics Stats { get { return stats; } }
 
         private readonly IVSet ivs;
         public IVSet IVs { get { return ivs; } }
@@ -66,11 +66,11 @@ namespace PokemonEngine.Model.Unique
         public int Level { get; private set; }
 
         public int Experience { get; private set; }
-                
+
         public Pokemon(Model.Pokemon basePokemon, string uid, Gender gender, Nature nature, IVSet ivs, EVSet evs, MoveSet<IMove> moves, int friendship, int level)
         {
             Base = basePokemon;
-            stats = new StatisticSet(this);
+            stats = new Statistics(this);
             this.gender = gender;
             this.nature = nature;
             this.uid = uid;
@@ -168,6 +168,21 @@ namespace PokemonEngine.Model.Unique
         public override int GetHashCode()
         {
             return UID.GetHashCode();
+        }
+        
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+        
+        IPokemon IPokemon.Clone()
+        {
+            return Clone();
+        }
+
+        public Pokemon Clone()
+        {
+            return new Pokemon(Base, this.Gender, this.Nature, this.IVs.Clone() as IVSet, this.EVs.Clone() as EVSet, this.moves.Clone(), this.Level);
         }
     }
 }

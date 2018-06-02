@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 using PokemonEngine.Model.Common;
 
-namespace PokemonEngine.Model
+namespace PokemonEngine.Model.Unique
 {
-    public class MoveSet<T> : IReadOnlyList<T> where T : IMove
+    public class MoveSet<T> : IReadOnlyList<T>, ICloneable where T : IMove
     {
         public const int MaxNumberOfMoves = 4;
 
@@ -72,6 +72,16 @@ namespace PokemonEngine.Model
         IEnumerator IEnumerable.GetEnumerator()
         {
             return moves.GetEnumerator();
+        }
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        public MoveSet<T> Clone()
+        {
+            return new MoveSet<T>(moves.Select(x => x.Clone()).ToList() as IList<T>);
         }
     }
 }

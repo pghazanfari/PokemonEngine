@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Model.Battle
 {
-    public interface IParticipant
+    public interface IParticipant : ICloneable
     {
         IReadOnlyList<IPokemon> Battlers { get; }
         Party Party { get; }
+
+        new IParticipant Clone();
     }
 
     public static class IBattleParticipantImpl

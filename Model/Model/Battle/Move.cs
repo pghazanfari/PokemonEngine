@@ -21,6 +21,7 @@ namespace PokemonEngine.Model.Battle
         public MoveTarget Target { get { return Base.Target; } }
         public int BasePP { get { return Base.BasePP; } }
         public int MaxPPLimit { get { return Base.MaxPPLimit; } }
+        public int Priority { get { return Base.Priority; } }
         public void Use(IBattle battle, UseMove useMoveAction) { Base.Use(battle, useMoveAction); }
 
         public int PP { get { return Base.PP; } }
@@ -36,5 +37,25 @@ namespace PokemonEngine.Model.Battle
         }
 
         public Move(Unique.IMove baseMove) : this(baseMove, false) { }
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        Unique.IMove Unique.IMove.Clone()
+        {
+            return Clone();
+        }
+
+        IMove IMove.Clone()
+        {
+            return Clone();
+        }
+
+        public Move Clone()
+        {
+            return new Move(Base.Clone(), IsDisabled);
+        }
     }
 }

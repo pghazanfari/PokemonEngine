@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Model.Unique
 {
-    public class EVSet
+    public class EVSet : ICloneable
     {
         public const int MaxEV = 255;
         public const int MinEV = 0;
@@ -44,5 +44,15 @@ namespace PokemonEngine.Model.Unique
 
         public EVSet(int ev) : this(Enumerable.ToDictionary(Statistic.All, x => x, x => ev)) { }
         public EVSet() : this(0) { }
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        public EVSet Clone()
+        {
+            return new EVSet(evs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
+        }
     }
 }

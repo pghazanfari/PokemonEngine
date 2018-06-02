@@ -9,7 +9,7 @@ using System.Collections;
 
 namespace PokemonEngine.Model.Unique
 {
-    public class Party : IEnumerable<Unique.IPokemon>
+    public class Party : IEnumerable<Unique.IPokemon>, ICloneable
     {
         public class PokemonSwappedEventArgs : EventArgs
         {
@@ -150,6 +150,16 @@ namespace PokemonEngine.Model.Unique
         IEnumerator IEnumerable.GetEnumerator()
         {
             return pokemon.GetEnumerator();
+        }
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        public Party Clone()
+        {
+            return new Party(this.pokemon.Select(x => x.Clone()).ToList());
         }
     }
 }

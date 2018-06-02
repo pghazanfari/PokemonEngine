@@ -51,18 +51,23 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="MoveImpl\Growl.cs" />
     <Compile Include="Pokemon.cs" />
     <Compile Include="Tests\BattleTest.cs" />
     <Compile Include="Moves.cs" />
-    <Compile Include="Moves\Tackle.cs" />
-    <Compile Include="Pokemons\Bulbasaur.cs" />
+    <Compile Include="MoveImpl\Tackle.cs" />
+    <Compile Include="PokemonImpl\Bulbasaur.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\TestStatistics.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Model\Model.csproj">
       <Project>{8ea90f35-9574-47eb-b8b6-0d879187346d}</Project>
       <Name>Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="EffectImpl\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

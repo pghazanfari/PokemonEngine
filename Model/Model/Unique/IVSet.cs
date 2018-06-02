@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Model.Unique
 {
-    public class IVSet
+    public class IVSet : ICloneable
     {
         public const int MaxIV = 31;
         public const int MinIV = 0;
@@ -33,5 +33,15 @@ namespace PokemonEngine.Model.Unique
 
         public IVSet(int iv) : this(Enumerable.ToDictionary(Statistic.All, x => x, x => iv)) { }
         public IVSet() : this(0) { }
+
+        object ICloneable.Clone()
+        {
+            return this.Clone();
+        }
+
+        public IVSet Clone()
+        {
+            return new IVSet(this.ivs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
+        }
     }
 }

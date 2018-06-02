@@ -16,7 +16,7 @@ namespace PokemonEngine.Model.Battle
         #region Base Pokemon Wrapper Methods
         public string Species { get { return Base.Species; } }
         public IReadOnlyList<PokemonType> Types { get { return Base.Types; } }
-        public IStatisticSet BaseStats { get { return Base.BaseStats; } }
+        IStatistics Model.IPokemon.Stats { get { return (Base as Model.IPokemon).Stats; } }
         public ExperienceGroup ExpGroup { get { return Base.ExpGroup; } }
         public MovePool MovePool { get { return Base.MovePool; } }
         public IReadOnlyList<Ability> AbilityPool { get { return Base.AbilityPool; } }
@@ -25,13 +25,13 @@ namespace PokemonEngine.Model.Battle
         public Gender Gender { get { return Base.Gender; } }
         public Nature Nature { get { return Base.Nature; } }
         public string UID {  get { return Base.UID; } }
-        IStatisticSet Unique.IPokemon.Stats { get { return Base.Stats; } }
+        IStatistics Model.Unique.IPokemon.Stats { get { return (Base as Model.Unique.IPokemon).Stats; } }
         public IVSet IVs { get { return Base.IVs; } }
         public EVSet EVs { get { return Base.EVs; } }
         public int Level { get { return Base.Level; } }
         public int Experience { get { return Base.Experience; } }
         public int HP { get { return Base.HP; } }
-        public MoveSet<Unique.IMove> Moves { get { return Base.Moves; } }
+        MoveSet<Unique.IMove> Unique.IPokemon.Moves { get { return Base.Moves; } }
 
         event EventHandler<GainExperienceEventArgs> Unique.IPokemon.OnGainExperience
         {
@@ -143,11 +143,11 @@ namespace PokemonEngine.Model.Battle
         }
         #endregion
 
-        private readonly StatisticSet stats;
-        public StatisticSet Stats { get { return stats; } }
+        private readonly Statistics stats;
+        public Statistics Stats { get { return stats; } }
 
         private readonly MoveSet<IMove> moves;
-        MoveSet<IMove> IPokemon.Moves
+        public MoveSet<IMove> Moves
         {
             get
             {
@@ -158,7 +158,7 @@ namespace PokemonEngine.Model.Battle
         public Pokemon(Unique.IPokemon basePokemon)
         {
             Base = basePokemon;
-            stats = new StatisticSet(this);
+            stats = new Statistics(basePokemon.Stats);
 
             IList<IMove> list = new List<IMove>(Base.Moves.Count);
             foreach (Unique.IMove move in Base.Moves) {
@@ -181,6 +181,26 @@ namespace PokemonEngine.Model.Battle
         public override int GetHashCode()
         {
             return UID.GetHashCode();
+        }
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        Unique.IPokemon Unique.IPokemon.Clone()
+        {
+            return Clone();
+        }
+
+        IPokemon IPokemon.Clone()
+        {
+            return Clone();
+        }
+
+        public Pokemon Clone()
+        {
+            return new Pokemon(Base.Clone());
         }
     }
 }
