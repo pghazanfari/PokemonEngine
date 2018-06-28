@@ -19,38 +19,21 @@ namespace ModelUnitTests.Tests
     public class BattleTest : IBattleInputProvider
     {
 
-        private PokemonEngine.Model.Unique.ITrainer makeTrainer(String name, int level, int numBulbasaurs)
-        {
-            List<PokemonEngine.Model.Unique.IPokemon> list = new List<PokemonEngine.Model.Unique.IPokemon>(numBulbasaurs);
-            for (int i = 0; i < numBulbasaurs; i++) { list.Add(Bulbasaur.ConstructSimple(level)); }
-            Party party = new Party(list);
-            return new PokemonEngine.Model.Unique.Trainer(name, party);
-        }
-
-        private Team makeTeam(string name, int level, int numBulbasaurs)
-        {
-            List<PokemonEngine.Model.Battle.IParticipant> list = new List<IParticipant>(numBulbasaurs);
-            for (int i = 0; i < numBulbasaurs; i++)
-            {
-                list.Add(new PokemonEngine.Model.Battle.Trainer(makeTrainer(name, level, numBulbasaurs), 1));
-            }
-            return new Team(list);
-        }
-
         [TestMethod]
         public void TestBattle()
         {
-            Team team1 = makeTeam("Trainer1", 10, 1);
-            Team team2 = makeTeam("Trainer2", 10, 1);
+            Team team1 = Helper.ConstructTeam("Trainer1", 10, 1);
+            Team team2 = Helper.ConstructTeam("Trainer2", 10, 1);
             Random random = new Random(1234567);
-            IBattle battle = new Battle(random, this, new Team[] { team1, team2 });
+            IBattle battle = new Battle(random, this, PokemonEngine.Model.Weather.ClearSkies, new Team[] { team1, team2 });
 
             battle.OnUseMove += OnUseMove;
             battle.OnMoveDamageInflicted += OnMoveDamageInflicted;
             battle.OnStatStageShifted += OnStatStageShifted;
 
+            int maxTurns = 20;
             int turnCounter = 0;
-            while (!battle.IsComplete())
+            while (!battle.IsComplete() && turnCounter < maxTurns)
             {
                 Trace.WriteLine($"Turn {++turnCounter} ===============================================");
 
@@ -62,6 +45,8 @@ namespace ModelUnitTests.Tests
                 Trace.WriteLine($"Team1 has a Bulbasaur with {pokemon1.HP}/{pokemon1.Stats[PokemonEngine.Model.Statistic.HP]} HP");
                 Trace.WriteLine($"Team2 has a Bulbasaur with {pokemon2.HP}/{pokemon2.Stats[PokemonEngine.Model.Statistic.HP]} HP");
             }
+
+            Assert.IsFalse(turnCounter >= maxTurns);
         }
 
         private void OnStatStageShifted(object sender, StatStageShiftedEventArgs e)
@@ -94,6 +79,12 @@ namespace ModelUnitTests.Tests
             foreach (Slot slot in e.Action.Targets)
             {
                 PokemonEngine.Model.Battle.ITrainer trainer = slot.Participant as PokemonEngine.Model.Battle.ITrainer;
+
+                if (e.Action.IsCriticalHit)
+                {
+                    Trace.WriteLine("A critical hit!");
+                }
+
                 Trace.WriteLine($"{trainer.UID}'s {slot.Pokemon.Species} took {e.Action.Damage(slot)} damage.");
             }
         }

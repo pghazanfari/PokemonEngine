@@ -21,9 +21,13 @@ namespace PokemonEngine.Model.Common
             return collection.Any(x => x == null);
         }
 
-        public static IReadOnlyDictionary<K,V> AsReadOnly<K,V>(this IDictionary<K,V> dictionary)
+        public static IReadOnlyDictionary<K, V> AsReadOnly<K, V>(this IDictionary<K, V> dictionary)
         {
             return new ReadOnlyDictionary<K, V>(dictionary);
+        }
+
+        public static IEnumerable<T> Except<T>(this IEnumerable<T> collection, params T[] list) {
+            return collection.Except(list as IEnumerable<T>);
         }
     }
 }

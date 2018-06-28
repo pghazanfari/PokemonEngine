@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections.ObjectModel;
+using System.Collections;
 using System.Text;
 using System.Threading.Tasks;
-
 
 using PokemonEngine.Model.Common;
 using PokemonEngine.Model.Battle.Messaging;
 using PokemonEngine.Model.Battle.Actions;
 using PokemonEngine.Model.Battle.Messages;
-using System.Collections.ObjectModel;
-using System.Collections;
+using PokemonEngine.Model.Battle.Weathers;
 
 namespace PokemonEngine.Model.Battle
 {
@@ -35,8 +35,13 @@ namespace PokemonEngine.Model.Battle
             }
         }
 
+        private readonly Weather surroundingWeather;
+        public Weather SurroundingWeather { get { return surroundingWeather; } }
+
+        public Weather CurrentWeather { get; private set; }
+
         public event EventHandler<EventArgs> OnBattleStart;
-        public event EventHandler<EventArgs> OnBattleEnd;
+        public event EventHandler<BattleEndEventArgs> OnBattleEnd;
 
         public event EventHandler<EventArgs> OnTurnStart;
         public event EventHandler<EventArgs> OnTurnEnd;
@@ -63,6 +68,10 @@ namespace PokemonEngine.Model.Battle
         public event EventHandler<ShiftStatStageEventArgs> OnShiftStatStage;
         public event EventHandler<StatStageShiftedEventArgs> OnStatStageShifted;
 
+        public event EventHandler<ChangeWeatherEventArgs> OnChangeWeather;
+        public event EventHandler<WeatherChangedEventArgs> OnWeatherChanged;
+        public event EventHandler<WeatherCompletedEventArgs> OnWeatherCompleted;
+
         public event EventHandler<PerformMoveOperationEventArgs> OnPerformMoveOperation;
         public event EventHandler<MoveOperationPerformedEventArgs> OnMoveOperationPerformed;
 
@@ -79,7 +88,7 @@ namespace PokemonEngine.Model.Battle
 
         public int TurnCounter { get; private set; }
 
-        public Battle(Random rng, IBattleInputProvider inputProvider, IEnumerable<Team> teams)
+        public Battle(Random rng, IBattleInputProvider inputProvider, Model.Weather weather, IEnumerable<Team> teams)
         {
             if (teams == null) { throw new ArgumentNullException("teams"); }
             if (teams.ContainsNull()) { throw new ArgumentException("A BattleTeam in a Battle cannot be null");  }
@@ -92,8 +101,9 @@ namespace PokemonEngine.Model.Battle
 
             this.teams = new List<Team>(teams).AsReadOnly();
             InputProvider = inputProvider;
-
             this.rng = rng;
+            surroundingWeather = weather;
+            CurrentWeather = surroundingWeather;
 
             effects = new List<Effect>();
             roEffects = (effects as List<Effect>).AsReadOnly();
@@ -108,8 +118,8 @@ namespace PokemonEngine.Model.Battle
             TurnCounter = 1;
         }
 
-        public Battle(IBattleInputProvider inputProvider, IEnumerable<Team> teams) : this(new Random(), inputProvider, teams) { }
-        public Battle(IBattleInputProvider inputProvider, params Team[] teams) : this(inputProvider, teams as IEnumerable<Team>) { }
+        public Battle(IBattleInputProvider inputProvider, Model.Weather weather, IEnumerable<Team> teams) : this(new Random(), inputProvider, weather, teams) { }
+        public Battle(IBattleInputProvider inputProvider, Model.Weather weather, params Team[] teams) : this(inputProvider, weather, teams as IEnumerable<Team>) { }
 
         public IEnumerator<Team> GetEnumerator()
         {
@@ -123,11 +133,13 @@ namespace PokemonEngine.Model.Battle
 
         private void flush()
         {
-            while (messageQueue.HasNext)
-            {
-                OnMessageBroadcast?.Invoke(this, new EventArgs(this));
-                messageQueue.Broadcast();
-            }
+            while (messageQueue.HasNext) broadcast();
+        }
+
+        private void broadcast()
+        {
+            OnMessageBroadcast?.Invoke(this, new EventArgs(this));
+            messageQueue.Broadcast();
         }
 
         public bool RegisterEffect(Effect effect)
@@ -135,6 +147,8 @@ namespace PokemonEngine.Model.Battle
             if (effects.Contains(effect)) { return false; }
             effects.Add(effect);
 
+            OnBattleStart += effect.OnBattleStart;
+            OnBattleEnd += effect.OnBattleEnd;
             OnTurnStart += effect.OnTurnStart;
             OnTurnEnd += effect.OnTurnEnd;
             OnMessageBroadcast += effect.OnMessageBroadcast;
@@ -152,6 +166,9 @@ namespace PokemonEngine.Model.Battle
             OnMoveDamageInflicted += effect.OnMoveDamageInflicted;
             OnShiftStatStage += effect.OnShiftStatStage;
             OnStatStageShifted += effect.OnStatStageShifted;
+            OnChangeWeather += effect.OnChangeWeather;
+            OnWeatherChanged += effect.OnWeatherChanged;
+            OnWeatherCompleted += effect.OnWeatherCompleted;
             OnPerformMoveOperation += effect.OnPerformMoveOperation;
             OnMoveOperationPerformed += effect.OnMoveOperationPerformed;
             OnPerformEffectOperation += effect.OnPerformEffectOperation;
@@ -162,6 +179,8 @@ namespace PokemonEngine.Model.Battle
 
         public bool DeregisterEffect(Effect effect)
         {
+            OnBattleStart -= effect.OnBattleStart;
+            OnBattleEnd -= effect.OnBattleEnd;
             OnTurnStart -= effect.OnTurnStart;
             OnTurnEnd -= effect.OnTurnEnd;
             OnMessageBroadcast -= effect.OnMessageBroadcast;
@@ -179,6 +198,9 @@ namespace PokemonEngine.Model.Battle
             OnMoveDamageInflicted -= effect.OnMoveDamageInflicted;
             OnShiftStatStage -= effect.OnShiftStatStage;
             OnStatStageShifted -= effect.OnStatStageShifted;
+            OnChangeWeather -= effect.OnChangeWeather;
+            OnWeatherChanged -= effect.OnWeatherChanged;
+            OnWeatherCompleted -= effect.OnWeatherCompleted;
             OnPerformMoveOperation -= effect.OnPerformMoveOperation;
             OnMoveOperationPerformed -= effect.OnMoveOperationPerformed;
             OnPerformEffectOperation -= effect.OnPerformEffectOperation;
@@ -250,8 +272,39 @@ namespace PokemonEngine.Model.Battle
                 foreach (SwapPokemon swapPokemonAction in swapPokemonActions) { messageQueue.Enqueue(swapPokemonAction); }
             }
 
+            CurrentWeather.DecrementTurnCounter();
+            if (CurrentWeather.IsComplete)
+            {
+                OnWeatherCompleted?.Invoke(this, new WeatherCompletedEventArgs(this, CurrentWeather));
+                MessageQueue.AddFirst(new WeatherChange(SurroundingWeather, -1));
+                broadcast();
+            }
 
             OnTurnEnd?.Invoke(this, new EventArgs(this));
+
+            /*
+             * Why is this loop run after OnTurnEnd is called? 
+             * We need to be able to process events that occur just before the end of the turn.
+             */
+            while (true)
+            {
+                flush();
+
+                List<Request> requests = new List<Request>();
+                foreach (Team team in Teams)
+                {
+                    foreach (Slot slot in team)
+                    {
+                        if (slot.Pokemon.HasFainted() && !slot.Participant.HasLost())
+                        {
+                            requests.Add(new Request(slot));
+                        }
+                    }
+                }
+                if (requests.Count == 0) { break; }
+                IList<SwapPokemon> swapPokemonActions = InputProvider.ProvideSwapPokemon(this, requests);
+                foreach (SwapPokemon swapPokemonAction in swapPokemonActions) { messageQueue.Enqueue(swapPokemonAction); }
+            }
 
             if (this.IsComplete())
             {
@@ -323,6 +376,27 @@ namespace PokemonEngine.Model.Battle
             shiftStatStage.Apply();
 
             OnStatStageShifted?.Invoke(this, new StatStageShiftedEventArgs(this, shiftStatStage));
+        }
+
+        public void Receive(WeatherChange weatherChange)
+        {
+            Weather previousWeather = CurrentWeather;
+
+            if (SurroundingWeather == weatherChange.Weather)
+            {
+                if (CurrentWeather != SurroundingWeather)
+                {
+                    OnChangeWeather?.Invoke(this, new ChangeWeatherEventArgs(this, weatherChange));
+                    CurrentWeather = SurroundingWeather;
+                    OnWeatherChanged?.Invoke(this, new WeatherChangedEventArgs(this, previousWeather, CurrentWeather));
+                }
+            }
+
+            bool change = CurrentWeather == weatherChange.Weather;
+
+            if (change) OnChangeWeather?.Invoke(this, new ChangeWeatherEventArgs(this, weatherChange));
+            CurrentWeather = Weather.Create(weatherChange.Weather, weatherChange.TurnCount);
+            if (change) OnWeatherChanged?.Invoke(this, new WeatherChangedEventArgs(this, previousWeather, CurrentWeather));
         }
 
         public void Receive(MoveOperation moveOperation)

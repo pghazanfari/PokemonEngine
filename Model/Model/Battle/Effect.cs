@@ -12,6 +12,9 @@ namespace PokemonEngine.Model.Battle
 {
     public abstract class Effect
     {
+        public void OnBattleStart(object sender, EventArgs args) { }
+        public void OnBattleEnd(object sender, BattleEndEventArgs args) { }
+
         public void OnTurnStart(object sender, EventArgs args) { }
         public void OnTurnEnd(object sender, EventArgs args) { }
         public void OnMessageBroadcast(object sender, EventArgs args) { }
@@ -36,6 +39,10 @@ namespace PokemonEngine.Model.Battle
 
         public void OnShiftStatStage(object sender, ShiftStatStageEventArgs args) { }
         public void OnStatStageShifted(object sender, StatStageShiftedEventArgs args) { }
+
+        public void OnChangeWeather(object sender, ChangeWeatherEventArgs args) { }
+        public void OnWeatherChanged(object sender, WeatherChangedEventArgs args) { }
+        public void OnWeatherCompleted(object sender, WeatherCompletedEventArgs args) { }
 
         public void OnPerformMoveOperation(object sender, PerformMoveOperationEventArgs args) { }
         public void OnMoveOperationPerformed(object sender, MoveOperationPerformedEventArgs args) { }

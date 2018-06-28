@@ -20,6 +20,7 @@ namespace PokemonEngine.Model
         int BasePP { get; }
         int MaxPPLimit { get; }
         int Priority { get; }
+        int CriticalHitStage { get; }
 
         void Use(IBattle battle, UseMove useMoveAction);
     }

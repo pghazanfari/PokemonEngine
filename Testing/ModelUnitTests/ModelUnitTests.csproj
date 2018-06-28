@@ -58,7 +58,9 @@
     <Compile Include="MoveImpl\Tackle.cs" />
     <Compile Include="PokemonImpl\Bulbasaur.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tests\TestStatistics.cs" />
+    <Compile Include="Tests\PokemonTest.cs" />
+    <Compile Include="Util.cs" />
+    <Compile Include="Util\NumberSequence.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Model\Model.csproj">

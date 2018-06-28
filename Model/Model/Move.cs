@@ -13,6 +13,7 @@ namespace PokemonEngine.Model
     public class Move : IMove
     {
         public const int DefaultPriority = 0;
+        public const int DefaultCriticalHitStage = 0;
 
         private readonly string name;
         public string Name { get { return name; }  }
@@ -44,9 +45,17 @@ namespace PokemonEngine.Model
             }
         }
 
-        // TODO: Effects
+        private readonly int criticalHitStage;
+        public int CriticalHitStage
+        {
+            get
+            {
+                return criticalHitStage;
+            }
+        }
 
-        public Move(string name, PokemonType type, int? power, DamageType? damageType, MoveTarget target, int basePP, int maxPossiblePP, int priority)
+
+        public Move(string name, PokemonType type, int? power, DamageType? damageType, MoveTarget target, int basePP, int maxPossiblePP, int priority, int criticalHitStage)
         {
             this.name = name;
             this.type = type;
@@ -56,9 +65,10 @@ namespace PokemonEngine.Model
             this.basePP = basePP;
             this.maxPossiblePP = maxPossiblePP;
             this.priority = priority;
+            this.criticalHitStage = criticalHitStage;
         }
 
-        public Move(string name, PokemonType type, int? power, DamageType? damageType, MoveTarget target, int basePP, int maxPossiblePP) : this(name, type, power, damageType, target, basePP, maxPossiblePP, DefaultPriority)
+        public Move(string name, PokemonType type, int? power, DamageType? damageType, MoveTarget target, int basePP, int maxPossiblePP) : this(name, type, power, damageType, target, basePP, maxPossiblePP, DefaultPriority, DefaultCriticalHitStage)
         { }
 
         public virtual void Use(IBattle battle, UseMove useMoveAction)

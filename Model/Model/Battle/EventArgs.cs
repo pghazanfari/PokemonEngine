@@ -162,6 +162,37 @@ namespace PokemonEngine.Model.Battle
         }
     }
 
+    public class ChangeWeatherEventArgs : EventArgs
+    {
+        public readonly WeatherChange Action;
+        public ChangeWeatherEventArgs(IBattle battle, WeatherChange action) : base(battle)
+        {
+            Action = action;
+        }
+    }
+
+    public class WeatherChangedEventArgs : EventArgs
+    {
+        public readonly Weather PreviousWeather;
+        public readonly Weather Weather;
+
+        public WeatherChangedEventArgs(IBattle battle, Weather previousWeather, Weather weather) : base(battle)
+        {
+            PreviousWeather = previousWeather;
+            Weather = weather;
+        }
+    }
+
+    public class WeatherCompletedEventArgs : EventArgs
+    {
+        public readonly Weather Weather;
+
+        public WeatherCompletedEventArgs(IBattle battle, Weather weather) : base(battle)
+        {
+            Weather = weather;
+        }
+    }
+
     public class PerformMoveOperationEventArgs : EventArgs
     {
         public readonly MoveOperation Operation;

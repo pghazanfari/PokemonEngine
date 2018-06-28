@@ -5,10 +5,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using ModelUnitTests.Util;
+
+using PokemonEngine.Model.Battle.Messages;
+
 namespace ModelUnitTests.Tests
 {
     [TestClass]
-    public class TestStatistics
+    public class PokemonTest
     {
         // https://pokemonshowdown.com/damagecalc/
 
@@ -64,6 +68,49 @@ namespace ModelUnitTests.Tests
             Assert.AreEqual(18, (battlePokemon as PokemonEngine.Model.Unique.IPokemon).Stats[PokemonEngine.Model.Statistic.SpecialDefense]);
             Assert.AreEqual(14, (battlePokemon as PokemonEngine.Model.Unique.IPokemon).Stats[PokemonEngine.Model.Statistic.Speed]);
             Assert.AreEqual(29, (battlePokemon as PokemonEngine.Model.Unique.IPokemon).Stats[PokemonEngine.Model.Statistic.HP]);
+        }
+
+        [TestMethod]
+        public void TestDamageCalculation()
+        {
+            PokemonEngine.Model.Battle.Team team1 = Helper.ConstructTeam("Trainer1", 10, 1);
+            PokemonEngine.Model.Battle.Team team2 = Helper.ConstructTeam("Trainer2", 10, 1);
+
+            NumberSequence sequence = new NumberSequence();
+            sequence.Add(1.0); // No Critical Hit
+            sequence.Add(0); // Maximum Damage
+
+            List<PokemonEngine.Model.Battle.Slot> targets = new List<PokemonEngine.Model.Battle.Slot> { team2[0] };
+            InflictMoveDamage inflictDamage = new InflictMoveDamage(sequence, team1[0].Pokemon.Moves[0], team1[0], targets);
+
+            Assert.AreEqual(1.0f, inflictDamage.STABModifier);
+            Assert.AreEqual(1.0f, inflictDamage.TypeModifier(targets[0]));
+            Assert.AreEqual(6.0f, inflictDamage.LevelInfluence);
+
+            Assert.AreEqual(1.0f, inflictDamage.TargetsModifier);
+            Assert.AreEqual(1.0f, inflictDamage.RandomModifier);
+            Assert.AreEqual(1.0f, inflictDamage.Modifier(targets[0]));
+
+            Assert.AreEqual(7, inflictDamage.Damage(targets[0]));
+
+            team1[0].Pokemon.Stats.ShiftStage(PokemonEngine.Model.Battle.Statistic.Attack, -1);
+            sequence = new NumberSequence();
+            sequence.Add(1.0); // No Critical Hit
+            sequence.Add(15); // Minimum Damage
+            inflictDamage = new InflictMoveDamage(sequence, team1[0].Pokemon.Moves[0], team1[0], targets);
+
+            Assert.AreEqual(9, team1[0].Pokemon.Stats[PokemonEngine.Model.Statistic.Attack]);
+            Assert.AreEqual(0.85f, inflictDamage.RandomModifier);
+            Assert.AreEqual(4, inflictDamage.Damage(targets[0]));
+
+            sequence = new NumberSequence();
+            sequence.Add(1.0); // No Critical Hit
+            sequence.Add(0); // Maximum Damage
+            inflictDamage = new InflictMoveDamage(sequence, team1[0].Pokemon.Moves[0], team1[0], targets);
+
+            Assert.AreEqual(9, team1[0].Pokemon.Stats[PokemonEngine.Model.Statistic.Attack]);
+            Assert.AreEqual(1.0f, inflictDamage.RandomModifier);
+            Assert.AreEqual(5, inflictDamage.Damage(targets[0]));
         }
     }
 }

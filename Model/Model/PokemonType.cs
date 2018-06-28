@@ -13,6 +13,10 @@ namespace PokemonEngine.Model
         public const float SUPER_EFFECTIVE = 2.0f;
         public const float NO_EFFECT = 0.0f;
 
+        private static readonly List<PokemonType> all = new List<PokemonType>();
+        private static readonly IReadOnlyList<PokemonType> roAll = all.AsReadOnly();
+        public static IReadOnlyList<PokemonType> All { get { return roAll; } }
+
         private static readonly Dictionary<PokemonType, Dictionary<PokemonType, float>> Effectiveness = new Dictionary<PokemonType, Dictionary<PokemonType, float>>();
 
         public static readonly PokemonType Normal = new PokemonType("Normal");
@@ -38,6 +42,7 @@ namespace PokemonEngine.Model
         private PokemonType(string name)
         {
             Name = name;
+            all.Add(this);
         }
 
         public override string ToString()

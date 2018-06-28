@@ -55,6 +55,7 @@
     <Compile Include="Model\Battle\Actions\IAction.cs" />
     <Compile Include="Model\Battle\Messages\MoveOperation.cs" />
     <Compile Include="Model\Battle\Messages\ShiftStatStage.cs" />
+    <Compile Include="Model\Battle\Messages\WeatherChange.cs" />
     <Compile Include="Model\Battle\Slot.cs" />
     <Compile Include="Model\Battle\IParticipant.cs" />
     <Compile Include="Model\Battle\Statistics.cs" />
@@ -65,6 +66,8 @@
     <Compile Include="Model\Battle\Messaging\IMessage.cs" />
     <Compile Include="Model\Battle\Messaging\ISubscriber.cs" />
     <Compile Include="Model\Battle\Actions\Request.cs" />
+    <Compile Include="Model\Battle\Weather.cs" />
+    <Compile Include="Model\Battle\Weathers\ClearSkies.cs" />
     <Compile Include="Model\Common\Events.cs" />
     <Compile Include="Model\Common\IProvider.cs" />
     <Compile Include="Model\Common\Sequence\IMutableSequence.cs" />
@@ -106,6 +109,7 @@
     <Compile Include="Model\Battle\IMove.cs" />
     <Compile Include="Model\Battle\IPokemon.cs" />
     <Compile Include="Model\Battle\Statistic.cs" />
+    <Compile Include="Model\Weather.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

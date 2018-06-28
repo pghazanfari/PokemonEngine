@@ -19,14 +19,15 @@ namespace PokemonEngine.Model.Battle
         IReadOnlyList<Effect> Effects { get; }
         int TurnCounter { get; }
         IComparer<IAction> ActionComparer { get; set; }
-
-        // TODO: Change the second parameter for the post-message events.
-        //       The same type is used as a placeholder for now.
+        Weather SurroundingWeather { get; }
+        Weather CurrentWeather { get; }
 
         event EventHandler<EventArgs> OnBattleStart;
-        event EventHandler<EventArgs> OnBattleEnd;
+        event EventHandler<BattleEndEventArgs> OnBattleEnd;
+
         event EventHandler<EventArgs> OnTurnStart;
         event EventHandler<EventArgs> OnTurnEnd;
+
         event EventHandler<EventArgs> OnMessageBroadcast;
 
         event EventHandler<RequestInputEventArgs> OnRequestInput;
@@ -49,6 +50,10 @@ namespace PokemonEngine.Model.Battle
 
         event EventHandler<ShiftStatStageEventArgs> OnShiftStatStage;
         event EventHandler<StatStageShiftedEventArgs> OnStatStageShifted;
+
+        event EventHandler<ChangeWeatherEventArgs> OnChangeWeather;
+        event EventHandler<WeatherChangedEventArgs> OnWeatherChanged;
+        event EventHandler<WeatherCompletedEventArgs> OnWeatherCompleted;
 
         event EventHandler<PerformMoveOperationEventArgs> OnPerformMoveOperation;
         event EventHandler<MoveOperationPerformedEventArgs> OnMoveOperationPerformed;

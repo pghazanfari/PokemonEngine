@@ -22,6 +22,7 @@ namespace PokemonEngine.Model.Unique
         public int BasePP { get { return Base.BasePP; } }
         public int MaxPPLimit { get { return Base.MaxPPLimit; } }
         public int Priority { get { return Base.Priority; } }
+        public int CriticalHitStage { get { return Base.CriticalHitStage; } }
         public void Use(IBattle battle, UseMove useMoveAction) { Base.Use(battle, useMoveAction); }
         #endregion
 

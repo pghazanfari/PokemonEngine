@@ -30,7 +30,5 @@ namespace ModelUnitTests.MoveImpl
         }
 
         public static readonly Growl Instance = new Growl();
-
-        public static readonly int Prio = Instance.Priority;
     }
 }

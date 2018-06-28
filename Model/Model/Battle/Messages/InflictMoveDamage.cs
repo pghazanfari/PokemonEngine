@@ -9,11 +9,16 @@ namespace PokemonEngine.Model.Battle.Messages
 {
     public class InflictMoveDamage : IMessage
     {
+        public const float MultiTargetModifier = 0.75f;
+        public const float SingleTargetModifier = 1.0f;
+
+        public const float CriticalHitAmplification = 1.5f;
+
         public readonly Model.IMove Move;
         public readonly Slot User;
         public readonly IReadOnlyCollection<Slot> Targets;
 
-        private readonly float criticalModifier;
+        private readonly bool criticalHit;
         private readonly float randomModifier;
 
         public InflictMoveDamage(Random random, Model.IMove move, Slot user, IReadOnlyCollection<Slot> targets)
@@ -22,17 +27,30 @@ namespace PokemonEngine.Model.Battle.Messages
             User = user;
             Targets = targets;
 
-            criticalModifier = random.Next(2) + 1.0f;
+            criticalHit = random.NextDouble() < CriticalHitProbability(move.CriticalHitStage);
             randomModifier = 1.0f - (random.Next(16) / 100.0f);
         }
 
         public InflictMoveDamage(Model.IMove move, Slot user, IReadOnlyCollection<Slot> targets) : this(new Random(), move, user, targets) { }
 
+        private float CriticalHitProbability(int stage)
+        {
+            switch(Math.Abs(stage))
+            {
+                case 0: return 1.0f / 24.0f;
+                case 1: return 1.0f / 8.0f;
+                case 2: return 1.0f / 2.0f;
+                default:
+                    return 1.0f;
+            }
+        }
+
+        public bool IsCriticalHit { get { return criticalHit; } }
         public float CriticalModifier
         {
             get
             {
-                return criticalModifier;
+                return IsCriticalHit ? CriticalHitAmplification : 1.0f;
             }
         }
 
@@ -56,7 +74,7 @@ namespace PokemonEngine.Model.Battle.Messages
         {
             get
             {
-                return Targets.Count > 0 ? 0.75f : 1.0f;
+                return Targets.Count > 1 ? MultiTargetModifier : SingleTargetModifier;
             }
         }
 
@@ -92,11 +110,11 @@ namespace PokemonEngine.Model.Battle.Messages
             switch (Move.DamageType)
             {
                 case DamageType.Physical:
-                    return ((float)User.Pokemon.Stats[Statistic.Attack]) / ((float)target.Pokemon.Stats[Statistic.Defense]);
+                    return ((float)User.Pokemon.Stats[Statistic.Attack]) / target.Pokemon.Stats[Statistic.Defense];
                 case DamageType.Special:
-                    return ((float)User.Pokemon.Stats[Statistic.SpecialAttack]) / ((float)target.Pokemon.Stats[Statistic.SpecialDefense]);
+                    return ((float)User.Pokemon.Stats[Statistic.SpecialAttack]) / target.Pokemon.Stats[Statistic.SpecialDefense];
                 default:
-                    throw new InvalidOperationException("MoveDamageEffect was used on a move without Physical or Special DamageType");
+                    throw new InvalidOperationException("InflictMoveDamage was used on a move without Physical or Special DamageType");
             }
         }
 
@@ -104,23 +122,22 @@ namespace PokemonEngine.Model.Battle.Messages
         {
             get
             {
-                return (2.0f * User.Pokemon.Level / 5.0f) + 2;
+                return ( (2.0f * User.Pokemon.Level) / 5.0f) + 2.0f;
             }
         }
 
-        public float Damage(Slot target)
+        public int Damage(Slot target)
         {
             // https://bulbapedia.bulbagarden.net/wiki/Damage#Damage_calculation
-            return ((LevelInfluence * Move.Power.Value * AttackDefenseRatio(target) / 50.0f) + 2) * Modifier(target);
+            return (int)Math.Floor((Math.Floor(Math.Floor(Math.Floor(LevelInfluence) * Move.Power.Value * AttackDefenseRatio(target)) / 50.0) + 2.0) * Modifier(target));
+            //return (int)(((LevelInfluence * Move.Power.Value * AttackDefenseRatio(target) / 50) + 2) * Modifier(target));
         }
 
         public void Apply()
         {
             foreach (Slot target in Targets)
             {
-                float dmg = Damage(target);
-
-                target.Pokemon.UpdateHP(-(int)dmg);
+                target.Pokemon.UpdateHP(-Damage(target));
             }
         }
 
