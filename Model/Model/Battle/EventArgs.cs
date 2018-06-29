@@ -125,20 +125,20 @@ namespace PokemonEngine.Model.Battle
         }
     }
 
-    public class InflictMoveDamageEventArgs : EventArgs
+    public class InflictDamageEventArgs : EventArgs
     {
-        public InflictMoveDamage Action;
-        public InflictMoveDamageEventArgs(IBattle battle, InflictMoveDamage action) : base(battle)
+        public InflictDamage Action;
+        public InflictDamageEventArgs(IBattle battle, InflictDamage action) : base(battle)
         {
             Action = action;
         }
     }
 
-    public class MoveDamageInflictedEventArgs : EventArgs
+    public class DamageInflictedEventArgs : EventArgs
     {
         // TODO: Add anything else
-        public readonly InflictMoveDamage Action;
-        public MoveDamageInflictedEventArgs(IBattle battle, InflictMoveDamage action) : base(battle)
+        public readonly InflictDamage Action;
+        public DamageInflictedEventArgs(IBattle battle, InflictDamage action) : base(battle)
         {
             Action = action;
         }

@@ -45,8 +45,8 @@ namespace PokemonEngine.Model.Battle
         event EventHandler<UseRunEventArgs> OnUseRun;
         event EventHandler<RunUsedEventArgs> OnRunUsed;
 
-        event EventHandler<InflictMoveDamageEventArgs> OnInflictMoveDamage;
-        event EventHandler<MoveDamageInflictedEventArgs> OnMoveDamageInflicted;
+        event EventHandler<InflictDamageEventArgs> OnInflictDamage;
+        event EventHandler<DamageInflictedEventArgs> OnDamageInflicted;
 
         event EventHandler<ShiftStatStageEventArgs> OnShiftStatStage;
         event EventHandler<StatStageShiftedEventArgs> OnStatStageShifted;

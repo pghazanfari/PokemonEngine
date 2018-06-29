@@ -34,8 +34,8 @@ namespace PokemonEngine.Model.Battle
         public void OnUseRun(object sender, UseRunEventArgs args) { }
         public void OnRunUsed(object sender, RunUsedEventArgs args) { }
 
-        public void OnInflictMoveDamage(object sender, InflictMoveDamageEventArgs args) { }
-        public void OnMoveDamageInflicted(object sender, MoveDamageInflictedEventArgs args) { }
+        public void OnInflictMoveDamage(object sender, InflictDamageEventArgs args) { }
+        public void OnMoveDamageInflicted(object sender, DamageInflictedEventArgs args) { }
 
         public void OnShiftStatStage(object sender, ShiftStatStageEventArgs args) { }
         public void OnStatStageShifted(object sender, StatStageShiftedEventArgs args) { }

@@ -62,8 +62,8 @@ namespace PokemonEngine.Model.Battle
         public event EventHandler<UseRunEventArgs> OnUseRun;
         public event EventHandler<RunUsedEventArgs> OnRunUsed;
 
-        public event EventHandler<InflictMoveDamageEventArgs> OnInflictMoveDamage;
-        public event EventHandler<MoveDamageInflictedEventArgs> OnMoveDamageInflicted;
+        public event EventHandler<InflictDamageEventArgs> OnInflictDamage;
+        public event EventHandler<DamageInflictedEventArgs> OnDamageInflicted;
         
         public event EventHandler<ShiftStatStageEventArgs> OnShiftStatStage;
         public event EventHandler<StatStageShiftedEventArgs> OnStatStageShifted;
@@ -120,6 +120,7 @@ namespace PokemonEngine.Model.Battle
 
         public Battle(IBattleInputProvider inputProvider, Model.Weather weather, IEnumerable<Team> teams) : this(new Random(), inputProvider, weather, teams) { }
         public Battle(IBattleInputProvider inputProvider, Model.Weather weather, params Team[] teams) : this(inputProvider, weather, teams as IEnumerable<Team>) { }
+        public Battle(Random rng, IBattleInputProvider inputProvider, Model.Weather weather, params Team[] teams) : this(rng, inputProvider, weather, teams as IEnumerable<Team>) { }
 
         public IEnumerator<Team> GetEnumerator()
         {
@@ -162,8 +163,8 @@ namespace PokemonEngine.Model.Battle
             OnMoveUsed += effect.OnMoveUsed;
             OnUseRun += effect.OnUseRun;
             OnRunUsed += effect.OnRunUsed;
-            OnInflictMoveDamage += effect.OnInflictMoveDamage;
-            OnMoveDamageInflicted += effect.OnMoveDamageInflicted;
+            OnInflictDamage += effect.OnInflictMoveDamage;
+            OnDamageInflicted += effect.OnMoveDamageInflicted;
             OnShiftStatStage += effect.OnShiftStatStage;
             OnStatStageShifted += effect.OnStatStageShifted;
             OnChangeWeather += effect.OnChangeWeather;
@@ -194,8 +195,8 @@ namespace PokemonEngine.Model.Battle
             OnMoveUsed -= effect.OnMoveUsed;
             OnUseRun -= effect.OnUseRun;
             OnRunUsed -= effect.OnRunUsed;
-            OnInflictMoveDamage -= effect.OnInflictMoveDamage;
-            OnMoveDamageInflicted -= effect.OnMoveDamageInflicted;
+            OnInflictDamage -= effect.OnInflictMoveDamage;
+            OnDamageInflicted -= effect.OnMoveDamageInflicted;
             OnShiftStatStage -= effect.OnShiftStatStage;
             OnStatStageShifted -= effect.OnStatStageShifted;
             OnChangeWeather -= effect.OnChangeWeather;
@@ -359,14 +360,14 @@ namespace PokemonEngine.Model.Battle
             OnRunUsed?.Invoke(this, new RunUsedEventArgs(this, runAction));
         }
 
-        public void Receive(InflictMoveDamage inflictMoveDamage)
+        public void Receive(InflictDamage inflictDamage)
         {
 
-            OnInflictMoveDamage?.Invoke(this, new InflictMoveDamageEventArgs(this, inflictMoveDamage));
+            OnInflictDamage?.Invoke(this, new InflictDamageEventArgs(this, inflictDamage));
 
-            inflictMoveDamage.Apply();
+            inflictDamage.Apply();
 
-            OnMoveDamageInflicted?.Invoke(this, new MoveDamageInflictedEventArgs(this, inflictMoveDamage));
+            OnDamageInflicted?.Invoke(this, new DamageInflictedEventArgs(this, inflictDamage));
         }
 
         public void Receive(ShiftStatStage shiftStatStage)

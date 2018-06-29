@@ -12,6 +12,7 @@ using PokemonEngine.Model.Battle;
 using ModelUnitTests.PokemonImpl;
 using ModelUnitTests.MoveImpl;
 using PokemonEngine.Model.Battle.Actions;
+using PokemonEngine.Model.Battle.Messages;
 
 namespace ModelUnitTests.Tests
 {
@@ -28,7 +29,7 @@ namespace ModelUnitTests.Tests
             IBattle battle = new Battle(random, this, PokemonEngine.Model.Weather.ClearSkies, new Team[] { team1, team2 });
 
             battle.OnUseMove += OnUseMove;
-            battle.OnMoveDamageInflicted += OnMoveDamageInflicted;
+            battle.OnDamageInflicted += OnDamageInflicted;
             battle.OnStatStageShifted += OnStatStageShifted;
 
             int maxTurns = 20;
@@ -74,18 +75,17 @@ namespace ModelUnitTests.Tests
             Trace.WriteLine($"{e.Action.Pokemon.Species}'s {e.Action.Stat.ToString()} {word1}{word2}!");
         }
 
-        private void OnMoveDamageInflicted(object sender, MoveDamageInflictedEventArgs e)
+        private void OnDamageInflicted(object sender, DamageInflictedEventArgs e)
         {
-            foreach (Slot slot in e.Action.Targets)
+            foreach (Slot target in e.Action.Targets)
             {
-                PokemonEngine.Model.Battle.ITrainer trainer = slot.Participant as PokemonEngine.Model.Battle.ITrainer;
-
-                if (e.Action.IsCriticalHit)
+                PokemonEngine.Model.Battle.ITrainer trainer = target.Participant as PokemonEngine.Model.Battle.ITrainer;
+                if (e.Action is InflictMoveDamage && (e.Action as InflictMoveDamage).IsCriticalHit)
                 {
                     Trace.WriteLine("A critical hit!");
                 }
 
-                Trace.WriteLine($"{trainer.UID}'s {slot.Pokemon.Species} took {e.Action.Damage(slot)} damage.");
+                Trace.WriteLine($"{trainer.UID}'s {target.Pokemon.Species} took {e.Action[target]} damage.");
             }
         }
 

@@ -75,7 +75,7 @@ namespace PokemonEngine.Model
         {
             if (!damageType.HasValue) { return; }
 
-            InflictMoveDamage message = new InflictMoveDamage(battle.RNG, this, useMoveAction.Slot, useMoveAction.Targets);
+            InflictMoveDamage message = new InflictMoveDamage(battle, this, useMoveAction.Slot, useMoveAction.Targets);
             battle.MessageQueue.AddFirst(message); // Maybe Enqueue?
         }
     }

@@ -17,7 +17,7 @@ namespace PokemonEngine.Model.Battle.Messaging
         void Receive(SwapPokemon swapPokemonAction);
         void Receive(Request request);
 
-        void Receive(InflictMoveDamage moveDamage);
+        void Receive(InflictDamage inflictDamage);
         void Receive(ShiftStatStage shiftStatStage);
         void Receive(WeatherChange weatherChange);
 

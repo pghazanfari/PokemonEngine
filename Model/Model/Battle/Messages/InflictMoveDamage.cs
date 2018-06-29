@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,45 +8,41 @@ using PokemonEngine.Model.Battle.Messaging;
 
 namespace PokemonEngine.Model.Battle.Messages
 {
-    public class InflictMoveDamage : IMessage
+    public class InflictMoveDamage : InflictDamage
     {
         public const float MultiTargetModifier = 0.75f;
         public const float SingleTargetModifier = 1.0f;
-
         public const float CriticalHitAmplification = 1.5f;
 
-        public readonly Model.IMove Move;
-        public readonly Slot User;
-        public readonly IReadOnlyCollection<Slot> Targets;
-
-        private readonly bool criticalHit;
-        private readonly float randomModifier;
-
-        public InflictMoveDamage(Random random, Model.IMove move, Slot user, IReadOnlyCollection<Slot> targets)
+        private readonly IReadOnlyCollection<Slot> targets;
+        public override IReadOnlyCollection<Slot> Targets { get { return targets; } }
+        public override int this[Slot key]
         {
-            Move = move;
-            User = user;
-            Targets = targets;
-
-            criticalHit = random.NextDouble() < CriticalHitProbability(move.CriticalHitStage);
-            randomModifier = 1.0f - (random.Next(16) / 100.0f);
-        }
-
-        public InflictMoveDamage(Model.IMove move, Slot user, IReadOnlyCollection<Slot> targets) : this(new Random(), move, user, targets) { }
-
-        private float CriticalHitProbability(int stage)
-        {
-            switch(Math.Abs(stage))
+            get
             {
-                case 0: return 1.0f / 24.0f;
-                case 1: return 1.0f / 8.0f;
-                case 2: return 1.0f / 2.0f;
-                default:
-                    return 1.0f;
+                return CalculateDamage(key);
             }
         }
 
-        public bool IsCriticalHit { get { return criticalHit; } }
+        public readonly IBattle Battle;
+        public readonly Model.IMove Move;
+        public readonly Slot User;
+
+        private readonly bool isCriticalHit;
+        private readonly float randomModifier;
+
+        public InflictMoveDamage(IBattle battle, Model.IMove move, Slot user, IEnumerable<Slot> targets)
+        {
+            Battle = battle;
+            Move = move;
+            User = user;
+            this.targets = new List<Slot>(targets).AsReadOnly();
+            randomModifier = 1.0f - (battle.RNG.Next(16) / 100.0f);
+            isCriticalHit = battle.RNG.NextDouble() < CriticalHitProbability(move.CriticalHitStage);
+        }
+        public InflictMoveDamage(IBattle battle, Model.IMove move, Slot user, params Slot[] targets) : this(battle, move, user, targets as IEnumerable<Slot>) { }
+
+        public bool IsCriticalHit { get { return isCriticalHit; } }
         public float CriticalModifier
         {
             get
@@ -66,7 +63,34 @@ namespace PokemonEngine.Model.Battle.Messages
         {
             get
             {
-                return 1.0f; //TODO: Implement once weather works
+                switch (Battle.CurrentWeather.Type)
+                {
+                    case Model.Weather.HarshSunlight:
+                        {
+                            if (Move.Type == PokemonType.Fire) return 1.5f;
+                            if (Move.Type == PokemonType.Water) return 0.5f;
+                            return 1.0f;
+                        }
+                    case Model.Weather.ExtremelyHarshSunlight:
+                        {
+                            if (Move.Type == PokemonType.Fire) return 1.5f; // This might be wrong
+                            if (Move.Type == PokemonType.Water) return 0.0f;
+                            return 1.0f;
+                        }
+                    case Model.Weather.Rain:
+                        {
+                            if (Move.Type == PokemonType.Water) return 1.5f;
+                            if (Move.Type == PokemonType.Fire) return 0.5f;
+                            return 1.0f;
+                        }
+                    case Model.Weather.HeavyRain:
+                        {
+                            if (Move.Type == PokemonType.Water) return 1.5f;
+                            if (Move.Type == PokemonType.Fire) return 0.0f; // This might be wrong
+                            return 1.0f;
+                        }
+                    default: return 1.0f;
+                }
             }
         }
 
@@ -74,7 +98,7 @@ namespace PokemonEngine.Model.Battle.Messages
         {
             get
             {
-                return Targets.Count > 1 ? MultiTargetModifier : SingleTargetModifier;
+                return Targets.Count() > 1 ? MultiTargetModifier : SingleTargetModifier;
             }
         }
 
@@ -126,24 +150,22 @@ namespace PokemonEngine.Model.Battle.Messages
             }
         }
 
-        public int Damage(Slot target)
+        public int CalculateDamage(Slot target)
         {
             // https://bulbapedia.bulbagarden.net/wiki/Damage#Damage_calculation
             return (int)Math.Floor((Math.Floor(Math.Floor(Math.Floor(LevelInfluence) * Move.Power.Value * AttackDefenseRatio(target)) / 50.0) + 2.0) * Modifier(target));
-            //return (int)(((LevelInfluence * Move.Power.Value * AttackDefenseRatio(target) / 50) + 2) * Modifier(target));
         }
 
-        public void Apply()
+        public static float CriticalHitProbability(int stage)
         {
-            foreach (Slot target in Targets)
+            switch (Math.Abs(stage))
             {
-                target.Pokemon.UpdateHP(-Damage(target));
+                case 0: return 1.0f / 24.0f;
+                case 1: return 1.0f / 8.0f;
+                case 2: return 1.0f / 2.0f;
+                default:
+                    return 1.0f;
             }
-        }
-
-        public void Dispatch(ISubscriber receiver)
-        {
-            receiver.Receive(this);
         }
     }
 }

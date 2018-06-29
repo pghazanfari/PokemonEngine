@@ -51,6 +51,7 @@
     <Compile Include="Model\Battle\ITargetSelector.cs" />
     <Compile Include="Model\Battle\ITrainer.cs" />
     <Compile Include="Model\Battle\Messages\EffectOperation.cs" />
+    <Compile Include="Model\Battle\Messages\InflictDamage.cs" />
     <Compile Include="Model\Battle\Messages\InflictMoveDamage.cs" />
     <Compile Include="Model\Battle\Actions\IAction.cs" />
     <Compile Include="Model\Battle\Messages\MoveOperation.cs" />
