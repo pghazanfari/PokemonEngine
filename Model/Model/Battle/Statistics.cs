@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,9 @@ namespace PokemonEngine.Model.Battle
         public const int MaxStage = 6;
 
         private readonly IStatistics stats;
-        public int this[Model.Statistic stat] { get { return (int)(stats[stat] * Multiplier(stat)); } }
+        public int this[Model.Statistic stat] { get { return (int)(Modifiers[stat].Calculate(stats[stat] * Multiplier(stat))); } }
+
+        public readonly IReadOnlyDictionary<Statistic, ModifierSet> Modifiers;
 
         private readonly IDictionary<Statistic, int> stages;
 
@@ -21,6 +24,7 @@ namespace PokemonEngine.Model.Battle
         {
             this.stats = stats;
             stages = Statistic.All.ToDictionary(kvp => kvp, kvp => InitialStage);
+            Modifiers = new ReadOnlyDictionary<Statistic, ModifierSet>(Statistic.All.ToDictionary(kvp => kvp, kvp => new ModifierSet()));
         }
 
         public void ShiftStage(Statistic stat, int delta)
@@ -35,34 +39,10 @@ namespace PokemonEngine.Model.Battle
 
         public float Multiplier(Statistic stat)
         {
-            if (stat == Statistic.Accuracy) { return accuracyMultipler(stages[stat]); }
-            if (stat == Statistic.Evasiveness) { return evasionMultiplier(stages[stat]); }
-            return multiplier(stages[stat]);
+            return Statistics.Multiplier(stat, stages[stat]);
         }
 
-        private float multiplier(int stage)
-        {
-            switch (stage)
-            {
-                case -6: return 0.25f;
-                case -5: return 0.285f;
-                case -4: return 0.33f;
-                case -3: return 0.4f;
-                case -2: return 0.5f;
-                case -1: return 0.66f;
-                case 0: return 1.0f;
-                case 1: return 1.5f;
-                case 2: return 2.0f;
-                case 3: return 2.5f;
-                case 4: return 3.0f;
-                case 5: return 3.5f;
-                case 6: return 4.0f;
-                default:
-                    throw new ArgumentException($"Stage must be between {MinStage} and {MaxStage} inclusive");
-            }
-        }
-
-        private float accuracyMultipler(int stage)
+        private static float AccuracyMultipler(int stage)
         {
             switch (stage)
             {
@@ -84,9 +64,34 @@ namespace PokemonEngine.Model.Battle
             }
         }
 
-        private float evasionMultiplier(int stage)
+        private static float EvasionMultiplier(int stage)
         {
-            return accuracyMultipler(-stage);
+            return AccuracyMultipler(-stage);
+        }
+
+        public static float Multiplier(Statistic stat, int stage)
+        {
+            if (stat == Statistic.Accuracy) { return AccuracyMultipler(stage); }
+            if (stat == Statistic.Evasiveness) { return EvasionMultiplier(stage); }
+
+            switch (stage)
+            {
+                case -6: return 0.25f;
+                case -5: return 0.285f;
+                case -4: return 0.33f;
+                case -3: return 0.4f;
+                case -2: return 0.5f;
+                case -1: return 0.66f;
+                case 0: return 1.0f;
+                case 1: return 1.5f;
+                case 2: return 2.0f;
+                case 3: return 2.5f;
+                case 4: return 3.0f;
+                case 5: return 3.5f;
+                case 6: return 4.0f;
+                default:
+                    throw new ArgumentException($"Stage must be between {MinStage} and {MaxStage} inclusive");
+            }
         }
     }
 }

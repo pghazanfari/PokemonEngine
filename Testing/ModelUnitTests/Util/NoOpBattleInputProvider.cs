@@ -9,11 +9,11 @@ using PokemonEngine.Model.Battle.Actions;
 
 namespace ModelUnitTests.Util
 {
-    public class NoOpBattleInputProvider : IBattleInputProvider
+    public class NoOpInputProvider : IInputProvider
     {
-        public static readonly NoOpBattleInputProvider Instance = new NoOpBattleInputProvider();
+        public static readonly NoOpInputProvider Instance = new NoOpInputProvider();
 
-        private NoOpBattleInputProvider() { }
+        private NoOpInputProvider() { }
 
         public IList<IAction> ProvideActions(IBattle battle, IList<Request> requests)
         {

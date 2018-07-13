@@ -27,6 +27,9 @@ namespace PokemonEngine.Model
         private readonly DamageType? damageType;
         public DamageType? DamageType { get { return damageType; } }
 
+        private readonly int accuracy;
+        public int Accuracy { get { return accuracy; } }
+
         private MoveTarget target;
         public MoveTarget Target { get { return target; } }
 
@@ -55,12 +58,13 @@ namespace PokemonEngine.Model
         }
 
 
-        public Move(string name, PokemonType type, int? power, DamageType? damageType, MoveTarget target, int basePP, int maxPossiblePP, int priority, int criticalHitStage)
+        public Move(string name, PokemonType type, int? power, DamageType? damageType, int accuracy, MoveTarget target, int basePP, int maxPossiblePP, int priority, int criticalHitStage)
         {
             this.name = name;
             this.type = type;
             this.power = power;
             this.damageType = damageType;
+            this.accuracy = accuracy;
             this.target = target;
             this.basePP = basePP;
             this.maxPossiblePP = maxPossiblePP;
@@ -68,14 +72,14 @@ namespace PokemonEngine.Model
             this.criticalHitStage = criticalHitStage;
         }
 
-        public Move(string name, PokemonType type, int? power, DamageType? damageType, MoveTarget target, int basePP, int maxPossiblePP) : this(name, type, power, damageType, target, basePP, maxPossiblePP, DefaultPriority, DefaultCriticalHitStage)
+        public Move(string name, PokemonType type, int? power, DamageType? damageType, int accuracy, MoveTarget target, int basePP, int maxPossiblePP) : this(name, type, power, damageType, accuracy, target, basePP, maxPossiblePP, DefaultPriority, DefaultCriticalHitStage)
         { }
 
         public virtual void Use(IBattle battle, UseMove useMoveAction)
         {
             if (!damageType.HasValue) { return; }
 
-            InflictMoveDamage message = new InflictMoveDamage(battle, this, useMoveAction.Slot, useMoveAction.Targets);
+            InflictMoveDamage message = new InflictMoveDamage(battle, this, useMoveAction.Slot, useMoveAction.HitTargets);
             battle.MessageQueue.AddFirst(message); // Maybe Enqueue?
         }
     }

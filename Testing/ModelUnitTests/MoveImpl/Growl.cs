@@ -17,11 +17,12 @@ namespace ModelUnitTests.MoveImpl
         private static readonly PokemonType type = PokemonType.Normal;
         private static readonly int? power = null;
         private static readonly PokemonEngine.Model.DamageType? damageType = null;
+        private const int accuracy = 100;
         private const MoveTarget moveTarget = MoveTarget.AnyFoe;
         private const int basePP = 40;
         private const int maxPP = 64;
 
-        private Growl() : base(name, type, power, damageType, moveTarget, basePP, maxPP) { }
+        private Growl() : base(name, type, power, damageType, accuracy, moveTarget, basePP, maxPP) { }
 
         public override void Use(IBattle battle, UseMove useMoveAction)
         {

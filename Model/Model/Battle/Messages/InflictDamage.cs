@@ -11,6 +11,8 @@ namespace PokemonEngine.Model.Battle.Messages
 {
     public abstract class InflictDamage : IMessage
     {
+        public readonly ModifierSet Modifiers = new ModifierSet();
+
         public abstract IReadOnlyCollection<Slot> Targets { get; }
         public abstract int this[Slot slot] { get; }
 
@@ -18,7 +20,7 @@ namespace PokemonEngine.Model.Battle.Messages
         {
             foreach (Slot slot in Targets)
             {
-                slot.Pokemon.UpdateHP(-this[slot]);
+                slot.Pokemon.UpdateHP(-(int)Modifiers.Calculate(this[slot]));
             }
         }
 

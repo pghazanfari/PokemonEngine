@@ -15,6 +15,7 @@ namespace PokemonEngine.Model
         string Name { get; }
         PokemonType Type { get; }
         int? Power { get; }
+        int Accuracy { get; }
         DamageType? DamageType { get; }
         MoveTarget Target { get;  }
         int BasePP { get; }

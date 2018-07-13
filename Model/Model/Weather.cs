@@ -15,7 +15,6 @@ namespace PokemonEngine.Model
         HeavyRain,
         Sandstorm,
         Hail,
-        DiamondDust,
         Fog,
         MysteriousAirCurrent
     }

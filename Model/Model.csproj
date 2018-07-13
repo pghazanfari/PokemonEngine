@@ -47,7 +47,8 @@
     <Compile Include="Model\Battle\Actions\UseMove.cs" />
     <Compile Include="Model\Battle\Actions\UseRun.cs" />
     <Compile Include="Model\Battle\EventArgs.cs" />
-    <Compile Include="Model\Battle\IBattleInputProvider.cs" />
+    <Compile Include="Model\Battle\IInputProvider.cs" />
+    <Compile Include="Model\Battle\IModifier.cs" />
     <Compile Include="Model\Battle\ITargetSelector.cs" />
     <Compile Include="Model\Battle\ITrainer.cs" />
     <Compile Include="Model\Battle\Messages\EffectOperation.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Model\Battle\Messages\MoveOperation.cs" />
     <Compile Include="Model\Battle\Messages\ShiftStatStage.cs" />
     <Compile Include="Model\Battle\Messages\WeatherChange.cs" />
+    <Compile Include="Model\Battle\ModifierSet.cs" />
     <Compile Include="Model\Battle\Slot.cs" />
     <Compile Include="Model\Battle\IParticipant.cs" />
     <Compile Include="Model\Battle\Statistics.cs" />
@@ -69,6 +71,14 @@
     <Compile Include="Model\Battle\Actions\Request.cs" />
     <Compile Include="Model\Battle\Weather.cs" />
     <Compile Include="Model\Battle\Weathers\ClearSkies.cs" />
+    <Compile Include="Model\Battle\Weathers\ExtremelyHarshSunlight.cs" />
+    <Compile Include="Model\Battle\Weathers\Fog.cs" />
+    <Compile Include="Model\Battle\Weathers\Hail.cs" />
+    <Compile Include="Model\Battle\Weathers\HarshSunlight.cs" />
+    <Compile Include="Model\Battle\Weathers\HeavyRain.cs" />
+    <Compile Include="Model\Battle\Weathers\MysteriousAirCurrent.cs" />
+    <Compile Include="Model\Battle\Weathers\Rain.cs" />
+    <Compile Include="Model\Battle\Weathers\Sandstorm.cs" />
     <Compile Include="Model\Common\Events.cs" />
     <Compile Include="Model\Common\IProvider.cs" />
     <Compile Include="Model\Common\Sequence\IMutableSequence.cs" />

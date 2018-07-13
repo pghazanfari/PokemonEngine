@@ -78,7 +78,7 @@ namespace PokemonEngine.Model.Battle
         public event EventHandler<PerformEffectOperationEventArgs> OnPerformEffectOperation;
         public event EventHandler<EffectOperationPerformedEventArgs> OnEffectOperationPerformed;
 
-        public IBattleInputProvider InputProvider { get; set; }
+        public IInputProvider InputProvider { get; set; }
         public IComparer<IAction> ActionComparer { get; set; }
 
         private readonly IList<Request> actionRequests;
@@ -88,7 +88,7 @@ namespace PokemonEngine.Model.Battle
 
         public int TurnCounter { get; private set; }
 
-        public Battle(Random rng, IBattleInputProvider inputProvider, Model.Weather weather, IEnumerable<Team> teams)
+        public Battle(Random rng, IInputProvider inputProvider, Model.Weather weather, IEnumerable<Team> teams)
         {
             if (teams == null) { throw new ArgumentNullException("teams"); }
             if (teams.ContainsNull()) { throw new ArgumentException("A BattleTeam in a Battle cannot be null");  }
@@ -118,9 +118,9 @@ namespace PokemonEngine.Model.Battle
             TurnCounter = 1;
         }
 
-        public Battle(IBattleInputProvider inputProvider, Model.Weather weather, IEnumerable<Team> teams) : this(new Random(), inputProvider, weather, teams) { }
-        public Battle(IBattleInputProvider inputProvider, Model.Weather weather, params Team[] teams) : this(inputProvider, weather, teams as IEnumerable<Team>) { }
-        public Battle(Random rng, IBattleInputProvider inputProvider, Model.Weather weather, params Team[] teams) : this(rng, inputProvider, weather, teams as IEnumerable<Team>) { }
+        public Battle(IInputProvider inputProvider, Model.Weather weather, IEnumerable<Team> teams) : this(new Random(), inputProvider, weather, teams) { }
+        public Battle(IInputProvider inputProvider, Model.Weather weather, params Team[] teams) : this(inputProvider, weather, teams as IEnumerable<Team>) { }
+        public Battle(Random rng, IInputProvider inputProvider, Model.Weather weather, params Team[] teams) : this(rng, inputProvider, weather, teams as IEnumerable<Team>) { }
 
         public IEnumerator<Team> GetEnumerator()
         {

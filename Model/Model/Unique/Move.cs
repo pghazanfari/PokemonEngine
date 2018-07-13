@@ -18,6 +18,7 @@ namespace PokemonEngine.Model.Unique
         public PokemonType Type {  get { return Base.Type; } }
         public int? Power { get { return Base.Power; } }
         public DamageType? DamageType { get { return Base.DamageType; } }
+        public int Accuracy { get { return Base.Accuracy; } }
         public MoveTarget Target { get { return Base.Target; } }
         public int BasePP { get { return Base.BasePP; } }
         public int MaxPPLimit { get { return Base.MaxPPLimit; } }

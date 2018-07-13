@@ -8,7 +8,7 @@ using PokemonEngine.Model.Battle.Actions;
 
 namespace PokemonEngine.Model.Battle
 {
-    public interface IBattleInputProvider
+    public interface IInputProvider
     {
         IList<IAction> ProvideActions(IBattle battle, IList<Request> requests);
         IList<SwapPokemon> ProvideSwapPokemon(IBattle battle, IList<Request> requests);

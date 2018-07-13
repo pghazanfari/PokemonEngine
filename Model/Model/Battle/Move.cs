@@ -16,13 +16,14 @@ namespace PokemonEngine.Model.Battle
         #region Base Move Wrapper Methods
         public string Name { get { return Base.Name; } }
         public PokemonType Type { get { return Base.Type; } }
-        public int? Power { get { return Base.Power; } }
+        public int? Power { get { return Base.Power.HasValue ? (int)PowerModifiers.Calculate(Base.Power.Value) : Base.Power; } }
         public DamageType? DamageType { get { return Base.DamageType; } }
+        public int Accuracy { get { return (int)AccuracyModifiers.Calculate(Base.Accuracy); } }
         public MoveTarget Target { get { return Base.Target; } }
         public int BasePP { get { return Base.BasePP; } }
         public int MaxPPLimit { get { return Base.MaxPPLimit; } }
-        public int Priority { get { return Base.Priority; } }
-        public int CriticalHitStage {  get { return Base.CriticalHitStage; } }
+        public int Priority { get { return (int)PriorityModifiers.Calculate(Base.Priority); } }
+        public int CriticalHitStage {  get { return (int)CriticalHitStageModifiers.Calculate(Base.CriticalHitStage); } }
         public void Use(IBattle battle, UseMove useMoveAction) { Base.Use(battle, useMoveAction); }
 
         public int PP { get { return Base.PP; } }
@@ -30,6 +31,12 @@ namespace PokemonEngine.Model.Battle
         #endregion
 
         public bool IsDisabled { get; private set; }
+
+        public readonly ModifierSet PowerModifiers = new ModifierSet();
+        public readonly ModifierSet AccuracyModifiers = new ModifierSet();
+        public readonly ModifierSet PriorityModifiers = new ModifierSet();
+        public readonly ModifierSet CriticalHitStageModifiers = new ModifierSet();
+        
 
         public Move(Unique.IMove baseMove, bool isDisabled)
         {

@@ -17,7 +17,7 @@ using PokemonEngine.Model.Battle.Messages;
 namespace ModelUnitTests.Tests
 {
     [TestClass]
-    public class BattleTest : IBattleInputProvider
+    public class BattleTest : IInputProvider
     {
 
         [TestMethod]

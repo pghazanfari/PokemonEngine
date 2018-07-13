@@ -81,7 +81,7 @@ namespace ModelUnitTests.Tests
             sequence.Add(1.0); // No Critical Hit
             sequence.Add(0); // Maximum Damage
 
-            IBattle battle = new Battle(sequence, NoOpBattleInputProvider.Instance, PokemonEngine.Model.Weather.ClearSkies, team1, team2);
+            IBattle battle = new Battle(sequence, NoOpInputProvider.Instance, PokemonEngine.Model.Weather.ClearSkies, team1, team2);
             List<PokemonEngine.Model.Battle.Slot> targets = new List<PokemonEngine.Model.Battle.Slot> { team2[0] };
             InflictMoveDamage inflictDamage = new InflictMoveDamage(battle, team1[0].Pokemon.Moves[0], team1[0], targets);
 
@@ -99,7 +99,7 @@ namespace ModelUnitTests.Tests
             sequence = new NumberSequence();
             sequence.Add(1.0); // No Critical Hit
             sequence.Add(15); // Minimum Damage
-            battle = new Battle(sequence, NoOpBattleInputProvider.Instance, PokemonEngine.Model.Weather.ClearSkies, team1, team2);
+            battle = new Battle(sequence, NoOpInputProvider.Instance, PokemonEngine.Model.Weather.ClearSkies, team1, team2);
             inflictDamage = new InflictMoveDamage(battle, team1[0].Pokemon.Moves[0], team1[0], targets);
 
             Assert.AreEqual(9, team1[0].Pokemon.Stats[PokemonEngine.Model.Statistic.Attack]);
@@ -109,7 +109,7 @@ namespace ModelUnitTests.Tests
             sequence = new NumberSequence();
             sequence.Add(1.0); // No Critical Hit
             sequence.Add(0); // Maximum Damage
-            battle = new Battle(sequence, NoOpBattleInputProvider.Instance, PokemonEngine.Model.Weather.ClearSkies, team1, team2);
+            battle = new Battle(sequence, NoOpInputProvider.Instance, PokemonEngine.Model.Weather.ClearSkies, team1, team2);
             inflictDamage = new InflictMoveDamage(battle, team1[0].Pokemon.Moves[0], team1[0], targets);
 
             Assert.AreEqual(9, team1[0].Pokemon.Stats[PokemonEngine.Model.Statistic.Attack]);
