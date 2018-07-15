@@ -43,6 +43,41 @@ namespace PokemonEngine.Model.Unique
     
     public static class IPokemonImpl
     {
+        public static int BaseHP(this Model.Unique.IPokemon pokemon)
+        {
+            return (pokemon as Model.IPokemon).Stats[Model.Statistic.HP];
+        }
+
+        public static int MaxHP(this Model.Unique.IPokemon pokemon)
+        {
+            return pokemon.Stats[Statistic.HP];
+        }
+
+        public static int BaseAttack(this Model.Unique.IPokemon pokemon)
+        {
+            return (pokemon as Model.IPokemon).Stats[Model.Statistic.Attack];
+        }
+
+        public static int BaseSpecialAttack(this Model.Unique.IPokemon pokemon)
+        {
+            return (pokemon as Model.IPokemon).Stats[Model.Statistic.SpecialAttack];
+        }
+
+        public static int BaseDefense(this Model.Unique.IPokemon pokemon)
+        {
+            return (pokemon as Model.IPokemon).Stats[Model.Statistic.Defense];
+        }
+
+        public static int BaseSpecialDefense(this Model.Unique.IPokemon pokemon)
+        {
+            return (pokemon as Model.IPokemon).Stats[Model.Statistic.SpecialDefense];
+        }
+
+        public static int BaseSpeed(this Model.Unique.IPokemon pokemon)
+        {
+            return (pokemon as Model.IPokemon).Stats[Model.Statistic.Speed];
+        }
+
         public static bool HasFainted(this Unique.IPokemon pokemon)
         {
             return pokemon.HP == 0;

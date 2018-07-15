@@ -25,6 +25,12 @@ namespace PokemonEngine.Model.Battle
             TurnsRemaining = turnCount;
         }
 
+        public void Reset(int turnsRemaining)
+        {
+            if (turnsRemaining <= 0) throw new ArgumentException("must be greater than 0", "turnsRemaining");
+            TurnsRemaining = turnsRemaining;
+        }
+
         public void DecrementTurnCounter()
         {
             if (TurnsRemaining == 0) return;

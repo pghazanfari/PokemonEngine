@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using PokemonEngine.Model.Battle;
 using PokemonEngine.Model.Battle.Actions;
 using PokemonEngine.Model.Battle.Messages;
+using PokemonEngine.Model.Common;
 
 namespace PokemonEngine.Model
 {
@@ -79,8 +80,11 @@ namespace PokemonEngine.Model
         {
             if (!damageType.HasValue) { return; }
 
-            InflictMoveDamage message = new InflictMoveDamage(battle, this, useMoveAction.Slot, useMoveAction.HitTargets);
+            Battle.IMove move = useMoveAction.Slot.Pokemon.Moves.Find(this);
+
+            InflictMoveDamage message = new InflictMoveDamage(battle, move, useMoveAction.Slot, useMoveAction.HitTargets);
             battle.MessageQueue.AddFirst(message); // Maybe Enqueue?
+            
         }
     }
 }

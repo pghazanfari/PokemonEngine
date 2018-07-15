@@ -19,6 +19,7 @@ namespace ModelUnitTests.Tests
     [TestClass]
     public class BattleTest : IInputProvider
     {
+        private bool buffetedByHail = false;
 
         [TestMethod]
         public void TestBattle()
@@ -26,7 +27,8 @@ namespace ModelUnitTests.Tests
             Team team1 = Helper.ConstructTeam("Trainer1", 10, 1);
             Team team2 = Helper.ConstructTeam("Trainer2", 10, 1);
             Random random = new Random(1234567);
-            IBattle battle = new Battle(random, this, PokemonEngine.Model.Weather.ClearSkies, new Team[] { team1, team2 });
+            IBattle battle = new Battle(random, this, PokemonEngine.Model.Weather.Hail, new Team[] { team1, team2 });
+            //IBattle battle = new Battle(random, this, PokemonEngine.Model.Weather.ClearSkies, new Team[] { team1, team2 });
 
             battle.OnUseMove += OnUseMove;
             battle.OnDamageInflicted += OnDamageInflicted;
@@ -48,6 +50,7 @@ namespace ModelUnitTests.Tests
             }
 
             Assert.IsFalse(turnCounter >= maxTurns);
+            Assert.IsTrue(buffetedByHail);
         }
 
         private void OnStatStageShifted(object sender, StatStageShiftedEventArgs e)
@@ -77,15 +80,40 @@ namespace ModelUnitTests.Tests
 
         private void OnDamageInflicted(object sender, DamageInflictedEventArgs e)
         {
-            foreach (Slot target in e.Action.Targets)
+            if (e.Action is InflictMoveDamage)
             {
-                PokemonEngine.Model.Battle.ITrainer trainer = target.Participant as PokemonEngine.Model.Battle.ITrainer;
-                if (e.Action is InflictMoveDamage && (e.Action as InflictMoveDamage).IsCriticalHit)
+                foreach (Slot target in e.Action.Targets)
                 {
-                    Trace.WriteLine("A critical hit!");
-                }
+                    PokemonEngine.Model.Battle.ITrainer trainer = target.Participant as PokemonEngine.Model.Battle.ITrainer;
+                    if (e.Action is InflictMoveDamage && (e.Action as InflictMoveDamage).IsCriticalHit)
+                    {
+                        Trace.WriteLine("A critical hit!");
+                    }
 
-                Trace.WriteLine($"{trainer.UID}'s {target.Pokemon.Species} took {e.Action[target]} damage.");
+                    Trace.WriteLine($"{trainer.UID}'s {target.Pokemon.Species} took {e.Action[target]} damage.");
+                }
+            }
+
+            if (e.Action is InflictDamage.Typed<PokemonEngine.Model.Battle.Weather>)
+            {
+                InflictDamage.Typed<PokemonEngine.Model.Battle.Weather> action = e.Action as InflictDamage.Typed<PokemonEngine.Model.Battle.Weather>;
+                if (action.Targets.FirstOrDefault() != null)
+                {
+                    switch (action.Source.Type)
+                    {
+                        case PokemonEngine.Model.Weather.Hail:
+                        {
+                            foreach (Slot slot in action.Targets)
+                            {
+                                buffetedByHail = true;
+
+                                PokemonEngine.Model.Battle.ITrainer trainer = slot.Participant as PokemonEngine.Model.Battle.ITrainer;
+                                Trace.WriteLine($"{trainer.UID}'s {slot.Pokemon.Species} is buffeted by the hail!");
+                            }
+                            break;
+                        }
+                    }
+                }
             }
         }
 

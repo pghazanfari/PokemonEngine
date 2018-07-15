@@ -13,9 +13,6 @@ namespace PokemonEngine.Model.Battle
         new Statistics Stats { get; }
         new MoveSet<IMove> Moves { get; }
 
-        //event EventHandler<UpdateStatStageEventArgs> OnUpdateStatStage;
-        //event EventHandler<StatStageUpdatedEventArgs> OnStatStageUpdated;
-
         new IPokemon Clone();
     }
 

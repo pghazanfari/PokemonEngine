@@ -26,8 +26,18 @@ namespace PokemonEngine.Model.Common
             return new ReadOnlyDictionary<K, V>(dictionary);
         }
 
-        public static IEnumerable<T> Except<T>(this IEnumerable<T> collection, params T[] list) {
-            return collection.Except(list as IEnumerable<T>);
+        public static IEnumerable<T> Except<T>(this IEnumerable<T> enumerable, params T[] list) {
+            return enumerable.Except(list as IEnumerable<T>);
+        }
+
+        public static T Find<T>(this IEnumerable<T> enumerable, object obj)
+        {
+            foreach (T t in enumerable)
+            {
+                if (t.Equals(obj)) return t;
+            }
+
+            return default(T);
         }
     }
 }

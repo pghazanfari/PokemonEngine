@@ -9,6 +9,7 @@ using PokemonEngine.Model.Battle.Actions;
 
 namespace PokemonEngine.Model.Unique
 {
+#pragma warning disable CS0659
     public class Move : IMove
     {
         public readonly Model.IMove Base;
@@ -57,6 +58,16 @@ namespace PokemonEngine.Model.Unique
         public Move Clone()
         {
             return new Move(Base, PP, MaxPP);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Model.IMove)
+            {
+                return Base.Equals(obj);
+            }
+
+            return base.Equals(obj);
         }
     }
 }
