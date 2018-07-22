@@ -10,6 +10,9 @@ namespace PokemonEngine.Model.Battle
     {
         private class Modifier : IModifier
         {
+            public event EventHandler<IModifier> OnDispose;
+            public event EventHandler<IModifier> OnDisposed;
+
             private readonly ModifierSet owner;
 
             private readonly float factor;
@@ -21,9 +24,13 @@ namespace PokemonEngine.Model.Battle
                 this.factor = factor;
             }
 
+            ~Modifier() { Dispose(); }
+
             public void Dispose()
             {
+                OnDispose?.Invoke(this, this);
                 owner.RemoveModifier(this);
+                OnDisposed?.Invoke(this, this);
             }
         }
 

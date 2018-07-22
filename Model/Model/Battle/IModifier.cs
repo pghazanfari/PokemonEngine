@@ -8,6 +8,9 @@ namespace PokemonEngine.Model.Battle
 {
     public interface IModifier : IDisposable
     {
+        event EventHandler<IModifier> OnDispose;
+        event EventHandler<IModifier> OnDisposed;
+
         float Factor { get; }
     }
 }

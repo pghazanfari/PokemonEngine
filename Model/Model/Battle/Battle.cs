@@ -66,7 +66,10 @@ namespace PokemonEngine.Model.Battle
 
         public event EventHandler<InflictDamageEventArgs> OnInflictDamage;
         public event EventHandler<DamageInflictedEventArgs> OnDamageInflicted;
-        
+
+        public event EventHandler<MoveUseFailureEventArgs> OnMoveUseFailure;
+        public event EventHandler<MoveUseFailedEventArgs> OnMoveUseFailed;
+
         public event EventHandler<ShiftStatStageEventArgs> OnShiftStatStage;
         public event EventHandler<StatStageShiftedEventArgs> OnStatStageShifted;
 
@@ -173,6 +176,8 @@ namespace PokemonEngine.Model.Battle
             OnRunUsed += effect.OnRunUsed;
             OnInflictDamage += effect.OnInflictDamage;
             OnDamageInflicted += effect.OnDamageInflicted;
+            OnMoveUseFailure += effect.OnMoveUseFailure;
+            OnMoveUseFailed += effect.OnMoveUseFailed;
             OnShiftStatStage += effect.OnShiftStatStage;
             OnStatStageShifted += effect.OnStatStageShifted;
             OnChangeWeather += effect.OnChangeWeather;
@@ -205,6 +210,8 @@ namespace PokemonEngine.Model.Battle
             OnRunUsed -= effect.OnRunUsed;
             OnInflictDamage -= effect.OnInflictDamage;
             OnDamageInflicted -= effect.OnDamageInflicted;
+            OnMoveUseFailure -= effect.OnMoveUseFailure;
+            OnMoveUseFailed -= effect.OnMoveUseFailed;
             OnShiftStatStage -= effect.OnShiftStatStage;
             OnStatStageShifted -= effect.OnStatStageShifted;
             OnChangeWeather -= effect.OnChangeWeather;
@@ -347,13 +354,15 @@ namespace PokemonEngine.Model.Battle
 
         public void Receive(SwapPokemon swapPokemonAction)
         {
+            IPokemon swappedPokemon = swapPokemonAction.Slot.Pokemon;
+
             SwapPokemonEventArgs swapPokemonEventArgs = new SwapPokemonEventArgs(this, swapPokemonAction);
             CurrentWeather.OnSwapPokemon(this, swapPokemonEventArgs);
             OnSwapPokemon?.Invoke(this, swapPokemonEventArgs);
 
             // TODO
 
-            PokemonSwappedEventArgs pokemonSwappedEventArgs = new PokemonSwappedEventArgs(this, swapPokemonAction);
+            PokemonSwappedEventArgs pokemonSwappedEventArgs = new PokemonSwappedEventArgs(this, swapPokemonAction, swappedPokemon);
             CurrentWeather.OnPokemonSwapped(this, pokemonSwappedEventArgs);
             OnPokemonSwapped?.Invoke(this, pokemonSwappedEventArgs);
         }
@@ -410,6 +419,19 @@ namespace PokemonEngine.Model.Battle
             DamageInflictedEventArgs damageInflictedEventArgs = new DamageInflictedEventArgs(this, inflictDamage);
             CurrentWeather.OnDamageInflicted(this, damageInflictedEventArgs);
             OnDamageInflicted?.Invoke(this, damageInflictedEventArgs);
+        }
+
+        public void Receive(MoveUseFailure moveFailure)
+        {
+            MoveUseFailureEventArgs moveUseFailureEventArgs = new MoveUseFailureEventArgs(this, moveFailure);
+            CurrentWeather.OnMoveUseFailure(this, moveUseFailureEventArgs);
+            OnMoveUseFailure?.Invoke(this, moveUseFailureEventArgs);
+
+            // TODO
+
+            MoveUseFailedEventArgs moveUseFailedEventArgs = new MoveUseFailedEventArgs(this, moveFailure);
+            CurrentWeather.OnMoveUseFailed(this, moveUseFailedEventArgs);
+            OnMoveUseFailed?.Invoke(this, moveUseFailedEventArgs);
         }
 
         public void Receive(ShiftStatStage shiftStatStage)

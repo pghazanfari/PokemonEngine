@@ -22,16 +22,27 @@ namespace PokemonEngine.Model.Battle.Weathers
             modifiers = new List<IModifier>();
         }
 
+        private void CleanupModifier(object sender, IModifier modifier)
+        {
+            modifiers.Remove(modifier);
+        }
+
         public override void OnUseMove(object sender, UseMoveEventArgs args)
         {
-            modifiers.Add(args.Action.AccuracyModifiers.AddModifier(AccuracyModifierLevel, AccuracyModifierFactor));
+            IModifier modifier = args.Action.AccuracyModifiers.AddModifier(AccuracyModifierLevel, AccuracyModifierFactor);
+            modifier.OnDispose += CleanupModifier;
+            modifiers.Add(modifier);
         }
+
 
         public override void OnChangeWeather(object sender, ChangeWeatherEventArgs args)
         {
             if (args.Battle.CurrentWeather == this)
             {
-                modifiers.ForEach(x => x.Dispose());
+                modifiers.ForEach(x => {
+                    x.OnDispose -= CleanupModifier;
+                    x.Dispose();
+                });
                 modifiers.Clear();
             }
         }

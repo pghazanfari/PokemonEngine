@@ -30,6 +30,11 @@ namespace PokemonEngine.Model.Common
             return enumerable.Except(list as IEnumerable<T>);
         }
 
+        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
+        {
+            foreach (T obj in enumerable) { action.Invoke(obj); }
+        }
+
         public static T Find<T>(this IEnumerable<T> enumerable, object obj)
         {
             foreach (T t in enumerable)

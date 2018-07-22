@@ -62,9 +62,11 @@ namespace PokemonEngine.Model.Battle
     {
         // TODO: Add anything else that is needed
         public readonly SwapPokemon Action;
-        public PokemonSwappedEventArgs(IBattle battle, SwapPokemon action) : base(battle)
+        public readonly IPokemon SwappedPokemon;
+        public PokemonSwappedEventArgs(IBattle battle, SwapPokemon action, IPokemon swappedPokemon) : base(battle)
         {
             Action = action;
+            SwappedPokemon = swappedPokemon;
         }
     }
 
@@ -139,6 +141,24 @@ namespace PokemonEngine.Model.Battle
         // TODO: Add anything else
         public readonly InflictDamage Action;
         public DamageInflictedEventArgs(IBattle battle, InflictDamage action) : base(battle)
+        {
+            Action = action;
+        }
+    }
+
+    public class MoveUseFailureEventArgs : EventArgs
+    {
+        public readonly MoveUseFailure Action;
+        public MoveUseFailureEventArgs(IBattle battle, MoveUseFailure action) : base(battle)
+        {
+            Action = action;
+        }
+    }
+
+    public class MoveUseFailedEventArgs : EventArgs
+    {
+        public readonly MoveUseFailure Action;
+        public MoveUseFailedEventArgs(IBattle battle, MoveUseFailure action) : base(battle)
         {
             Action = action;
         }

@@ -4,11 +4,111 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using PokemonEngine.Model.Common;
+using PokemonEngine.Model.Unique;
+using PokemonEngine.Model.Battle.Messages;
+
 namespace PokemonEngine.Model.Battle.Weathers
 {
     public class Sandstorm : Weather
     {
-        public Sandstorm() : base() { }
-        public Sandstorm(int turnCount) : base(turnCount) { }
+        public const int SpecialDefenseModifierLevel = 0;
+        public const float SpecialDefenseModifierFactor = 1.5f;
+        public static readonly PokemonType BuffedType = PokemonType.Rock;
+
+        private readonly IDictionary<IPokemon, IModifier> modifiers;
+
+        public Sandstorm() : base()
+        {
+            modifiers = new Dictionary<IPokemon, IModifier>();
+        }
+        public Sandstorm(int turnCount) : base(turnCount)
+        {
+            modifiers = new Dictionary<IPokemon, IModifier>();
+        }
+
+        public override void OnTurnEnd(object sender, EventArgs args)
+        {
+            InflictSandstormDamage msg = new InflictSandstormDamage(args.Battle, this);
+            args.Battle.MessageQueue.Enqueue(msg);
+        }
+
+        public override void OnBattleStart(object sender, EventArgs args)
+        {
+            foreach (Team team in args.Battle)
+            {
+                foreach (Slot slot in team)
+                {
+                    if (slot.Pokemon.Types.Contains(BuffedType))
+                    {
+                        IModifier modifier = slot.Pokemon.Stats.Modifiers[Statistic.SpecialDefense].AddModifier(SpecialDefenseModifierLevel, SpecialDefenseModifierFactor);
+                        modifiers.Add(slot.Pokemon, modifier);
+                    }
+                }
+            }
+        }
+
+        public override void OnPokemonSwapped(object sender, PokemonSwappedEventArgs args)
+        {
+            if (modifiers.ContainsKey(args.SwappedPokemon))
+            {
+                modifiers[args.SwappedPokemon].Dispose();
+                modifiers.Remove(args.SwappedPokemon);
+            }
+            
+            if (args.Action.Slot.Pokemon.Types.Contains(BuffedType))
+            {
+                IModifier modifier = args.Action.Slot.Pokemon.Stats.Modifiers[Statistic.SpecialDefense].AddModifier(SpecialDefenseModifierLevel, SpecialDefenseModifierFactor);
+                modifiers.Add(args.Action.Slot.Pokemon, modifier);
+            }
+        }
+
+        public override void OnChangeWeather(object sender, ChangeWeatherEventArgs args)
+        {
+            if (args.Battle.CurrentWeather == this)
+            {
+                modifiers.Values.ForEach(x => x.Dispose());
+                modifiers.Clear();
+            }
+        }
+
+        private class InflictSandstormDamage : InflictDamage.Typed<Weather>
+        {
+            IReadOnlyList<PokemonType> ProtectedTypes = new List<PokemonType> {
+            PokemonType.Rock, PokemonType.Ground, PokemonType.Steel }.AsReadOnly();
+
+            private IBattle battle;
+
+            public override int this[Slot slot]
+            {
+                get
+                {
+                    return (int)(slot.Pokemon.MaxHP() / 16.0f);
+                }
+            }
+
+            private Weather source;
+            public override Weather Source
+            {
+                get
+                {
+                    return source;
+                }
+            }
+
+            public override IEnumerable<Slot> Targets
+            {
+                get
+                {
+                    return battle.SelectMany(x => x.Where(y => y.IsInPlay && !y.Pokemon.Types.Intersect(ProtectedTypes).Any()));
+                }
+            }
+
+            public InflictSandstormDamage(IBattle battle, Sandstorm sandstorm)
+            {
+                this.battle = battle;
+                source = sandstorm;
+            }
+        }
     }
 }

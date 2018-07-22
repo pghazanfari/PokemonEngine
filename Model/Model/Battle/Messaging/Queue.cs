@@ -85,6 +85,28 @@ namespace PokemonEngine.Model.Battle.Messaging
             return false;
         }
 
+        public bool Remove(IMessage message)
+        {
+            if (map.ContainsKey(message))
+            {
+                queue.Remove(map[message]);
+                map.Remove(message);
+            }
+            return false;
+        }
+
+        public bool Replace(IMessage oldMessage, IMessage newMessage)
+        {
+            if (map.ContainsKey(oldMessage) && !map.ContainsKey(newMessage))
+            {
+                LinkedListNode<IMessage> node = map[oldMessage];
+                node.Value = newMessage;
+                map.Remove(oldMessage);
+                map[newMessage] = node;
+            }
+            return false;
+        }
+
         public bool Swap(IMessage firstMessage, IMessage secondMessage)
         {
             if (map.ContainsKey(firstMessage) && map.ContainsKey(secondMessage))
