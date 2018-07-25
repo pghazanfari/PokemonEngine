@@ -79,12 +79,6 @@
     <Compile Include="Model\Battle\Weathers\MysteriousAirCurrent.cs" />
     <Compile Include="Model\Battle\Weathers\Rain.cs" />
     <Compile Include="Model\Battle\Weathers\Sandstorm.cs" />
-    <Compile Include="Model\Common\Events.cs" />
-    <Compile Include="Model\Common\IProvider.cs" />
-    <Compile Include="Model\Common\Sequence\IMutableSequence.cs" />
-    <Compile Include="Model\Common\Sequence\ISequence.cs" />
-    <Compile Include="Model\Common\Sequence\MutableSequence.cs" />
-    <Compile Include="Model\Common\Sequence\Sequence.cs" />
     <Compile Include="Model\ExperienceGroup.cs" />
     <Compile Include="Model\IMove.cs" />
     <Compile Include="Model\IStatistics.cs" />

@@ -11,23 +11,6 @@ namespace PokemonEngine.Model.Unique
 {
     public class Party : IEnumerable<Unique.IPokemon>, ICloneable
     {
-        public class PokemonSwappedEventArgs : EventArgs
-        {
-            public readonly Unique.IPokemon First;
-            public readonly int FirstSlot;
-
-            public readonly Unique.IPokemon Second;
-            public readonly int SecondSlot;
-
-            public PokemonSwappedEventArgs(Unique.IPokemon first, int firstSlot, Unique.IPokemon second, int secondSlot) : base()
-            {
-                First = first;
-                FirstSlot = firstSlot;
-                Second = second;
-                SecondSlot = secondSlot;
-            }
-        }
-
         public class PokemonReplacedEventArgs : EventArgs
         {
             public readonly Unique.IPokemon PartyPokemon;
@@ -73,11 +56,11 @@ namespace PokemonEngine.Model.Unique
             }
         }
 
-        public event EventHandler<Party, PokemonSwappedEventArgs> OnPokemonSwap;
-        public event EventHandler<Party, PokemonSwappedEventArgs> OnPokemonSwapped;
+        public event EventHandler<PokemonSwappedEventArgs> OnSwapPokemon;
+        public event EventHandler<PokemonSwappedEventArgs> OnPokemonSwapped;
 
-        public event EventHandler<Party, PokemonReplacedEventArgs> OnPokemonReplace;
-        public event EventHandler<Party, PokemonReplacedEventArgs> OnPokemonReplaced;
+        public event EventHandler<PokemonReplacedEventArgs> OnReplacePokemon;
+        public event EventHandler<PokemonReplacedEventArgs> OnPokemonReplaced;
 
         public Party(int size, IList<Unique.IPokemon> pokemon)
         {
@@ -109,33 +92,33 @@ namespace PokemonEngine.Model.Unique
             Swap(firstIndex, secondIndex);
         }
 
-        public void Swap(int firstSlot, int secondSlot)
+        public void Swap(int slot1, int slot2)
         {
-            if (firstSlot < 0 || firstSlot >= PokemonCount)
+            if (slot1 < 0 || slot1 >= PokemonCount)
             {
-                throw new Exception($"Invalid slot for first pokemon: {firstSlot}");
+                throw new Exception($"Invalid slot for first pokemon: {slot1}");
             }
-            if (secondSlot < 0 || secondSlot >= PokemonCount)
+            if (slot2 < 0 || slot2 >= PokemonCount)
             {
-                throw new Exception($"Invalid slot for second pokemon: {secondSlot}");
+                throw new Exception($"Invalid slot for second pokemon: {slot2}");
             }
 
-            if (firstSlot == secondSlot)
+            if (slot1 == slot2)
             {
                 throw new Exception($"You cannot swap pokemon in the same slot");
             }
-            PokemonSwappedEventArgs args = new PokemonSwappedEventArgs(pokemon[firstSlot], firstSlot, pokemon[secondSlot], secondSlot);
-            OnPokemonSwap?.Invoke(this, args);
-            Unique.IPokemon tmp = pokemon[firstSlot];
-            pokemon[firstSlot] = pokemon[secondSlot];
-            pokemon[secondSlot] = tmp;
+            PokemonSwappedEventArgs args = new PokemonSwappedEventArgs(this, slot1, slot2);
+            OnSwapPokemon?.Invoke(this, args);
+            Unique.IPokemon tmp = pokemon[slot1];
+            pokemon[slot1] = pokemon[slot2];
+            pokemon[slot2] = tmp;
             OnPokemonSwapped?.Invoke(this, args);
         }
 
         public Unique.IPokemon Replace(int slot, Unique.IPokemon replacementPokemon)
         {
             PokemonReplacedEventArgs args = new PokemonReplacedEventArgs(pokemon[slot], slot, replacementPokemon);
-            OnPokemonReplace(this, args);
+            OnReplacePokemon(this, args);
             Unique.IPokemon old = pokemon[slot];
             pokemon[slot] = replacementPokemon;
             OnPokemonReplaced(this, args);

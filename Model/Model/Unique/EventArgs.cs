@@ -91,4 +91,65 @@ namespace PokemonEngine.Model.Unique
         }
     }
 
+    public class SwapPokemonEventArgs : EventArgs
+    {
+        public readonly Party Party;
+        public readonly int Slot1;
+        public readonly int Slot2;
+
+        public Unique.IPokemon Pokemon1
+        {
+            get
+            {
+                return Party[Slot1];
+            }
+        }
+
+
+        public Unique.IPokemon Pokemon2
+        {
+            get
+            {
+                return Party[Slot2];
+            }
+        }
+
+        public SwapPokemonEventArgs(Party party, int slot1, int slot2) : base()
+        {
+            Party = party;
+            Slot1 = slot1;
+            Slot2 = slot2;
+        }
+    }
+
+    public class PokemonSwappedEventArgs : EventArgs
+    {
+        public readonly Party Party;
+        public readonly int Slot1;
+        public readonly int Slot2;
+
+        public Unique.IPokemon Pokemon1
+        {
+            get
+            {
+                return Party[Slot1];
+            }
+        }
+
+
+        public Unique.IPokemon Pokemon2
+        {
+            get
+            {
+                return Party[Slot2];
+            }
+        }
+
+        public PokemonSwappedEventArgs(Party party, int slot1, int slot2) : base()
+        {
+            Party = party;
+            Slot1 = slot1;
+            Slot2 = slot2;
+        }
+    }
 }
