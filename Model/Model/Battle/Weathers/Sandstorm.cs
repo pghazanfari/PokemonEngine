@@ -12,6 +12,33 @@ namespace PokemonEngine.Model.Battle.Weathers
 {
     public class Sandstorm : Weather
     {
+        private class SandstormModifier : IModifier
+        {
+            private readonly Sandstorm owner;
+
+            public float Factor
+            {
+                get
+                {
+                    return SpecialDefenseModifierFactor;
+                }
+            }
+
+            public SandstormModifier(Sandstorm owner)
+            {
+                this.owner = owner;
+            }
+
+            public void Dispose()
+            {
+                IEnumerable<KeyValuePair<IPokemon, IModifier>> enumerable = owner.modifiers.Where(x => x.Value == this);
+                if (enumerable.Any())
+                {
+                    owner.modifiers.Remove(enumerable.First().Key);
+                }
+            }
+        }
+
         public const int SpecialDefenseModifierLevel = 0;
         public const float SpecialDefenseModifierFactor = 1.5f;
         public static readonly PokemonType BuffedType = PokemonType.Rock;
@@ -41,7 +68,8 @@ namespace PokemonEngine.Model.Battle.Weathers
                 {
                     if (slot.Pokemon.Types.Contains(BuffedType))
                     {
-                        IModifier modifier = slot.Pokemon.Stats.Modifiers[Statistic.SpecialDefense].AddModifier(SpecialDefenseModifierLevel, SpecialDefenseModifierFactor);
+                        IModifier modifier = new SandstormModifier(this);
+                        slot.Pokemon.Stats.Modifiers[Statistic.SpecialDefense].AddModifier(SpecialDefenseModifierLevel, modifier);
                         modifiers.Add(slot.Pokemon, modifier);
                     }
                 }
@@ -58,7 +86,8 @@ namespace PokemonEngine.Model.Battle.Weathers
             
             if (args.Action.Slot.Pokemon.Types.Contains(BuffedType))
             {
-                IModifier modifier = args.Action.Slot.Pokemon.Stats.Modifiers[Statistic.SpecialDefense].AddModifier(SpecialDefenseModifierLevel, SpecialDefenseModifierFactor);
+                IModifier modifier = new SandstormModifier(this);
+                args.Action.Slot.Pokemon.Stats.Modifiers[Statistic.SpecialDefense].AddModifier(SpecialDefenseModifierLevel, modifier);
                 modifiers.Add(args.Action.Slot.Pokemon, modifier);
             }
         }

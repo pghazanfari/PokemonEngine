@@ -15,6 +15,7 @@ namespace PokemonEngine.Model.Unique
         new IStatistics Stats { get; }
         Gender Gender { get; }
         Nature Nature { get; }
+        Ability Ability { get; }
         IVSet IVs { get; }
         EVSet EVs { get; }
         int Level { get; }

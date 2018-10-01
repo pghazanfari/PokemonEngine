@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using PokemonEngine.Model;
+using ModelUnitTests.Util;
 
 namespace ModelUnitTests.PokemonImpl
 {
@@ -34,9 +35,9 @@ namespace ModelUnitTests.PokemonImpl
 
         public static readonly Bulbasaur Instance = new Bulbasaur();
 
-        public static PokemonEngine.Model.Unique.IPokemon Construct(string uid, Gender gender, Nature nature, PokemonEngine.Model.Unique.IVSet ivs, PokemonEngine.Model.Unique.EVSet evs, PokemonEngine.Model.Unique.MoveSet<PokemonEngine.Model.Unique.IMove> moves, int friendship, int level)
+        public static PokemonEngine.Model.Unique.IPokemon Construct(string uid, Gender gender, Nature nature, Ability ability, PokemonEngine.Model.Unique.IVSet ivs, PokemonEngine.Model.Unique.EVSet evs, PokemonEngine.Model.Unique.MoveSet<PokemonEngine.Model.Unique.IMove> moves, int friendship, int level)
         {
-            return new PokemonEngine.Model.Unique.Pokemon(Instance, uid, gender, nature, ivs, evs, moves, friendship, level);
+            return new PokemonEngine.Model.Unique.Pokemon(Instance, uid, gender, nature, ability, ivs, evs, moves, friendship, level);
         }
 
         public static PokemonEngine.Model.Unique.IPokemon ConstructSimple(int level)
@@ -47,7 +48,7 @@ namespace ModelUnitTests.PokemonImpl
                 moves.Add(new PokemonEngine.Model.Unique.Move(Instance.MovePool.StarterMoves[i]));
             }
 
-            return new PokemonEngine.Model.Unique.Pokemon(Instance, Gender.Male, Nature.Adamant, new PokemonEngine.Model.Unique.IVSet(),
+            return new PokemonEngine.Model.Unique.Pokemon(Instance, Gender.Male, Nature.Adamant, new NullAbility(), new PokemonEngine.Model.Unique.IVSet(),
                 new PokemonEngine.Model.Unique.EVSet(), new PokemonEngine.Model.Unique.MoveSet<PokemonEngine.Model.Unique.IMove>(moves), level);
         }
     }

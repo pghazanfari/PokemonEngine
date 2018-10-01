@@ -40,7 +40,20 @@ namespace PokemonEngine.Model.Battle
 
         // CurrentWeather will be invoked manually before events in order to ensure
         // that the CurrentWeather's effect always applies.
-        public Weather CurrentWeather { get; private set; }
+        private Weather currentWeather;
+        public Weather CurrentWeather
+        {
+            get
+            {
+                return currentWeather;
+            }
+            set
+            {
+                DeregisterEffect(currentWeather);
+                currentWeather = value;
+                RegisterEffect(currentWeather);
+            }
+        }
 
         public event EventHandler<EventArgs> OnBattleStart;
         public event EventHandler<BattleEndEventArgs> OnBattleEnd;
@@ -109,7 +122,6 @@ namespace PokemonEngine.Model.Battle
             InputProvider = inputProvider;
             this.rng = rng;
             surroundingWeather = weather;
-            CurrentWeather = surroundingWeather;
 
             effects = new List<Effect>();
             roEffects = (effects as List<Effect>).AsReadOnly();
@@ -122,6 +134,8 @@ namespace PokemonEngine.Model.Battle
             ActionComparer = new Actions.Comparer(RNG);
             currentState = State.START;
             TurnCounter = 1;
+
+            CurrentWeather = surroundingWeather;
 
             BattleArgs = new EventArgs(this);
         }
@@ -148,7 +162,6 @@ namespace PokemonEngine.Model.Battle
         private void broadcast()
         {
             EventArgs args = new EventArgs(this);
-            CurrentWeather.OnMessageBroadcast(this, args);
             OnMessageBroadcast?.Invoke(this, args);
 
             messageQueue.Broadcast();
@@ -156,7 +169,7 @@ namespace PokemonEngine.Model.Battle
 
         public bool RegisterEffect(Effect effect)
         {
-            if (effects.Contains(effect)) { return false; }
+            if (effect == null || effects.Contains(effect)) { return false; }
             effects.Add(effect);
 
             OnBattleStart += effect.OnBattleStart;
@@ -193,6 +206,8 @@ namespace PokemonEngine.Model.Battle
 
         public bool DeregisterEffect(Effect effect)
         {
+            if (effect == null) return false;
+
             OnBattleStart -= effect.OnBattleStart;
             OnBattleEnd -= effect.OnBattleEnd;
             OnTurnStart -= effect.OnTurnStart;
@@ -227,19 +242,24 @@ namespace PokemonEngine.Model.Battle
 
         public void ExecuteTurn()
         {
-            
-
             if (currentState == State.END) { return; } // Don't do anything if battle is over
 
             if (currentState == State.START)
             {
-                CurrentWeather.OnBattleStart(this, BattleArgs);
+                //Add effects of all Pokemon Abilities in battle
+                foreach (Team team in teams)
+                {
+                    foreach (Slot slot in team)
+                    {
+                        RegisterEffect(slot.Pokemon.Ability.newEffect(this, slot.Pokemon));
+                    }
+                }
+
                 OnBattleStart?.Invoke(this, BattleArgs);
 
                 currentState = State.IN_PROGRESS;
             }
 
-            CurrentWeather.OnTurnStart(this, BattleArgs);
             OnTurnStart?.Invoke(this, BattleArgs);
 
             /* First we enqueue BattleActionRequests for all battle slots that are still in play. The 
@@ -261,13 +281,11 @@ namespace PokemonEngine.Model.Battle
             flush();
 
             RequestInputEventArgs requestInputEventArgs = new RequestInputEventArgs(this, actionRequests);
-            CurrentWeather.OnRequestInput(this, requestInputEventArgs);
             OnRequestInput?.Invoke(this, requestInputEventArgs);
 
             List<IAction> actions = new List<IAction>(InputProvider.ProvideActions(this, actionRequests));
 
             InputReceivedEventArgs inputReceivedEventArgs = new InputReceivedEventArgs(this, actionRequests, actions);
-            CurrentWeather.OnInputReceived(this, inputReceivedEventArgs);
             OnInputReceived?.Invoke(this, inputReceivedEventArgs);
 
             actions.Sort(ActionComparer);
@@ -301,14 +319,12 @@ namespace PokemonEngine.Model.Battle
             if (CurrentWeather.IsComplete)
             {
                 WeatherCompletedEventArgs weatherCompletedEventArgs = new WeatherCompletedEventArgs(this, CurrentWeather);
-                CurrentWeather.OnWeatherCompleted(this, weatherCompletedEventArgs);
                 OnWeatherCompleted?.Invoke(this, weatherCompletedEventArgs);
 
                 MessageQueue.AddFirst(new WeatherChange(SurroundingWeather, -1));
                 broadcast();
             }
 
-            CurrentWeather.OnTurnEnd(this, BattleArgs);
             OnTurnEnd?.Invoke(this, BattleArgs);
 
             /*
@@ -338,7 +354,6 @@ namespace PokemonEngine.Model.Battle
             if (this.IsComplete())
             {
                 BattleEndEventArgs battleEndEventArgs = new BattleEndEventArgs(this, this.Winner());
-                CurrentWeather.OnBattleEnd(this, battleEndEventArgs);
                 OnBattleEnd?.Invoke(this, battleEndEventArgs);
 
                 currentState = State.END;
@@ -357,26 +372,22 @@ namespace PokemonEngine.Model.Battle
             IPokemon swappedPokemon = swapPokemonAction.Slot.Pokemon;
 
             SwapPokemonEventArgs swapPokemonEventArgs = new SwapPokemonEventArgs(this, swapPokemonAction);
-            CurrentWeather.OnSwapPokemon(this, swapPokemonEventArgs);
             OnSwapPokemon?.Invoke(this, swapPokemonEventArgs);
 
             // TODO
 
             PokemonSwappedEventArgs pokemonSwappedEventArgs = new PokemonSwappedEventArgs(this, swapPokemonAction, swappedPokemon);
-            CurrentWeather.OnPokemonSwapped(this, pokemonSwappedEventArgs);
             OnPokemonSwapped?.Invoke(this, pokemonSwappedEventArgs);
         }
 
         public void Receive(UseItem useItemAction)
         {
             UseItemEventArgs useItemEventArgs = new UseItemEventArgs(this, useItemAction);
-            CurrentWeather.OnUseItem(this, useItemEventArgs);
             OnUseItem?.Invoke(this, useItemEventArgs);
 
             // TODO
 
             ItemUsedEventArgs itemUsedEventArgs = new ItemUsedEventArgs(this, useItemAction);
-            CurrentWeather.OnItemUsed(this, itemUsedEventArgs);
             OnItemUsed?.Invoke(this, itemUsedEventArgs);
         }
 
@@ -385,65 +396,55 @@ namespace PokemonEngine.Model.Battle
             if (useMoveAction.Slot.Pokemon.HasFainted()) { return; }
 
             UseMoveEventArgs useMoveEventArgs = new UseMoveEventArgs(this, useMoveAction);
-            CurrentWeather.OnUseMove(this, useMoveEventArgs);
             OnUseMove?.Invoke(this, useMoveEventArgs);
 
             useMoveAction.Move.Use(this, useMoveAction);
 
             MoveUsedEventArgs moveUsedEventArgs = new MoveUsedEventArgs(this, useMoveAction);
-            CurrentWeather.OnMoveUsed(this, moveUsedEventArgs);
             OnMoveUsed?.Invoke(this, moveUsedEventArgs);
         }
 
         public void Receive(UseRun runAction)
         {
             UseRunEventArgs useRunEventArgs = new UseRunEventArgs(this, runAction);
-            CurrentWeather.OnUseRun(this, useRunEventArgs);
             OnUseRun?.Invoke(this, useRunEventArgs);
 
             // TODO
 
             RunUsedEventArgs runUsedEventArgs = new RunUsedEventArgs(this, runAction);
-            CurrentWeather.OnRunUsed(this, runUsedEventArgs);
             OnRunUsed?.Invoke(this, runUsedEventArgs);
         }
 
         public void Receive(InflictDamage inflictDamage)
         {
             InflictDamageEventArgs inflictDamageEventArgs = new InflictDamageEventArgs(this, inflictDamage);
-            CurrentWeather.OnInflictDamage(this, inflictDamageEventArgs);
             OnInflictDamage?.Invoke(this, inflictDamageEventArgs);
 
             inflictDamage.Apply();
 
             DamageInflictedEventArgs damageInflictedEventArgs = new DamageInflictedEventArgs(this, inflictDamage);
-            CurrentWeather.OnDamageInflicted(this, damageInflictedEventArgs);
             OnDamageInflicted?.Invoke(this, damageInflictedEventArgs);
         }
 
         public void Receive(MoveUseFailure moveFailure)
         {
             MoveUseFailureEventArgs moveUseFailureEventArgs = new MoveUseFailureEventArgs(this, moveFailure);
-            CurrentWeather.OnMoveUseFailure(this, moveUseFailureEventArgs);
             OnMoveUseFailure?.Invoke(this, moveUseFailureEventArgs);
 
             // TODO
 
             MoveUseFailedEventArgs moveUseFailedEventArgs = new MoveUseFailedEventArgs(this, moveFailure);
-            CurrentWeather.OnMoveUseFailed(this, moveUseFailedEventArgs);
             OnMoveUseFailed?.Invoke(this, moveUseFailedEventArgs);
         }
 
         public void Receive(ShiftStatStage shiftStatStage)
         {
             ShiftStatStageEventArgs shiftStatStageEventArgs = new ShiftStatStageEventArgs(this, shiftStatStage);
-            CurrentWeather.OnShiftStatStage(this, shiftStatStageEventArgs);
             OnShiftStatStage?.Invoke(this, shiftStatStageEventArgs);
 
             shiftStatStage.Apply();
 
             StatStageShiftedEventArgs statStageShiftedEventArgs = new StatStageShiftedEventArgs(this, shiftStatStage);
-            CurrentWeather.OnStatStageShifted(this, statStageShiftedEventArgs);
             OnStatStageShifted?.Invoke(this, statStageShiftedEventArgs);
         }
 
@@ -456,13 +457,11 @@ namespace PokemonEngine.Model.Battle
                 if (CurrentWeather != SurroundingWeather)
                 {
                     ChangeWeatherEventArgs changeWeatherEventArgs = new ChangeWeatherEventArgs(this, weatherChange);
-                    CurrentWeather.OnChangeWeather(this, changeWeatherEventArgs);
                     OnChangeWeather?.Invoke(this, changeWeatherEventArgs);
 
                     CurrentWeather = SurroundingWeather;
 
                     WeatherChangedEventArgs weatherChangedEventArgs = new WeatherChangedEventArgs(this, previousWeather, CurrentWeather);
-                    CurrentWeather.OnWeatherChanged(this, weatherChangedEventArgs);
                     OnWeatherChanged?.Invoke(this, weatherChangedEventArgs);
                 }
             }
@@ -473,7 +472,6 @@ namespace PokemonEngine.Model.Battle
             if (change)
             {
                 ChangeWeatherEventArgs changeWeatherEventArgs = new ChangeWeatherEventArgs(this, weatherChange);
-                CurrentWeather.OnChangeWeather(this, changeWeatherEventArgs);
                 OnChangeWeather?.Invoke(this, changeWeatherEventArgs);
             }
 
@@ -482,7 +480,6 @@ namespace PokemonEngine.Model.Battle
             if (change)
             {
                 WeatherChangedEventArgs weatherChangedEventArgs = new WeatherChangedEventArgs(this, previousWeather, CurrentWeather);
-                CurrentWeather.OnWeatherChanged(this, weatherChangedEventArgs);
                 OnWeatherChanged?.Invoke(this, weatherChangedEventArgs);
             }
         }
@@ -490,26 +487,22 @@ namespace PokemonEngine.Model.Battle
         public void Receive(MoveOperation moveOperation)
         {
             PerformMoveOperationEventArgs performMoveOperationEventArgs = new PerformMoveOperationEventArgs(this, moveOperation);
-            CurrentWeather.OnPerformMoveOperation(this, performMoveOperationEventArgs);
             OnPerformMoveOperation?.Invoke(this, performMoveOperationEventArgs);
 
             moveOperation.PerformOperation(this);
 
             MoveOperationPerformedEventArgs moveOperationPerformedEventArgs = new MoveOperationPerformedEventArgs(this, moveOperation);
-            CurrentWeather.OnMoveOperationPerformed(this, moveOperationPerformedEventArgs);
             OnMoveOperationPerformed?.Invoke(this, moveOperationPerformedEventArgs);
         }
 
         public void Receive(EffectOperation effectOperation)
         {
             PerformEffectOperationEventArgs performEffectOperationEventArgs= new PerformEffectOperationEventArgs(this, effectOperation);
-            CurrentWeather.OnPerformEffectOperation(this, performEffectOperationEventArgs);
             OnPerformEffectOperation?.Invoke(this, performEffectOperationEventArgs);
 
             effectOperation.PerformOperation(this);
 
             EffectOperationPerformedEventArgs effectOperationPerformedEventArgs = new EffectOperationPerformedEventArgs(this, effectOperation);
-            CurrentWeather.OnEffectOperationPerformed(this, effectOperationPerformedEventArgs);
             OnEffectOperationPerformed?.Invoke(this, effectOperationPerformedEventArgs);
         }
     }

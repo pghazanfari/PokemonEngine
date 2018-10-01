@@ -44,6 +44,9 @@ namespace PokemonEngine.Model.Unique
         private readonly IStatistics stats;
         public IStatistics Stats { get { return stats; } }
 
+        private readonly Ability ability;
+        public Ability Ability { get { return ability; } }
+
         private readonly IVSet ivs;
         public IVSet IVs { get { return ivs; } }
 
@@ -67,13 +70,14 @@ namespace PokemonEngine.Model.Unique
 
         public int Experience { get; private set; }
 
-        public Pokemon(Model.Pokemon basePokemon, string uid, Gender gender, Nature nature, IVSet ivs, EVSet evs, MoveSet<IMove> moves, int friendship, int level)
+        public Pokemon(Model.Pokemon basePokemon, string uid, Gender gender, Nature nature, Ability ability, IVSet ivs, EVSet evs, MoveSet<IMove> moves, int friendship, int level)
         {
             Base = basePokemon;
             stats = new Statistics(this);
             this.gender = gender;
             this.nature = nature;
             this.uid = uid;
+            this.ability = ability;
             this.ivs = ivs;
             this.evs = evs;
             this.moves = moves;
@@ -93,8 +97,8 @@ namespace PokemonEngine.Model.Unique
             HP = Stats[Statistic.HP];
         }
 
-        public Pokemon(Model.Pokemon basePokemon, Gender gender, Nature nature, IVSet ivs, EVSet evs, MoveSet<IMove> moves, int level) : 
-            this(basePokemon, Guid.NewGuid().ToString(), gender, nature, ivs, evs, moves, basePokemon.Friendship, level) { }
+        public Pokemon(Model.Pokemon basePokemon, Gender gender, Nature nature, Ability ability, IVSet ivs, EVSet evs, MoveSet<IMove> moves, int level) : 
+            this(basePokemon, Guid.NewGuid().ToString(), gender, nature, ability, ivs, evs, moves, basePokemon.Friendship, level) { }
 
         public int GainExperience(int amount)
         {
@@ -182,7 +186,7 @@ namespace PokemonEngine.Model.Unique
 
         public Pokemon Clone()
         {
-            return new Pokemon(Base, this.Gender, this.Nature, this.IVs.Clone() as IVSet, this.EVs.Clone() as EVSet, this.moves.Clone(), this.Level);
+            return new Pokemon(Base, this.Gender, this.Nature, this.Ability, this.IVs.Clone() as IVSet, this.EVs.Clone() as EVSet, this.moves.Clone(), this.Level);
         }
     }
 }

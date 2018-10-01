@@ -24,5 +24,10 @@ namespace PokemonEngine.Model.Battle.Actions
         {
             receiver.Receive(this);
         }
+
+        public void Dispose()
+        {
+            // Do Nothing
+        }
     }
 }

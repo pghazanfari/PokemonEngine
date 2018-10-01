@@ -19,8 +19,6 @@ namespace PokemonEngine.Model
             Description = description;
         }
 
-        public abstract void OnBattleStart(IBattle battle);
-        public abstract void OnEnterBattle(IBattle battle, Battle.IPokemon pokemon);
-        public abstract void OnExitBattle(IBattle battle, Battle.IPokemon pokemon);
+        public abstract Effect newEffect(IBattle battle, Battle.IPokemon pokemon);
     }
 }

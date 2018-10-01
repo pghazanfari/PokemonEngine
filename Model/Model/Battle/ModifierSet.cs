@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,57 +7,22 @@ using System.Threading.Tasks;
 
 namespace PokemonEngine.Model.Battle
 {
-    public class ModifierSet
+    public class ModifierSet : IDisposable
     {
-        private class Modifier : IModifier
-        {
-            public event EventHandler<IModifier> OnDispose;
-            public event EventHandler<IModifier> OnDisposed;
-
-            private readonly ModifierSet owner;
-
-            private readonly float factor;
-            public float Factor { get { return factor; } }
-
-            public Modifier(ModifierSet owner, float factor)
-            {
-                this.owner = owner;
-                this.factor = factor;
-            }
-
-            ~Modifier() { Dispose(); }
-
-            public void Dispose()
-            {
-                OnDispose?.Invoke(this, this);
-                owner.RemoveModifier(this);
-                OnDisposed?.Invoke(this, this);
-            }
-        }
-
         private SortedDictionary<int, List<IModifier>> modifiers;
-        public float this[int level]
-        {
-            get
-            {
-                return modifiers[level].Sum(x => x.Factor);
-            }
-        }
 
         public ModifierSet()
         {
             modifiers = new SortedDictionary<int, List<IModifier>>();
         }
 
-        public IModifier AddModifier(int level, float factor)
+        public void AddModifier(int level, IModifier modifier)
         {
-            Modifier modifier = new Modifier(this, factor);
             if (!modifiers.ContainsKey(level))
             {
                 modifiers[level] = new List<IModifier>();
             }
             modifiers[level].Add(modifier);
-            return modifier;
         }
 
         public bool RemoveModifier(IModifier modifier)
@@ -89,9 +55,26 @@ namespace PokemonEngine.Model.Battle
             float factor = 1.0f;
             foreach (KeyValuePair<int, List<IModifier>> pair in modifiers)
             {
-                factor *= this[pair.Key];
+                factor *= levelFactor(pair.Key);
             }
             return baseValue * factor;
+        }
+
+        private float levelFactor(int level)
+        {
+            return modifiers[level].Sum(x => x.Factor);
+        }
+        
+        public void Dispose()
+        {
+            foreach (KeyValuePair<int, List<IModifier>> pair in modifiers)
+            {
+                foreach (IModifier modifier in pair.Value)
+                {
+                    modifier.Dispose();
+                }
+                pair.Value.Clear();
+            }
         }
     }
 }

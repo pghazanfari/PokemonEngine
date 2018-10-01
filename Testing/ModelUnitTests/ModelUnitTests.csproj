@@ -61,6 +61,7 @@
     <Compile Include="Tests\PokemonTest.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="Util\NoOpBattleInputProvider.cs" />
+    <Compile Include="Util\NullAbility.cs" />
     <Compile Include="Util\NumberSequence.cs" />
   </ItemGroup>
   <ItemGroup>

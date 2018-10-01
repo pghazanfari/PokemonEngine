@@ -8,6 +8,29 @@ namespace PokemonEngine.Model.Battle.Weathers
 {
     public class Fog : Weather
     {
+        private class FogModifier : IModifier
+        {
+            private readonly Fog owner;
+
+            public float Factor
+            {
+                get
+                {
+                    return AccuracyModifierFactor;
+                }
+            }
+
+            public FogModifier(Fog owner)
+            {
+                this.owner = owner;
+            }
+
+            public void Dispose()
+            {
+                owner.modifiers.Remove(this);
+            }
+        }
+
         public const int AccuracyModifierLevel = 0;
         public const float AccuracyModifierFactor = 0.6f;
 
@@ -22,15 +45,10 @@ namespace PokemonEngine.Model.Battle.Weathers
             modifiers = new List<IModifier>();
         }
 
-        private void CleanupModifier(object sender, IModifier modifier)
-        {
-            modifiers.Remove(modifier);
-        }
-
         public override void OnUseMove(object sender, UseMoveEventArgs args)
         {
-            IModifier modifier = args.Action.AccuracyModifiers.AddModifier(AccuracyModifierLevel, AccuracyModifierFactor);
-            modifier.OnDispose += CleanupModifier;
+            IModifier modifier = new FogModifier(this);
+            args.Action.AccuracyModifiers.AddModifier(AccuracyModifierLevel, modifier);
             modifiers.Add(modifier);
         }
 
@@ -39,10 +57,7 @@ namespace PokemonEngine.Model.Battle.Weathers
         {
             if (args.Battle.CurrentWeather == this)
             {
-                modifiers.ForEach(x => {
-                    x.OnDispose -= CleanupModifier;
-                    x.Dispose();
-                });
+                modifiers.ForEach(x => x.Dispose());
                 modifiers.Clear();
             }
         }

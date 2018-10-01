@@ -26,6 +26,7 @@ namespace PokemonEngine.Model.Battle
         public Nature Nature { get { return Base.Nature; } }
         public string UID {  get { return Base.UID; } }
         IStatistics Model.Unique.IPokemon.Stats { get { return (Base as Model.Unique.IPokemon).Stats; } }
+        public Ability Ability { get { return Base.Ability; } }
         public IVSet IVs { get { return Base.IVs; } }
         public EVSet EVs { get { return Base.EVs; } }
         public int Level { get { return Base.Level; } }

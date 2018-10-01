@@ -36,6 +36,11 @@ namespace PokemonEngine.Model.Battle.Messages
             receiver.Receive(this);
         }
 
+        public void Dispose()
+        {
+            Modifiers.Dispose();
+        }
+
         private class SimpleInflictDamage<T> : Typed<T>
         {
             private readonly T source;

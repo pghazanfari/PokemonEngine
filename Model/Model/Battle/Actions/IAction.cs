@@ -21,5 +21,10 @@ namespace PokemonEngine.Model.Battle.Actions
         }
 
         public abstract void Dispatch(ISubscriber receiver);
+
+        public void Dispose()
+        {
+            //Do Nothing
+        }
     }
 }

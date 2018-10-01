@@ -30,5 +30,10 @@ namespace PokemonEngine.Model.Battle.Messages
         {
             receiver.Receive(this);
         }
+
+        public void Dispose()
+        {
+            //Do Nothing
+        }
     }
 }
