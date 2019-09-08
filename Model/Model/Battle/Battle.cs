@@ -1,42 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections.ObjectModel;
 using System.Collections;
-using System.Text;
-using System.Threading.Tasks;
 
 using PokemonEngine.Model.Common;
-using PokemonEngine.Model.Battle.Messaging;
 using PokemonEngine.Model.Battle.Actions;
 using PokemonEngine.Model.Battle.Messages;
-using PokemonEngine.Model.Battle.Weathers;
 
 namespace PokemonEngine.Model.Battle
 {
     public class Battle : IBattle
     {
-        private readonly Random rng;
-        public Random RNG { get { return rng; } }
-
-        private readonly IReadOnlyList<Team> teams;
-        public IReadOnlyList<Team> Teams { get { return teams; } }
-
-        private readonly Messaging.Queue messageQueue;
-        public Messaging.Queue MessageQueue { get { return messageQueue; } }
+        public Random RNG { get; }
+        public IReadOnlyList<Team> Teams { get; }
+        public Messaging.Queue MessageQueue { get; }
 
         private readonly IList<Effect> effects;
-        private readonly IReadOnlyList<Effect> roEffects;
-        public IReadOnlyList<Effect> Effects
-        {
-            get
-            {
-                return roEffects;
-            }
-        }
-
-        private readonly Weather surroundingWeather;
-        public Weather SurroundingWeather { get { return surroundingWeather; } }
+        public IReadOnlyList<Effect> Effects { get; }
+        public Weather SurroundingWeather { get; }
 
         // CurrentWeather will be invoked manually before events in order to ensure
         // that the CurrentWeather's effect always applies.
@@ -118,24 +99,24 @@ namespace PokemonEngine.Model.Battle
             //Going to attempt to not enforce this
             //if (teams.Any(x => x.SlotCount != teams[0].SlotCount)) throw new ArgumentException("All teams must have the same number of slots for the battle");
 
-            this.teams = new List<Team>(teams).AsReadOnly();
+            Teams = new List<Team>(teams).AsReadOnly();
             InputProvider = inputProvider;
-            this.rng = rng;
-            surroundingWeather = weather;
+            RNG = rng;
+            SurroundingWeather = weather;
 
             effects = new List<Effect>();
-            roEffects = (effects as List<Effect>).AsReadOnly();
+            Effects = (effects as List<Effect>).AsReadOnly();
             
             actionRequests = new List<Request>();
 
-            messageQueue = new Messaging.Queue();
-            messageQueue.AddSubscriber(this);
+            MessageQueue = new Messaging.Queue();
+            MessageQueue.AddSubscriber(this);
 
             ActionComparer = new Actions.Comparer(RNG);
             currentState = State.START;
             TurnCounter = 1;
 
-            CurrentWeather = surroundingWeather;
+            CurrentWeather = SurroundingWeather;
 
             BattleArgs = new EventArgs(this);
         }
@@ -146,25 +127,25 @@ namespace PokemonEngine.Model.Battle
 
         public IEnumerator<Team> GetEnumerator()
         {
-            return teams.GetEnumerator();
+            return Teams.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return teams.GetEnumerator();
+            return Teams.GetEnumerator();
         }
 
-        private void flush()
+        private void Flush()
         {
-            while (messageQueue.HasNext) broadcast();
+            while (MessageQueue.HasNext) Broadcast();
         }
 
-        private void broadcast()
+        private void Broadcast()
         {
             EventArgs args = new EventArgs(this);
             OnMessageBroadcast?.Invoke(this, args);
 
-            messageQueue.Broadcast();
+            MessageQueue.Broadcast();
         }
 
         public bool RegisterEffect(Effect effect)
@@ -247,7 +228,7 @@ namespace PokemonEngine.Model.Battle
             if (currentState == State.START)
             {
                 //Add effects of all Pokemon Abilities in battle
-                foreach (Team team in teams)
+                foreach (Team team in Teams)
                 {
                     foreach (Slot slot in team)
                     {
@@ -273,12 +254,12 @@ namespace PokemonEngine.Model.Battle
                 {
                     if (slot.IsInPlay)
                     {
-                        messageQueue.Enqueue(new Request(slot));
+                        MessageQueue.Enqueue(new Request(slot));
                     }
                 }
             }
             actionRequests.Clear();
-            flush();
+            Flush();
 
             RequestInputEventArgs requestInputEventArgs = new RequestInputEventArgs(this, actionRequests);
             OnRequestInput?.Invoke(this, requestInputEventArgs);
@@ -292,12 +273,12 @@ namespace PokemonEngine.Model.Battle
 
             foreach (IAction action in actions)
             {
-                messageQueue.Enqueue(action);
+                MessageQueue.Enqueue(action);
             }
 
             while (true)
             {
-                flush();
+                Flush();
 
                 List<Request> requests = new List<Request>();
                 foreach (Team team in Teams)
@@ -312,7 +293,7 @@ namespace PokemonEngine.Model.Battle
                 }
                 if (requests.Count == 0) { break; }
                 IList<SwapPokemon> swapPokemonActions = InputProvider.ProvideSwapPokemon(this, requests);
-                foreach (SwapPokemon swapPokemonAction in swapPokemonActions) { messageQueue.Enqueue(swapPokemonAction); }
+                foreach (SwapPokemon swapPokemonAction in swapPokemonActions) { MessageQueue.Enqueue(swapPokemonAction); }
             }
 
             CurrentWeather.DecrementTurnCounter();
@@ -322,7 +303,7 @@ namespace PokemonEngine.Model.Battle
                 OnWeatherCompleted?.Invoke(this, weatherCompletedEventArgs);
 
                 MessageQueue.AddFirst(new WeatherChange(SurroundingWeather, -1));
-                broadcast();
+                Broadcast();
             }
 
             OnTurnEnd?.Invoke(this, BattleArgs);
@@ -333,7 +314,7 @@ namespace PokemonEngine.Model.Battle
              */
             while (true)
             {
-                flush();
+                Flush();
 
                 List<Request> requests = new List<Request>();
                 foreach (Team team in Teams)
@@ -348,7 +329,7 @@ namespace PokemonEngine.Model.Battle
                 }
                 if (requests.Count == 0) { break; }
                 IList<SwapPokemon> swapPokemonActions = InputProvider.ProvideSwapPokemon(this, requests);
-                foreach (SwapPokemon swapPokemonAction in swapPokemonActions) { messageQueue.Enqueue(swapPokemonAction); }
+                foreach (SwapPokemon swapPokemonAction in swapPokemonActions) { MessageQueue.Enqueue(swapPokemonAction); }
             }
 
             if (this.IsComplete())

@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PokemonEngine.Model.Unique
 {
     public class PokemonEventArgs : EventArgs
     {
-        public readonly IPokemon Pokemon;
+        public IPokemon Pokemon { get; }
         public PokemonEventArgs(IPokemon pokemon)
         {
             Pokemon = pokemon;
@@ -17,7 +13,7 @@ namespace PokemonEngine.Model.Unique
 
     public class GainExperienceEventArgs : PokemonEventArgs
     {
-        public readonly int Experience;
+        public int Experience { get; }
         public GainExperienceEventArgs(IPokemon pokemon, int experience) : base(pokemon)
         {
             Experience = experience;
@@ -26,8 +22,8 @@ namespace PokemonEngine.Model.Unique
 
     public class ExperienceGainedEventArgs : PokemonEventArgs
     {
-        public readonly int PreviousExperience;
-        public readonly int Amount;
+        public int PreviousExperience { get; }
+        public int Amount { get; }
         public ExperienceGainedEventArgs(IPokemon pokemon, int previousExperience) : base(pokemon)
         {
             PreviousExperience = previousExperience;
@@ -52,7 +48,7 @@ namespace PokemonEngine.Model.Unique
 
     public class UpdateFriendshipEventArgs : PokemonEventArgs
     {
-        public readonly int Amount;
+        public int Amount { get; }
         public UpdateFriendshipEventArgs(IPokemon pokemon, int amount) : base(pokemon)
         {
             Amount = amount;
@@ -61,18 +57,18 @@ namespace PokemonEngine.Model.Unique
 
     public class FriendshipUpdatedEventArgs : PokemonEventArgs
     {
-        public readonly int PreviousAmount;
-        public readonly int Amount;
+        public int PreviousAmount { get; }
+        public int Amount { get; }
         public FriendshipUpdatedEventArgs(IPokemon pokemon, int previousAmount) : base(pokemon)
         {
             PreviousAmount = previousAmount;
-            Amount = (int)(pokemon.Friendship - PreviousAmount);
+            Amount = pokemon.Friendship - PreviousAmount;
         }
     }
 
     public class UpdateHPEventArgs : PokemonEventArgs
     {
-        public readonly int Amount;
+        public int Amount { get; }
         public UpdateHPEventArgs(IPokemon pokemon, int amount) : base(pokemon)
         {
             Amount = amount;
@@ -81,23 +77,23 @@ namespace PokemonEngine.Model.Unique
 
     public class HPUpdatedEventArgs : PokemonEventArgs
     {
-        public readonly int PreviousHP;
-        public readonly int Amount;
+        public int PreviousHP { get; }
+        public int Amount { get; }
 
         public HPUpdatedEventArgs(IPokemon pokemon, int previousHP) : base(pokemon)
         {
             PreviousHP = previousHP;
-            Amount = (int)(pokemon.HP - PreviousHP);
+            Amount = pokemon.HP - PreviousHP;
         }
     }
 
     public class SwapPokemonEventArgs : EventArgs
     {
-        public readonly Party Party;
-        public readonly int Slot1;
-        public readonly int Slot2;
+        public Party Party { get; }
+        public int Slot1 { get; }
+        public int Slot2 { get; }
 
-        public Unique.IPokemon Pokemon1
+        public IPokemon Pokemon1
         {
             get
             {
@@ -106,7 +102,7 @@ namespace PokemonEngine.Model.Unique
         }
 
 
-        public Unique.IPokemon Pokemon2
+        public IPokemon Pokemon2
         {
             get
             {
@@ -124,11 +120,11 @@ namespace PokemonEngine.Model.Unique
 
     public class PokemonSwappedEventArgs : EventArgs
     {
-        public readonly Party Party;
-        public readonly int Slot1;
-        public readonly int Slot2;
+        public Party Party { get; }
+        public int Slot1 { get; }
+        public int Slot2 { get; }
 
-        public Unique.IPokemon Pokemon1
+        public IPokemon Pokemon1
         {
             get
             {
@@ -137,7 +133,7 @@ namespace PokemonEngine.Model.Unique
         }
 
 
-        public Unique.IPokemon Pokemon2
+        public IPokemon Pokemon2
         {
             get
             {

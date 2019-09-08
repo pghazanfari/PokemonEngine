@@ -2,20 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PokemonEngine.Model.Battle
 {
     public class Team : IEnumerable<Slot>
     {
-        private readonly IReadOnlyList<Slot> slots;
-        public IReadOnlyList<Slot> Slots { get { return slots; } }
+        public IReadOnlyList<Slot> Slots { get; }
+        public IReadOnlyList<IParticipant> Participants { get; }
 
-        private readonly IReadOnlyList<IParticipant> participants;
-        public IReadOnlyList<IParticipant> Participants { get { return participants; } }
-    
-        public Slot this[int i] { get { return slots[i]; } }
+        public Slot this[int i] { get { return Slots[i]; } }
 
         public Team(params IParticipant[] slotMappings) : this(new List<IParticipant>(slotMappings)) { }
 
@@ -32,23 +27,23 @@ namespace PokemonEngine.Model.Battle
                 if (!trainerPokemonCounts.ContainsKey(slotMappings[i])) { trainerPokemonCounts[slotMappings[i]] = 0; }
                 battleSlots.Add(new Slot(this, slotMappings[i], i, trainerPokemonCounts[slotMappings[i]]++));
             }
-            this.slots = battleSlots.AsReadOnly();
-            participants = new List<IParticipant>(trainerPokemonCounts.Keys).AsReadOnly();
+            Slots = battleSlots.AsReadOnly();
+            Participants = new List<IParticipant>(trainerPokemonCounts.Keys).AsReadOnly();
         }
 
         public bool Overlaps(Team other)
         {
-            return participants.Any(x => other.participants.Contains(x));
+            return Participants.Any(x => other.Participants.Contains(x));
         }
 
         public IEnumerator<Slot> GetEnumerator()
         {
-            return slots.GetEnumerator();
+            return Slots.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return slots.GetEnumerator();
+            return Slots.GetEnumerator();
         }
     }
 

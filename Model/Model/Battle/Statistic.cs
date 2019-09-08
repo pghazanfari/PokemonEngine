@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
 
 namespace PokemonEngine.Model.Battle
 {
@@ -29,7 +24,7 @@ namespace PokemonEngine.Model.Battle
             Accuracy
         }).AsReadOnly();
 
-        public readonly String Name;
+        public string Name { get; }
         private Statistic(string name)
         {
             Name = name;

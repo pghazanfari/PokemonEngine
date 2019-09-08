@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using PokemonEngine.Model.Battle.Messaging;
+﻿using PokemonEngine.Model.Battle.Messaging;
 
 namespace PokemonEngine.Model.Battle.Messages
 {
     public class MoveUseFailure : IMessage
     {
-        public readonly IMove Move;
+        public IMove Move { get; }
 
         public MoveUseFailure(IMove move)
         {

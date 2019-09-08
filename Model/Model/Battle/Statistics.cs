@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PokemonEngine.Model.Battle
 {
@@ -14,7 +12,7 @@ namespace PokemonEngine.Model.Battle
         public const int MaxStage = 6;
 
         private readonly IStatistics stats;
-        public int this[Model.Statistic stat] { get { return (int)(Modifiers[stat].Calculate(stats[stat] * Multiplier(stat))); } }
+        public int this[Model.Statistic stat] { get { return (int)Modifiers[stat].Calculate(stats[stat] * Multiplier(stat)); } }
 
         public readonly IReadOnlyDictionary<Statistic, ModifierSet> Modifiers;
 
@@ -39,7 +37,7 @@ namespace PokemonEngine.Model.Battle
 
         public float Multiplier(Statistic stat)
         {
-            return Statistics.Multiplier(stat, stages[stat]);
+            return Multiplier(stat, stages[stat]);
         }
 
         private static float AccuracyMultipler(int stage)

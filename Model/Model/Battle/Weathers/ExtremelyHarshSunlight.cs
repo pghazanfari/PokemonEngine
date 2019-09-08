@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using PokemonEngine.Model.Battle.Messaging;
+﻿using PokemonEngine.Model.Battle.Messaging;
 using PokemonEngine.Model.Battle.Actions;
 using PokemonEngine.Model.Battle.Messages;
 
@@ -18,9 +12,8 @@ namespace PokemonEngine.Model.Battle.Weathers
         public override void OnMessageBroadcast(object sender, EventArgs args)
         {
             IMessage message = args.Battle.MessageQueue.First;
-            if (message is UseMove)
+            if (message is UseMove action)
             {
-                UseMove action = (UseMove)message;
                 if (action.Move.Type == PokemonType.Water)
                 {
                     MoveUseFailure newMessage = new MoveUseFailure(action.Move);

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace PokemonEngine.Model
 {
@@ -14,8 +10,7 @@ namespace PokemonEngine.Model
         public const float NO_EFFECT = 0.0f;
 
         private static readonly List<PokemonType> all = new List<PokemonType>();
-        private static readonly IReadOnlyList<PokemonType> roAll = all.AsReadOnly();
-        public static IReadOnlyList<PokemonType> All { get { return roAll; } }
+        public static IReadOnlyList<PokemonType> All { get; } = all.AsReadOnly();
 
         private static readonly Dictionary<PokemonType, Dictionary<PokemonType, float>> Effectiveness = new Dictionary<PokemonType, Dictionary<PokemonType, float>>();
 
@@ -85,178 +80,214 @@ namespace PokemonEngine.Model
 
 
             //Normal
-            Effectiveness[Normal] = new Dictionary<PokemonType, float>();
-            Effectiveness[Normal][Rock] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Normal][Ghost] = NO_EFFECT;
-            Effectiveness[Normal][Steel] = NOT_VERY_EFFECTIVE;
+            Effectiveness[Normal] = new Dictionary<PokemonType, float>
+            {
+                [Rock] = NOT_VERY_EFFECTIVE,
+                [Ghost] = NO_EFFECT,
+                [Steel] = NOT_VERY_EFFECTIVE
+            };
 
             //Fighting
-            Effectiveness[Fighting] = new Dictionary<PokemonType, float>();
-            Effectiveness[Fighting][Normal] = SUPER_EFFECTIVE;
-            Effectiveness[Fighting][Flying] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Fighting][Poison] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Fighting][Rock] = SUPER_EFFECTIVE;
-            Effectiveness[Fighting][Bug] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Fighting][Ghost] = NO_EFFECT;
-            Effectiveness[Fighting][Steel] = SUPER_EFFECTIVE;
-            Effectiveness[Fighting][Psychic] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Fighting][Ice] = SUPER_EFFECTIVE;
-            Effectiveness[Fighting][Dark] = SUPER_EFFECTIVE;
-            Effectiveness[Fighting][Fairy] = NOT_VERY_EFFECTIVE;
+            Effectiveness[Fighting] = new Dictionary<PokemonType, float>
+            {
+                [Normal] = SUPER_EFFECTIVE,
+                [Flying] = NOT_VERY_EFFECTIVE,
+                [Poison] = NOT_VERY_EFFECTIVE,
+                [Rock] = SUPER_EFFECTIVE,
+                [Bug] = NOT_VERY_EFFECTIVE,
+                [Ghost] = NO_EFFECT,
+                [Steel] = SUPER_EFFECTIVE,
+                [Psychic] = NOT_VERY_EFFECTIVE,
+                [Ice] = SUPER_EFFECTIVE,
+                [Dark] = SUPER_EFFECTIVE,
+                [Fairy] = NOT_VERY_EFFECTIVE
+            };
 
             //Flying
-            Effectiveness[Flying] = new Dictionary<PokemonType, float>();
-            Effectiveness[Flying][Fighting] = SUPER_EFFECTIVE;
-            Effectiveness[Flying][Rock] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Flying][Bug] = SUPER_EFFECTIVE;
-            Effectiveness[Flying][Steel] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Flying][Grass] = SUPER_EFFECTIVE;
-            Effectiveness[Flying][Electric] = NOT_VERY_EFFECTIVE;
+            Effectiveness[Flying] = new Dictionary<PokemonType, float>
+            {
+                [Fighting] = SUPER_EFFECTIVE,
+                [Rock] = NOT_VERY_EFFECTIVE,
+                [Bug] = SUPER_EFFECTIVE,
+                [Steel] = NOT_VERY_EFFECTIVE,
+                [Grass] = SUPER_EFFECTIVE,
+                [Electric] = NOT_VERY_EFFECTIVE
+            };
 
             //Poison
-            Effectiveness[Poison] = new Dictionary<PokemonType, float>();
-            Effectiveness[Poison][Poison] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Poison][Ground] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Poison][Rock] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Poison][Ghost] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Poison][Steel] = NO_EFFECT;
-            Effectiveness[Poison][Grass] = SUPER_EFFECTIVE;
-            Effectiveness[Poison][Fairy] = SUPER_EFFECTIVE;
+            Effectiveness[Poison] = new Dictionary<PokemonType, float>
+            {
+                [Poison] = NOT_VERY_EFFECTIVE,
+                [Ground] = NOT_VERY_EFFECTIVE,
+                [Rock] = NOT_VERY_EFFECTIVE,
+                [Ghost] = NOT_VERY_EFFECTIVE,
+                [Steel] = NO_EFFECT,
+                [Grass] = SUPER_EFFECTIVE,
+                [Fairy] = SUPER_EFFECTIVE
+            };
 
             //Ground
-            Effectiveness[Ground] = new Dictionary<PokemonType, float>();
-            Effectiveness[Ground][Flying] = NO_EFFECT;
-            Effectiveness[Ground][Poison] = SUPER_EFFECTIVE;
-            Effectiveness[Ground][Rock] = SUPER_EFFECTIVE;
-            Effectiveness[Ground][Bug] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Ground][Steel] = SUPER_EFFECTIVE;
-            Effectiveness[Ground][Fire] = SUPER_EFFECTIVE;
-            Effectiveness[Ground][Grass] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Ground][Electric] = SUPER_EFFECTIVE;
+            Effectiveness[Ground] = new Dictionary<PokemonType, float>
+            {
+                [Flying] = NO_EFFECT,
+                [Poison] = SUPER_EFFECTIVE,
+                [Rock] = SUPER_EFFECTIVE,
+                [Bug] = NOT_VERY_EFFECTIVE,
+                [Steel] = SUPER_EFFECTIVE,
+                [Fire] = SUPER_EFFECTIVE,
+                [Grass] = NOT_VERY_EFFECTIVE,
+                [Electric] = SUPER_EFFECTIVE
+            };
 
             //Rock
-            Effectiveness[Rock] = new Dictionary<PokemonType, float>();
-            Effectiveness[Rock][Fighting] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Rock][Flying] = SUPER_EFFECTIVE;
-            Effectiveness[Rock][Ground] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Rock][Bug] = SUPER_EFFECTIVE;
-            Effectiveness[Rock][Steel] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Rock][Fire] = SUPER_EFFECTIVE;
-            Effectiveness[Rock][Ice] = SUPER_EFFECTIVE;
+            Effectiveness[Rock] = new Dictionary<PokemonType, float>
+            {
+                [Fighting] = NOT_VERY_EFFECTIVE,
+                [Flying] = SUPER_EFFECTIVE,
+                [Ground] = NOT_VERY_EFFECTIVE,
+                [Bug] = SUPER_EFFECTIVE,
+                [Steel] = NOT_VERY_EFFECTIVE,
+                [Fire] = SUPER_EFFECTIVE,
+                [Ice] = SUPER_EFFECTIVE
+            };
 
             //Bug
-            Effectiveness[Bug] = new Dictionary<PokemonType, float>();
-            Effectiveness[Bug][Fighting] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Bug][Flying] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Bug][Poison] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Bug][Ghost] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Bug][Steel] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Bug][Fire] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Bug][Grass] = SUPER_EFFECTIVE;
-            Effectiveness[Bug][Psychic] = SUPER_EFFECTIVE;
-            Effectiveness[Bug][Dark] = SUPER_EFFECTIVE;
-            Effectiveness[Bug][Fairy] = NOT_VERY_EFFECTIVE;
+            Effectiveness[Bug] = new Dictionary<PokemonType, float>
+            {
+                [Fighting] = NOT_VERY_EFFECTIVE,
+                [Flying] = NOT_VERY_EFFECTIVE,
+                [Poison] = NOT_VERY_EFFECTIVE,
+                [Ghost] = NOT_VERY_EFFECTIVE,
+                [Steel] = NOT_VERY_EFFECTIVE,
+                [Fire] = NOT_VERY_EFFECTIVE,
+                [Grass] = SUPER_EFFECTIVE,
+                [Psychic] = SUPER_EFFECTIVE,
+                [Dark] = SUPER_EFFECTIVE,
+                [Fairy] = NOT_VERY_EFFECTIVE
+            };
 
             //Ghost
-            Effectiveness[Ghost] = new Dictionary<PokemonType, float>();
-            Effectiveness[Ghost][Normal] = NO_EFFECT;
-            Effectiveness[Ghost][Ghost] = SUPER_EFFECTIVE;
-            Effectiveness[Ghost][Psychic] = SUPER_EFFECTIVE;
-            Effectiveness[Ghost][Dark] = NO_EFFECT;
+            Effectiveness[Ghost] = new Dictionary<PokemonType, float>
+            {
+                [Normal] = NO_EFFECT,
+                [Ghost] = SUPER_EFFECTIVE,
+                [Psychic] = SUPER_EFFECTIVE,
+                [Dark] = NO_EFFECT
+            };
 
             //Steel
-            Effectiveness[Steel] = new Dictionary<PokemonType, float>();
-            Effectiveness[Steel][Rock] = SUPER_EFFECTIVE;
-            Effectiveness[Steel][Steel] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Steel][Fire] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Steel][Water] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Steel][Electric] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Steel][Ice] = SUPER_EFFECTIVE;
-            Effectiveness[Steel][Fairy] = SUPER_EFFECTIVE;
+            Effectiveness[Steel] = new Dictionary<PokemonType, float>
+            {
+                [Rock] = SUPER_EFFECTIVE,
+                [Steel] = NOT_VERY_EFFECTIVE,
+                [Fire] = NOT_VERY_EFFECTIVE,
+                [Water] = NOT_VERY_EFFECTIVE,
+                [Electric] = NOT_VERY_EFFECTIVE,
+                [Ice] = SUPER_EFFECTIVE,
+                [Fairy] = SUPER_EFFECTIVE
+            };
 
             //Fire
-            Effectiveness[Fire] = new Dictionary<PokemonType, float>();
-            Effectiveness[Fire][Rock] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Fire][Bug] = SUPER_EFFECTIVE;
-            Effectiveness[Fire][Steel] = SUPER_EFFECTIVE;
-            Effectiveness[Fire][Fire] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Fire][Water] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Fire][Grass] = SUPER_EFFECTIVE;
-            Effectiveness[Fire][Ice] = SUPER_EFFECTIVE;
-            Effectiveness[Fire][Dragon] = NOT_VERY_EFFECTIVE;
+            Effectiveness[Fire] = new Dictionary<PokemonType, float>
+            {
+                [Rock] = NOT_VERY_EFFECTIVE,
+                [Bug] = SUPER_EFFECTIVE,
+                [Steel] = SUPER_EFFECTIVE,
+                [Fire] = NOT_VERY_EFFECTIVE,
+                [Water] = NOT_VERY_EFFECTIVE,
+                [Grass] = SUPER_EFFECTIVE,
+                [Ice] = SUPER_EFFECTIVE,
+                [Dragon] = NOT_VERY_EFFECTIVE
+            };
 
             //Water
-            Effectiveness[Water] = new Dictionary<PokemonType, float>();
-            Effectiveness[Water][Ground] = SUPER_EFFECTIVE;
-            Effectiveness[Water][Rock] = SUPER_EFFECTIVE;
-            Effectiveness[Water][Fire] = SUPER_EFFECTIVE;
-            Effectiveness[Water][Water] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Water][Grass] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Water][Dragon] = NOT_VERY_EFFECTIVE;
+            Effectiveness[Water] = new Dictionary<PokemonType, float>
+            {
+                [Ground] = SUPER_EFFECTIVE,
+                [Rock] = SUPER_EFFECTIVE,
+                [Fire] = SUPER_EFFECTIVE,
+                [Water] = NOT_VERY_EFFECTIVE,
+                [Grass] = NOT_VERY_EFFECTIVE,
+                [Dragon] = NOT_VERY_EFFECTIVE
+            };
 
             //Grass
-            Effectiveness[Grass] = new Dictionary<PokemonType, float>();
-            Effectiveness[Grass][Flying] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Grass][Poison] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Grass][Ground] = SUPER_EFFECTIVE;
-            Effectiveness[Grass][Rock] = SUPER_EFFECTIVE;
-            Effectiveness[Grass][Bug] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Grass][Steel] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Grass][Fire] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Grass][Water] = SUPER_EFFECTIVE;
-            Effectiveness[Grass][Grass] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Grass][Dragon] = NOT_VERY_EFFECTIVE;
+            Effectiveness[Grass] = new Dictionary<PokemonType, float>
+            {
+                [Flying] = NOT_VERY_EFFECTIVE,
+                [Poison] = NOT_VERY_EFFECTIVE,
+                [Ground] = SUPER_EFFECTIVE,
+                [Rock] = SUPER_EFFECTIVE,
+                [Bug] = NOT_VERY_EFFECTIVE,
+                [Steel] = NOT_VERY_EFFECTIVE,
+                [Fire] = NOT_VERY_EFFECTIVE,
+                [Water] = SUPER_EFFECTIVE,
+                [Grass] = NOT_VERY_EFFECTIVE,
+                [Dragon] = NOT_VERY_EFFECTIVE
+            };
 
             //Electric
-            Effectiveness[Electric] = new Dictionary<PokemonType, float>();
-            Effectiveness[Electric][Flying] = SUPER_EFFECTIVE;
-            Effectiveness[Electric][Ground] = NO_EFFECT;
-            Effectiveness[Electric][Water] = SUPER_EFFECTIVE;
-            Effectiveness[Electric][Grass] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Electric][Electric] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Electric][Ice] = NOT_VERY_EFFECTIVE;
+            Effectiveness[Electric] = new Dictionary<PokemonType, float>
+            {
+                [Flying] = SUPER_EFFECTIVE,
+                [Ground] = NO_EFFECT,
+                [Water] = SUPER_EFFECTIVE,
+                [Grass] = NOT_VERY_EFFECTIVE,
+                [Electric] = NOT_VERY_EFFECTIVE,
+                [Ice] = NOT_VERY_EFFECTIVE
+            };
 
             //Psychic
-            Effectiveness[Psychic] = new Dictionary<PokemonType, float>();
-            Effectiveness[Psychic][Fighting] = SUPER_EFFECTIVE;
-            Effectiveness[Psychic][Poison] = SUPER_EFFECTIVE;
-            Effectiveness[Psychic][Steel] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Psychic][Psychic] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Psychic][Dark] = NO_EFFECT;
+            Effectiveness[Psychic] = new Dictionary<PokemonType, float>
+            {
+                [Fighting] = SUPER_EFFECTIVE,
+                [Poison] = SUPER_EFFECTIVE,
+                [Steel] = NOT_VERY_EFFECTIVE,
+                [Psychic] = NOT_VERY_EFFECTIVE,
+                [Dark] = NO_EFFECT
+            };
 
             //Ice
-            Effectiveness[Ice] = new Dictionary<PokemonType, float>();
-            Effectiveness[Ice][Flying] = SUPER_EFFECTIVE;
-            Effectiveness[Ice][Ground] = SUPER_EFFECTIVE;
-            Effectiveness[Ice][Steel] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Ice][Fire] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Ice][Water] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Ice][Grass] = SUPER_EFFECTIVE;
-            Effectiveness[Ice][Ice] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Ice][Dragon] = SUPER_EFFECTIVE;
+            Effectiveness[Ice] = new Dictionary<PokemonType, float>
+            {
+                [Flying] = SUPER_EFFECTIVE,
+                [Ground] = SUPER_EFFECTIVE,
+                [Steel] = NOT_VERY_EFFECTIVE,
+                [Fire] = NOT_VERY_EFFECTIVE,
+                [Water] = NOT_VERY_EFFECTIVE,
+                [Grass] = SUPER_EFFECTIVE,
+                [Ice] = NOT_VERY_EFFECTIVE,
+                [Dragon] = SUPER_EFFECTIVE
+            };
 
             //Dragon
-            Effectiveness[Dragon] = new Dictionary<PokemonType, float>();
-            Effectiveness[Dragon][Steel] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Dragon][Dragon] = SUPER_EFFECTIVE;
-            Effectiveness[Dragon][Fairy] = NO_EFFECT;
+            Effectiveness[Dragon] = new Dictionary<PokemonType, float>
+            {
+                [Steel] = NOT_VERY_EFFECTIVE,
+                [Dragon] = SUPER_EFFECTIVE,
+                [Fairy] = NO_EFFECT
+            };
 
             //Dark
-            Effectiveness[Dark] = new Dictionary<PokemonType, float>();
-            Effectiveness[Dark][Fire] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Dark][Ghost] = SUPER_EFFECTIVE;
-            Effectiveness[Dark][Psychic] = SUPER_EFFECTIVE;
-            Effectiveness[Dark][Dark] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Dark][Fairy] = NOT_VERY_EFFECTIVE;
+            Effectiveness[Dark] = new Dictionary<PokemonType, float>
+            {
+                [Fire] = NOT_VERY_EFFECTIVE,
+                [Ghost] = SUPER_EFFECTIVE,
+                [Psychic] = SUPER_EFFECTIVE,
+                [Dark] = NOT_VERY_EFFECTIVE,
+                [Fairy] = NOT_VERY_EFFECTIVE
+            };
 
             //Fairy
-            Effectiveness[Fairy] = new Dictionary<PokemonType, float>();
-            Effectiveness[Fairy][Fighting] = SUPER_EFFECTIVE;
-            Effectiveness[Fairy][Ground] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Fairy][Steel] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Fairy][Fire] = NOT_VERY_EFFECTIVE;
-            Effectiveness[Fairy][Dragon] = SUPER_EFFECTIVE;
-            Effectiveness[Fairy][Dark] = SUPER_EFFECTIVE;
+            Effectiveness[Fairy] = new Dictionary<PokemonType, float>
+            {
+                [Fighting] = SUPER_EFFECTIVE,
+                [Ground] = NOT_VERY_EFFECTIVE,
+                [Steel] = NOT_VERY_EFFECTIVE,
+                [Fire] = NOT_VERY_EFFECTIVE,
+                [Dragon] = SUPER_EFFECTIVE,
+                [Dark] = SUPER_EFFECTIVE
+            };
         }
     }
 }

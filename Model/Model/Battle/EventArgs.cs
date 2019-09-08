@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.Collections.Generic;
 using PokemonEngine.Model.Battle.Actions;
 using PokemonEngine.Model.Battle.Messages;
 
@@ -11,7 +6,7 @@ namespace PokemonEngine.Model.Battle
 {
     public class EventArgs : System.EventArgs
     {
-        public readonly IBattle Battle;
+        public IBattle Battle { get; }
 
         public EventArgs(IBattle battle)
         {
@@ -22,7 +17,7 @@ namespace PokemonEngine.Model.Battle
     #region Battle
     public class BattleEndEventArgs : EventArgs
     {
-        public readonly Team Winner;
+        public Team Winner { get; }
         public BattleEndEventArgs(IBattle battle, Team winner) : base(battle)
         {
             Winner = winner;
@@ -31,7 +26,7 @@ namespace PokemonEngine.Model.Battle
 
     public class RequestInputEventArgs : EventArgs
     {
-        public readonly IList<Request> Requests;
+        public IList<Request> Requests { get; }
         public RequestInputEventArgs(IBattle battle, IList<Request> requests) : base(battle)
         {
             Requests = requests;
@@ -40,8 +35,8 @@ namespace PokemonEngine.Model.Battle
 
     public class InputReceivedEventArgs : EventArgs
     {
-        public readonly IList<Request> Requests;
-        public readonly IList<IAction> Inputs;
+        public IList<Request> Requests { get; }
+        public IList<IAction> Inputs { get; }
         public InputReceivedEventArgs(IBattle battle, IList<Request> requests, IList<IAction> inputs) : base(battle)
         {
             Requests = requests;
@@ -51,7 +46,7 @@ namespace PokemonEngine.Model.Battle
 
     public class SwapPokemonEventArgs : EventArgs
     {
-        public readonly SwapPokemon Action;
+        public SwapPokemon Action { get; }
         public SwapPokemonEventArgs(IBattle battle, SwapPokemon action) : base(battle)
         {
             Action = action;
@@ -61,8 +56,8 @@ namespace PokemonEngine.Model.Battle
     public class PokemonSwappedEventArgs : EventArgs
     {
         // TODO: Add anything else that is needed
-        public readonly SwapPokemon Action;
-        public readonly IPokemon SwappedPokemon;
+        public SwapPokemon Action { get; }
+        public IPokemon SwappedPokemon { get; }
         public PokemonSwappedEventArgs(IBattle battle, SwapPokemon action, IPokemon swappedPokemon) : base(battle)
         {
             Action = action;
@@ -72,7 +67,7 @@ namespace PokemonEngine.Model.Battle
 
     public class UseItemEventArgs : EventArgs
     {
-        public readonly UseItem Action;
+        public UseItem Action { get; }
         public UseItemEventArgs(IBattle battle, UseItem action) : base(battle)
         {
             Action = action;
@@ -82,7 +77,7 @@ namespace PokemonEngine.Model.Battle
     public class ItemUsedEventArgs : EventArgs
     {
         // TODO: Add anything else
-        public readonly UseItem Action;
+        public UseItem Action { get; }
         public ItemUsedEventArgs(IBattle battle, UseItem action) : base(battle)
         {
             Action = action;
@@ -91,7 +86,7 @@ namespace PokemonEngine.Model.Battle
 
     public class UseMoveEventArgs : EventArgs
     {
-        public readonly UseMove Action;
+        public UseMove Action { get; }
         public UseMoveEventArgs(IBattle battle, UseMove action) : base(battle)
         {
             Action = action;
@@ -101,7 +96,7 @@ namespace PokemonEngine.Model.Battle
     public class MoveUsedEventArgs : EventArgs
     {
         // TODO: Add anything else
-        public readonly UseMove Action;
+        public UseMove Action { get; }
         public MoveUsedEventArgs(IBattle battle, UseMove action) : base(battle)
         {
             Action = action;
@@ -110,7 +105,7 @@ namespace PokemonEngine.Model.Battle
 
     public class UseRunEventArgs : EventArgs
     {
-        public readonly UseRun Action;
+        public UseRun Action { get; }
         public UseRunEventArgs(IBattle battle, UseRun action) : base(battle)
         {
             Action = action;
@@ -120,7 +115,7 @@ namespace PokemonEngine.Model.Battle
     public class RunUsedEventArgs : EventArgs
     {
         // TODO: Add anything else
-        public readonly UseRun Action;
+        public UseRun Action { get; }
         public RunUsedEventArgs(IBattle battle, UseRun action) : base(battle)
         {
             Action = action;
@@ -139,7 +134,7 @@ namespace PokemonEngine.Model.Battle
     public class DamageInflictedEventArgs : EventArgs
     {
         // TODO: Add anything else
-        public readonly InflictDamage Action;
+        public InflictDamage Action { get; }
         public DamageInflictedEventArgs(IBattle battle, InflictDamage action) : base(battle)
         {
             Action = action;
@@ -148,7 +143,7 @@ namespace PokemonEngine.Model.Battle
 
     public class MoveUseFailureEventArgs : EventArgs
     {
-        public readonly MoveUseFailure Action;
+        public MoveUseFailure Action { get; }
         public MoveUseFailureEventArgs(IBattle battle, MoveUseFailure action) : base(battle)
         {
             Action = action;
@@ -157,7 +152,7 @@ namespace PokemonEngine.Model.Battle
 
     public class MoveUseFailedEventArgs : EventArgs
     {
-        public readonly MoveUseFailure Action;
+        public MoveUseFailure Action { get; }
         public MoveUseFailedEventArgs(IBattle battle, MoveUseFailure action) : base(battle)
         {
             Action = action;
@@ -166,7 +161,7 @@ namespace PokemonEngine.Model.Battle
 
     public class ShiftStatStageEventArgs : EventArgs
     {
-        public readonly ShiftStatStage Action;
+        public ShiftStatStage Action { get; }
         public ShiftStatStageEventArgs(IBattle battle, ShiftStatStage action) : base(battle)
         {
             Action = action;
@@ -175,7 +170,7 @@ namespace PokemonEngine.Model.Battle
 
     public class StatStageShiftedEventArgs : EventArgs
     {
-        public readonly ShiftStatStage Action;
+        public ShiftStatStage Action { get; }
         public StatStageShiftedEventArgs(IBattle battle, ShiftStatStage action) : base(battle)
         {
             Action = action;
@@ -184,7 +179,7 @@ namespace PokemonEngine.Model.Battle
 
     public class ChangeWeatherEventArgs : EventArgs
     {
-        public readonly WeatherChange Action;
+        public WeatherChange Action { get; }
         public ChangeWeatherEventArgs(IBattle battle, WeatherChange action) : base(battle)
         {
             Action = action;
@@ -193,8 +188,8 @@ namespace PokemonEngine.Model.Battle
 
     public class WeatherChangedEventArgs : EventArgs
     {
-        public readonly Weather PreviousWeather;
-        public readonly Weather Weather;
+        public Weather PreviousWeather { get; }
+        public Weather Weather { get; }
 
         public WeatherChangedEventArgs(IBattle battle, Weather previousWeather, Weather weather) : base(battle)
         {
@@ -205,7 +200,7 @@ namespace PokemonEngine.Model.Battle
 
     public class WeatherCompletedEventArgs : EventArgs
     {
-        public readonly Weather Weather;
+        public Weather Weather { get; }
 
         public WeatherCompletedEventArgs(IBattle battle, Weather weather) : base(battle)
         {
@@ -215,7 +210,7 @@ namespace PokemonEngine.Model.Battle
 
     public class PerformMoveOperationEventArgs : EventArgs
     {
-        public readonly MoveOperation Operation;
+        public MoveOperation Operation { get; }
         public PerformMoveOperationEventArgs(IBattle battle, MoveOperation operation) : base(battle)
         {
             Operation = operation;
@@ -224,7 +219,7 @@ namespace PokemonEngine.Model.Battle
 
     public class MoveOperationPerformedEventArgs : EventArgs
     {
-        public readonly MoveOperation Operation;
+        public MoveOperation Operation { get; }
         public MoveOperationPerformedEventArgs(IBattle battle, MoveOperation operation) : base(battle)
         {
             Operation = operation;
@@ -233,7 +228,7 @@ namespace PokemonEngine.Model.Battle
     
     public class PerformEffectOperationEventArgs : EventArgs
     {
-        public readonly EffectOperation Operation;
+        public EffectOperation Operation { get; }
 
         public PerformEffectOperationEventArgs(IBattle battle, EffectOperation operation) : base(battle)
         {
@@ -243,7 +238,7 @@ namespace PokemonEngine.Model.Battle
 
     public class EffectOperationPerformedEventArgs : EventArgs
     {
-        public readonly EffectOperation Operation;
+        public EffectOperation Operation { get; }
 
         public EffectOperationPerformedEventArgs(IBattle battle, EffectOperation operation) : base(battle)
         {
@@ -255,7 +250,7 @@ namespace PokemonEngine.Model.Battle
     #region Pokemon
     public class PokemonEventArgs : EventArgs
     {
-        public readonly IPokemon Pokemon;
+        public IPokemon Pokemon { get; }
         public PokemonEventArgs(IBattle battle, IPokemon pokemon) : base(battle)
         {
             Pokemon = pokemon;
@@ -264,8 +259,8 @@ namespace PokemonEngine.Model.Battle
 
     public class UpdateStatisticStageEventArgs : PokemonEventArgs
     {
-        public readonly Statistic Stat;
-        public readonly int Levels;
+        public Statistic Stat { get; }
+        public int Levels { get; }
         public UpdateStatisticStageEventArgs(IBattle battle, IPokemon pokemon, Statistic stat, int levels) : base(battle, pokemon)
         {
             Stat = stat;
@@ -275,9 +270,9 @@ namespace PokemonEngine.Model.Battle
 
     public class StatisticStageUpdatedEventArgs : PokemonEventArgs
     {
-        public readonly Statistic Stat;
-        public readonly int PreviousLevel;
-        public readonly int NumLevels;
+        public Statistic Stat { get; }
+        public int PreviousLevel { get; }
+        public int NumLevels { get; }
 
         public StatisticStageUpdatedEventArgs(IBattle battle, IPokemon pokemon, Statistic stat, int previousLevel) : base(battle, pokemon)
         {

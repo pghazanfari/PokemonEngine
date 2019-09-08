@@ -1,25 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using PokemonEngine.Model.Battle.Messaging;
+﻿using PokemonEngine.Model.Battle.Messaging;
 
 namespace PokemonEngine.Model.Battle.Messages
 {
     public class WeatherChange : IMessage
     {
-        private readonly Model.Weather weather;
-        public Model.Weather Weather { get { return weather; } }
-
-        private readonly int turnCount;
-        public int TurnCount { get { return turnCount; } }
+        public Model.Weather Weather { get; }
+        public int TurnCount { get; }
 
         public WeatherChange(Model.Weather weather, int turnCount)
         {
-            this.weather = weather;
-            this.turnCount = turnCount;
+            Weather = weather;
+            TurnCount = turnCount;
         }
 
         public void Dispatch(ISubscriber receiver)

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace PokemonEngine.Model
 {
@@ -28,7 +24,7 @@ namespace PokemonEngine.Model
             Speed
         }).AsReadOnly();
 
-        public readonly string Name;
+        public string Name { get; }
         private Statistic(string name)
         {
             Name = name;

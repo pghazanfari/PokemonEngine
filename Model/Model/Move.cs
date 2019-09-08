@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using PokemonEngine.Model.Battle;
+﻿using PokemonEngine.Model.Battle;
 using PokemonEngine.Model.Battle.Actions;
 using PokemonEngine.Model.Battle.Messages;
 using PokemonEngine.Model.Common;
@@ -15,62 +9,30 @@ namespace PokemonEngine.Model
     {
         public const int DefaultPriority = 0;
         public const int DefaultCriticalHitStage = 0;
-
-        private readonly string name;
-        public string Name { get { return name; }  }
-
-        private readonly PokemonType type;
-        public PokemonType Type { get { return type; } }
-
-        private readonly int? power;
-        public int? Power { get { return power; }  }
-
-        private readonly DamageType? damageType;
-        public DamageType? DamageType { get { return damageType; } }
-
-        private readonly int accuracy;
-        public int Accuracy { get { return accuracy; } }
-
-        private MoveTarget target;
-        public MoveTarget Target { get { return target; } }
-
-        private readonly int basePP;
-        public int BasePP { get { return basePP; } }
-
-        private readonly int maxPossiblePP;
-        public int MaxPPLimit { get { return maxPossiblePP; } }
-
-        private readonly int priority;
-        public int Priority
-        {
-            get
-            {
-                return priority;
-            }
-        }
-
-        private readonly int criticalHitStage;
-        public int CriticalHitStage
-        {
-            get
-            {
-                return criticalHitStage;
-            }
-        }
+        public string Name { get; }
+        public PokemonType Type { get; }
+        public int? Power { get; }
+        public DamageType? DamageType { get; }
+        public int Accuracy { get; }
+        public MoveTarget Target { get; }
+        public int BasePP { get; }
+        public int MaxPPLimit { get; }
+        public int Priority { get; }
+        public int CriticalHitStage { get; }
 
 
         public Move(string name, PokemonType type, int? power, DamageType? damageType, int accuracy, MoveTarget target, int basePP, int maxPossiblePP, int priority, int criticalHitStage)
         {
-            this.name = name;
-            this.type = type;
-            this.power = power;
-            this.damageType = damageType;
-            this.accuracy = accuracy;
-            this.target = target;
-            this.basePP = basePP;
-            this.maxPossiblePP = maxPossiblePP;
-            this.priority = priority;
-            this.criticalHitStage = criticalHitStage;
+            Name = name;
+            Type = type;
+            Power = power;
+            DamageType = damageType;
+            Accuracy = accuracy;
+            Target = target;
+            BasePP = basePP;
+            MaxPPLimit = maxPossiblePP;
+            Priority = priority;
+            CriticalHitStage = criticalHitStage;
         }
 
         public Move(string name, PokemonType type, int? power, DamageType? damageType, int accuracy, MoveTarget target, int basePP, int maxPossiblePP) : this(name, type, power, damageType, accuracy, target, basePP, maxPossiblePP, DefaultPriority, DefaultCriticalHitStage)
@@ -78,7 +40,7 @@ namespace PokemonEngine.Model
 
         public virtual void Use(IBattle battle, UseMove useMoveAction)
         {
-            if (!damageType.HasValue) { return; }
+            if (!DamageType.HasValue) { return; }
 
             Battle.IMove move = useMoveAction.Slot.Pokemon.Moves.Find(this);
 

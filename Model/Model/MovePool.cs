@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PokemonEngine.Model
 {
     public class MovePool
     {
-        private readonly IReadOnlyList<IMove> starterMoves;
-        public IReadOnlyList<IMove> StarterMoves { get { return starterMoves; } }
+        public IReadOnlyList<IMove> StarterMoves { get; }
 
-        private readonly IReadOnlyDictionary<int, IMove> moves;
+        private IReadOnlyDictionary<int, IMove> Moves { get; }
         public IMove this[int i]
         {
             get
             {
-                return moves[i];
+                return Moves[i];
             }
         }
 
@@ -26,8 +21,8 @@ namespace PokemonEngine.Model
         public MovePool(IList<IMove> starterMoves, IDictionary<int, IMove> moves)
         {
             //TODO: Validation
-            this.starterMoves = new List<IMove>(starterMoves).AsReadOnly();
-            this.moves = new ReadOnlyDictionary<int, IMove>(moves);
+            StarterMoves = new List<IMove>(starterMoves).AsReadOnly();
+            Moves = new ReadOnlyDictionary<int, IMove>(moves);
         }
     }
 }

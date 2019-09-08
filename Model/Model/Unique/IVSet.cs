@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PokemonEngine.Model.Unique
 {
@@ -36,12 +34,12 @@ namespace PokemonEngine.Model.Unique
 
         object ICloneable.Clone()
         {
-            return this.Clone();
+            return Clone();
         }
 
         public IVSet Clone()
         {
-            return new IVSet(this.ivs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
+            return new IVSet(ivs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
         }
     }
 }

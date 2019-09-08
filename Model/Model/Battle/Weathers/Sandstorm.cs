@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using PokemonEngine.Model.Common;
 using PokemonEngine.Model.Unique;
@@ -103,7 +100,7 @@ namespace PokemonEngine.Model.Battle.Weathers
 
         private class InflictSandstormDamage : InflictDamage.Typed<Weather>
         {
-            IReadOnlyList<PokemonType> ProtectedTypes = new List<PokemonType> {
+            readonly IReadOnlyList<PokemonType> ProtectedTypes = new List<PokemonType> {
             PokemonType.Rock, PokemonType.Ground, PokemonType.Steel }.AsReadOnly();
 
             private IBattle battle;
@@ -116,14 +113,7 @@ namespace PokemonEngine.Model.Battle.Weathers
                 }
             }
 
-            private Weather source;
-            public override Weather Source
-            {
-                get
-                {
-                    return source;
-                }
-            }
+            public override Weather Source { get; }
 
             public override IEnumerable<Slot> Targets
             {
@@ -136,7 +126,7 @@ namespace PokemonEngine.Model.Battle.Weathers
             public InflictSandstormDamage(IBattle battle, Sandstorm sandstorm)
             {
                 this.battle = battle;
-                source = sandstorm;
+                Source = sandstorm;
             }
         }
     }

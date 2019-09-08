@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using PokemonEngine.Model.Common;
 
 namespace PokemonEngine.Model.Unique
 {
@@ -18,7 +13,7 @@ namespace PokemonEngine.Model.Unique
 
         public const int MinHP = 0;
 
-        public readonly Model.Pokemon Base;
+        public Model.Pokemon Base { get; }
 
         #region Base Pokemon Wrapper Methods
         public string Species { get { return Base.Species; } }
@@ -37,30 +32,14 @@ namespace PokemonEngine.Model.Unique
         public event EventHandler<FriendshipUpdatedEventArgs> OnFriendshipUpdated;
         public event EventHandler<UpdateHPEventArgs> OnUpdateHP;
         public event EventHandler<HPUpdatedEventArgs> OnHPUpdated;
-
-        private readonly string uid;
-        public string UID { get { return uid; } }
-
-        private readonly IStatistics stats;
-        public IStatistics Stats { get { return stats; } }
-
-        private readonly Ability ability;
-        public Ability Ability { get { return ability; } }
-
-        private readonly IVSet ivs;
-        public IVSet IVs { get { return ivs; } }
-
-        private readonly EVSet evs;
-        public EVSet EVs { get { return evs; } }
-
-        private readonly Gender gender;
-        public Gender Gender { get { return gender; } }
-
-        private readonly Nature nature;
-        public Nature Nature { get { return nature; } }
-
-        private readonly MoveSet<IMove> moves;
-        public MoveSet<IMove> Moves { get { return moves; } }
+        public string UID { get; }
+        public IStatistics Stats { get; }
+        public Ability Ability { get; }
+        public IVSet IVs { get; }
+        public EVSet EVs { get; }
+        public Gender Gender { get; }
+        public Nature Nature { get; }
+        public MoveSet<IMove> Moves { get; }
 
         public int HP { get; private set; }
 
@@ -73,14 +52,14 @@ namespace PokemonEngine.Model.Unique
         public Pokemon(Model.Pokemon basePokemon, string uid, Gender gender, Nature nature, Ability ability, IVSet ivs, EVSet evs, MoveSet<IMove> moves, int friendship, int level)
         {
             Base = basePokemon;
-            stats = new Statistics(this);
-            this.gender = gender;
-            this.nature = nature;
-            this.uid = uid;
-            this.ability = ability;
-            this.ivs = ivs;
-            this.evs = evs;
-            this.moves = moves;
+            Stats = new Statistics(this);
+            Gender = gender;
+            Nature = nature;
+            UID = uid;
+            Ability = ability;
+            IVs = ivs;
+            EVs = evs;
+            Moves = moves;
             Friendship = friendship;
             Experience = ExpGroup.ExperienceNeededForLevel(level);
 
@@ -105,7 +84,7 @@ namespace PokemonEngine.Model.Unique
             int expNeededForLevelup = ExpGroup.ExperienceNeededForLevel(Level + 1) - Experience;
             if (amount >= expNeededForLevelup)
             {
-                int prevExp1 = this.Experience;
+                int prevExp1 = Experience;
 
                 OnGainExperience?.Invoke(this, new GainExperienceEventArgs(this, expNeededForLevelup));
                 Experience += expNeededForLevelup;
@@ -139,7 +118,7 @@ namespace PokemonEngine.Model.Unique
         public int UpdateFriendship(int delta)
         {
             int prevFriendship = Friendship;
-            int newFriendship = (int)Math.Max(0, Math.Min(MaxFriendship, Friendship + delta));
+            int newFriendship = Math.Max(0, Math.Min(MaxFriendship, Friendship + delta));
             int actualDelta = newFriendship - Friendship;
 
             OnUpdateFriendship?.Invoke(this, new UpdateFriendshipEventArgs(this, actualDelta));
@@ -164,7 +143,7 @@ namespace PokemonEngine.Model.Unique
         {
             if (obj is IPokemon)
             {
-                return this.UID.Equals((obj as IPokemon).UID);
+                return UID.Equals((obj as IPokemon).UID);
             }
             return false;
         }
@@ -186,7 +165,7 @@ namespace PokemonEngine.Model.Unique
 
         public Pokemon Clone()
         {
-            return new Pokemon(Base, this.Gender, this.Nature, this.Ability, this.IVs.Clone() as IVSet, this.EVs.Clone() as EVSet, this.moves.Clone(), this.Level);
+            return new Pokemon(Base, Gender, Nature, Ability, IVs.Clone() as IVSet, EVs.Clone() as EVSet, Moves.Clone(), Level);
         }
     }
 }

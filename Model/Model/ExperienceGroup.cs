@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PokemonEngine.Model
 {
@@ -15,31 +11,31 @@ namespace PokemonEngine.Model
             switch (expGroup)
             {
                 case ExperienceGroup.Erratic:
-                    return expErratic(level);
+                    return ExpErratic(level);
                 case ExperienceGroup.Fast:
-                    return expFast(level);
+                    return ExpFast(level);
                 case ExperienceGroup.MediumFast:
-                    return expMediumFast(level);
+                    return ExpMediumFast(level);
                 case ExperienceGroup.MediumSlow:
-                    return expMediumSlow(level);
+                    return ExpMediumSlow(level);
                 case ExperienceGroup.Slow:
-                    return expSlow(level);
+                    return ExpSlow(level);
                 case ExperienceGroup.Fluctuating:
-                    return expFluctuating(level);
+                    return ExpFluctuating(level);
 
             }
             throw new Exception($"Unrecognized ExperienceGroup type {expGroup.ToString()}");
         }
 
-        private static int expErratic(int level)
+        private static int ExpErratic(int level)
         {
             if (level <= 50)
             {
-                return (int)Math.Ceiling( (Math.Pow(level, 3) * (100 - level)) / 50);
+                return (int)Math.Ceiling(Math.Pow(level, 3) * (100 - level) / 50);
             }
             if (level > 50 && level <= 68)
             {
-                return (int)Math.Ceiling((Math.Pow(level, 3) * (150 - level)) / 100);
+                return (int)Math.Ceiling(Math.Pow(level, 3) * (150 - level) / 100);
             }
             if (level > 68 && level <= 98)
             {
@@ -47,30 +43,30 @@ namespace PokemonEngine.Model
             }
 
             // level > 98
-            return (int)Math.Ceiling((Math.Pow(level, 3) * (160 - level)) / 100);
+            return (int)Math.Ceiling(Math.Pow(level, 3) * (160 - level) / 100);
         }
 
-        private static int expFast(int level)
+        private static int ExpFast(int level)
         {
             return (int)Math.Ceiling(4 * Math.Pow(level, 3) / 5.0);
         }
 
-        private static int expMediumFast(int level)
+        private static int ExpMediumFast(int level)
         {
             return (int)Math.Ceiling(Math.Pow(level, 3));
         }
 
-        private static int expMediumSlow(int level)
+        private static int ExpMediumSlow(int level)
         {
-            return (int)Math.Ceiling((6.0 / 5.0) * Math.Pow(level, 3) - 15 * Math.Pow(level, 2) + 100 * level - 140);
+            return (int)Math.Ceiling(6.0 / 5.0 * Math.Pow(level, 3) - 15 * Math.Pow(level, 2) + 100 * level - 140);
         }
 
-        private static int expSlow(int level)
+        private static int ExpSlow(int level)
         {
             return (int)Math.Ceiling(5.0 * Math.Pow(level, 3) / 4.0);
         }
 
-        private static int expFluctuating(int level)
+        private static int ExpFluctuating(int level)
         {
             if (level <= 15)
             {

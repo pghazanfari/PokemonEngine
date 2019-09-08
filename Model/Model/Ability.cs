@@ -10,8 +10,8 @@ namespace PokemonEngine.Model
 {
     public abstract class Ability
     {
-        public readonly string Name;
-        public readonly string Description;
+        public string Name { get; }
+        public string Description { get; }
 
         public Ability(string name, string description)
         {

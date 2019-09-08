@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using PokemonEngine.Model.Battle.Messaging;
+﻿using PokemonEngine.Model.Battle.Messaging;
 
 namespace PokemonEngine.Model.Battle.Messages
 {
     public abstract class EffectOperation : IMessage
     {
-        public readonly Effect Effect;
+        public Effect Effect { get; }
 
         public EffectOperation(Effect effect)
         {

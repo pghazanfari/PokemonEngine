@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using PokemonEngine.Model.Battle.Messaging;
+﻿using PokemonEngine.Model.Battle.Messaging;
 
 namespace PokemonEngine.Model.Battle.Messages
 {
     public class ShiftStatStage : IMessage
     {
-        public readonly IPokemon Pokemon;
-        public readonly Statistic Stat;
-        public readonly int Delta;
+        public IPokemon Pokemon { get; }
+        public Statistic Stat { get; }
+        public int Delta { get; }
 
         public ShiftStatStage(IPokemon pokemon, Statistic stat, int delta)
         {

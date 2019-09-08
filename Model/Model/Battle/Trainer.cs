@@ -1,26 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using PokemonEngine.Model.Unique;
 
 namespace PokemonEngine.Model.Battle
 {
     public class Trainer : ITrainer
     {
-        public readonly Unique.ITrainer Base;
+        public Unique.ITrainer Base { get; }
 
-        public readonly int NumBattlers;
+        public int NumBattlers { get; }
         private readonly IList<IPokemon> battlers;
-        private readonly IReadOnlyList<IPokemon> roBattlers;
-        public IReadOnlyList<IPokemon> Battlers
-        {
-            get
-            {
-                return roBattlers;
-            }
-        }
+        public IReadOnlyList<IPokemon> Battlers { get; }
 
         public Party Party
         {
@@ -47,7 +37,7 @@ namespace PokemonEngine.Model.Battle
             {
                 battlers.Add(new Pokemon(Party[i]));
             }
-            roBattlers = (battlers as List<IPokemon>).AsReadOnly();
+            Battlers = (battlers as List<IPokemon>).AsReadOnly();
         }
 
         object ICloneable.Clone()

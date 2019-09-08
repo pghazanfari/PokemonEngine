@@ -1,11 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using PokemonEngine.Model.Common;
-using System.Collections;
 
 namespace PokemonEngine.Model.Unique
 {
@@ -13,9 +9,9 @@ namespace PokemonEngine.Model.Unique
     {
         public class PokemonReplacedEventArgs : EventArgs
         {
-            public readonly Unique.IPokemon PartyPokemon;
-            public readonly int PartyPokemonSlot;
-            public readonly Unique.IPokemon ReplacementPokemon;
+            public Unique.IPokemon PartyPokemon { get; }
+            public int PartyPokemonSlot { get; }
+            public Unique.IPokemon ReplacementPokemon { get; }
 
             public PokemonReplacedEventArgs(Unique.IPokemon partyPokemon, int partyPokemonSlot, Unique.IPokemon replacementPokemon) : base()
             {
@@ -28,9 +24,7 @@ namespace PokemonEngine.Model.Unique
         public const int DefaultSize = 6;
 
         private readonly IList<Unique.IPokemon> pokemon;
-
-        private readonly int size;
-        public int Size { get { return size; } }
+        public int Size { get; }
 
         public Unique.IPokemon this[int i]
         {
@@ -44,7 +38,7 @@ namespace PokemonEngine.Model.Unique
         {
             get
             {
-                return pokemon.Count >= size;
+                return pokemon.Count >= Size;
             }
         }
 
@@ -66,7 +60,7 @@ namespace PokemonEngine.Model.Unique
         {
             if (size < pokemon.Count) { throw new Exception($"Party size ({size}) is smaller than the size of the supplied list of pokemon ({pokemon.Count})"); }
 
-            this.size = size;
+            Size = size;
             this.pokemon = new List<Unique.IPokemon>(pokemon);
         }
 
@@ -142,7 +136,7 @@ namespace PokemonEngine.Model.Unique
 
         public Party Clone()
         {
-            return new Party(this.pokemon.Select(x => x.Clone()).ToList());
+            return new Party(pokemon.Select(x => x.Clone()).ToList());
         }
     }
 }

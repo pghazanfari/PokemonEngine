@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-using PokemonEngine.Model.Common;
 using PokemonEngine.Model.Unique;
 using PokemonEngine.Model.Battle.Messages;
 
@@ -33,7 +29,7 @@ namespace PokemonEngine.Model.Battle.Weathers
                 }
             }
 
-            private Weather source;
+            private readonly Weather source;
             public override Weather Source
             {
                 get

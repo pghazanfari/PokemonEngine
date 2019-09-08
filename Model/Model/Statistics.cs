@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PokemonEngine.Model
 {
@@ -31,9 +28,9 @@ namespace PokemonEngine.Model
             this.statistics = new ReadOnlyDictionary<Statistic, int>(dict);
         }
 
-        public Statistics(int hp, int attack, int defense, int specialAttack, int specialDefense, int speed) : this(paramsToDict(hp, attack, defense, specialAttack, specialDefense, speed)) { }
+        public Statistics(int hp, int attack, int defense, int specialAttack, int specialDefense, int speed) : this(ParamsToDict(hp, attack, defense, specialAttack, specialDefense, speed)) { }
 
-        private static IDictionary<Statistic, int> paramsToDict(int hp, int attack, int defense, int specialAttack, int specialDefense, int speed)
+        private static IDictionary<Statistic, int> ParamsToDict(int hp, int attack, int defense, int specialAttack, int specialDefense, int speed)
         {
             Dictionary<Statistic, int> dict = new Dictionary<Statistic, int>(6);
             dict[Statistic.HP] = hp;

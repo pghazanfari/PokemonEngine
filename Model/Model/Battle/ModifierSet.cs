@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PokemonEngine.Model.Battle
 {
@@ -55,12 +52,12 @@ namespace PokemonEngine.Model.Battle
             float factor = 1.0f;
             foreach (KeyValuePair<int, List<IModifier>> pair in modifiers)
             {
-                factor *= levelFactor(pair.Key);
+                factor *= LevelFactor(pair.Key);
             }
             return baseValue * factor;
         }
 
-        private float levelFactor(int level)
+        private float LevelFactor(int level)
         {
             return modifiers[level].Sum(x => x.Factor);
         }

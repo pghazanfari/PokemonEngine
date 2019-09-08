@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using PokemonEngine.Model.Common;
 
 namespace PokemonEngine.Model.Unique
 {
@@ -44,22 +38,22 @@ namespace PokemonEngine.Model.Unique
     
     public static class IPokemonImpl
     {
-        public static int BaseHP(this Model.Unique.IPokemon pokemon)
+        public static int BaseHP(Unique.IPokemon pokemon)
         {
             return (pokemon as Model.IPokemon).Stats[Model.Statistic.HP];
         }
 
-        public static int MaxHP(this Model.Unique.IPokemon pokemon)
+        public static int MaxHP(this Unique.IPokemon pokemon)
         {
             return pokemon.Stats[Statistic.HP];
         }
 
-        public static int BaseAttack(this Model.Unique.IPokemon pokemon)
+        public static int BaseAttack(this Unique.IPokemon pokemon)
         {
             return (pokemon as Model.IPokemon).Stats[Model.Statistic.Attack];
         }
 
-        public static int BaseSpecialAttack(this Model.Unique.IPokemon pokemon)
+        public static int BaseSpecialAttack(this Unique.IPokemon pokemon)
         {
             return (pokemon as Model.IPokemon).Stats[Model.Statistic.SpecialAttack];
         }
@@ -69,12 +63,12 @@ namespace PokemonEngine.Model.Unique
             return (pokemon as Model.IPokemon).Stats[Model.Statistic.Defense];
         }
 
-        public static int BaseSpecialDefense(this Model.Unique.IPokemon pokemon)
+        public static int BaseSpecialDefense(this Unique.IPokemon pokemon)
         {
             return (pokemon as Model.IPokemon).Stats[Model.Statistic.SpecialDefense];
         }
 
-        public static int BaseSpeed(this Model.Unique.IPokemon pokemon)
+        public static int BaseSpeed(this Unique.IPokemon pokemon)
         {
             return (pokemon as Model.IPokemon).Stats[Model.Statistic.Speed];
         }

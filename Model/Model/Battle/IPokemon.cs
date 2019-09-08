@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using PokemonEngine.Model.Unique;
+﻿using PokemonEngine.Model.Unique;
 
 namespace PokemonEngine.Model.Battle
 {

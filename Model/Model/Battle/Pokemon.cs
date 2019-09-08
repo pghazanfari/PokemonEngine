@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-using PokemonEngine.Model.Common;
 using PokemonEngine.Model.Unique;
 
 namespace PokemonEngine.Model.Battle
 {
     public class Pokemon : IPokemon
     {
-        public readonly Unique.IPokemon Base;
+        public Unique.IPokemon Base { get; }
 
         #region Base Pokemon Wrapper Methods
         public string Species { get { return Base.Species; } }
@@ -25,7 +21,7 @@ namespace PokemonEngine.Model.Battle
         public Gender Gender { get { return Base.Gender; } }
         public Nature Nature { get { return Base.Nature; } }
         public string UID {  get { return Base.UID; } }
-        IStatistics Model.Unique.IPokemon.Stats { get { return (Base as Model.Unique.IPokemon).Stats; } }
+        IStatistics Unique.IPokemon.Stats { get { return (Base as Unique.IPokemon).Stats; } }
         public Ability Ability { get { return Base.Ability; } }
         public IVSet IVs { get { return Base.IVs; } }
         public EVSet EVs { get { return Base.EVs; } }
@@ -33,6 +29,7 @@ namespace PokemonEngine.Model.Battle
         public int Experience { get { return Base.Experience; } }
         public int HP { get { return Base.HP; } }
         MoveSet<Unique.IMove> Unique.IPokemon.Moves { get { return Base.Moves; } }
+        #endregion
 
         event EventHandler<GainExperienceEventArgs> Unique.IPokemon.OnGainExperience
         {
@@ -142,38 +139,27 @@ namespace PokemonEngine.Model.Battle
         {
             return Base.UpdateHP(delta);
         }
-        #endregion
-
-        private readonly Statistics stats;
-        public Statistics Stats { get { return stats; } }
-
-        private readonly MoveSet<IMove> moves;
-        public MoveSet<IMove> Moves
-        {
-            get
-            {
-                return moves;
-            }
-        }
+        public Statistics Stats { get; }
+        public MoveSet<IMove> Moves { get; }
 
         public Pokemon(Unique.IPokemon basePokemon)
         {
             Base = basePokemon;
-            stats = new Statistics(basePokemon.Stats);
+            Stats = new Statistics(basePokemon.Stats);
 
             IList<IMove> list = new List<IMove>(Base.Moves.Count);
             foreach (Unique.IMove move in Base.Moves) {
                 if (move == null) { list.Add(null); continue; }
                 list.Add(new Move(move));
             }
-            moves = new MoveSet<IMove>(list);
+            Moves = new MoveSet<IMove>(list);
         }
 
         public override bool Equals(object obj)
         {
             if (obj is Unique.IPokemon)
             {
-                this.UID.Equals((obj as Unique.IPokemon).UID);
+                UID.Equals((obj as Unique.IPokemon).UID);
             }
 
             return false;

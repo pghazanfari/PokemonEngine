@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using PokemonEngine.Model.Battle;
 using PokemonEngine.Model.Battle.Actions;
@@ -12,7 +8,7 @@ namespace PokemonEngine.Model.Unique
 #pragma warning disable CS0659
     public class Move : IMove
     {
-        public readonly Model.IMove Base;
+        public Model.IMove Base { get; }
 
         #region Base Move Wrapper Methods
         public string Name { get { return Base.Name; } }
@@ -38,7 +34,7 @@ namespace PokemonEngine.Model.Unique
             if (pp > maxPP) { throw new Exception($"PP {pp} must be less than or equal to max pp {maxPP}");  }
             if (maxPP > baseMove.MaxPPLimit) { throw new Exception($"Max PP {maxPP} must be less than or equal to max possible pp {baseMove.MaxPPLimit}"); }
 
-            this.Base = baseMove;
+            Base = baseMove;
             PP = pp;
             MaxPP = maxPP;
         }

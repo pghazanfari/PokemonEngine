@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using PokemonEngine.Model.Unique;
 using PokemonEngine.Model.Battle.Messaging;
@@ -11,7 +7,7 @@ namespace PokemonEngine.Model.Battle.Actions
 {
     public class SwapPokemon : IAction
     {
-        public readonly Unique.IPokemon Replacement;
+        public Unique.IPokemon Replacement { get; }
 
         public SwapPokemon(Slot slot, Unique.IPokemon replacement) : base(slot)
         {

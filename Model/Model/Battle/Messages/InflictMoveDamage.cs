@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PokemonEngine.Model.Battle.Messaging;
 
 namespace PokemonEngine.Model.Battle.Messages
 {
@@ -34,10 +30,7 @@ namespace PokemonEngine.Model.Battle.Messages
             }
         }
 
-        public readonly IBattle Battle;        public readonly Slot User;
-
-        private readonly bool isCriticalHit;
-        private readonly float randomModifier;
+        public IBattle Battle { get; }        public Slot User { get; }
 
         public InflictMoveDamage(IBattle battle, IMove move, Slot user, IEnumerable<Slot> targets)
         {
@@ -45,12 +38,12 @@ namespace PokemonEngine.Model.Battle.Messages
             this.move = move;
             User = user;
             this.targets = new List<Slot>(targets).AsReadOnly();
-            randomModifier = 1.0f - (battle.RNG.Next(16) / 100.0f);
-            isCriticalHit = battle.RNG.NextDouble() < CriticalHitProbability(move.CriticalHitStage);
+            RandomModifier = 1.0f - (battle.RNG.Next(16) / 100.0f);
+            IsCriticalHit = battle.RNG.NextDouble() < CriticalHitProbability(move.CriticalHitStage);
         }
         public InflictMoveDamage(IBattle battle, IMove move, Slot user, params Slot[] targets) : this(battle, move, user, targets as IEnumerable<Slot>) { }
 
-        public bool IsCriticalHit { get { return isCriticalHit; } }
+        public bool IsCriticalHit { get; }
         public float CriticalModifier
         {
             get
@@ -59,13 +52,7 @@ namespace PokemonEngine.Model.Battle.Messages
             }
         }
 
-        public float RandomModifier
-        {
-            get
-            {
-                return randomModifier;
-            }
-        }
+        public float RandomModifier { get; }
 
         public float WeatherModifier
         {
@@ -150,13 +137,7 @@ namespace PokemonEngine.Model.Battle.Messages
             }
         }
 
-        public float LevelInfluence
-        {
-            get
-            {
-                return ( (2.0f * User.Pokemon.Level) / 5.0f) + 2.0f;
-            }
-        }
+        public float LevelInfluence => 2.0f * User.Pokemon.Level / 5.0f + 2.0f;
 
         public int CalculateDamage(Slot target)
         {

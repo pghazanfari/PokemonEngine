@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using PokemonEngine.Model.Battle.Messaging;
 
@@ -14,8 +12,8 @@ namespace PokemonEngine.Model.Battle.Actions
 
         public ModifierSet AccuracyModifiers = new ModifierSet();
 
-        public readonly IMove Move;
-        public readonly IReadOnlyList<Slot> Targets;
+        public IMove Move { get; }
+        public IReadOnlyList<Slot> Targets { get; }
 
         public IEnumerable<Slot> HitTargets
         {

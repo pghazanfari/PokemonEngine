@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PokemonEngine.Model
+﻿namespace PokemonEngine.Model
 {
     public class Nature
     {
@@ -37,9 +31,9 @@ namespace PokemonEngine.Model
         public static readonly Nature Careful = new Nature("Careful", Statistic.SpecialDefense, Statistic.SpecialAttack);
         public static readonly Nature Quirky = new Nature("Quirky", null, null);
 
-        public readonly string Name;
-        public readonly Statistic IncreasedStat;
-        public readonly Statistic DecreasedStat;
+        public string Name { get; }
+        public Statistic IncreasedStat { get; }
+        public Statistic DecreasedStat { get; }
 
         private Nature(string name, Statistic increasedStat, Statistic decreasedStat)
         {
@@ -50,8 +44,8 @@ namespace PokemonEngine.Model
 
         public double Multiplier(Statistic stat)
         {
-            if (stat == IncreasedStat) { return Nature.IncreaseMultiplier; }
-            if (stat == DecreasedStat) { return Nature.DecreaseMultiplier; }
+            if (stat == IncreasedStat) { return IncreaseMultiplier; }
+            if (stat == DecreasedStat) { return DecreaseMultiplier; }
 
             return 1.0;
         }
